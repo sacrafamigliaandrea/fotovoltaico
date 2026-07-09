@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cacciatori di Sole — la sala di controllo del fotovoltaico</title>
+<link rel="icon" href="logo.svg">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ PALETTE DEDICATA "SALA DI CONTROLLO" ============
+   Tema scuro tecnologico: blu notte profondo, ciano elettrico (dato/tech),
+   oro solare (sole/avanzamento), verde energia (ambiente/successo),
+   ambra per i feedback (mai rosso). */
+:root{
+  --sfondo:#0A1524; --sfondo2:#0D1B2E;
+  --pann:#13253C;   --pann2:#182E49;   /* pannelli/card */
+  --brd:#24405E;    --brd2:#33587F;
+  --testo:#EAF3FB;  --muted:#93ADC4;
+  --ciano:#3BC9EC;  --cianoL:rgba(59,201,236,.10);
+  --sole:#FFC93D;   --sole2:#F5A91B;   --soleL:rgba(255,201,61,.10);
+  --energia:#3DDC97;--energiaL:rgba(61,220,151,.10);
+  --ambra:#E09F3E;  --ambraL:rgba(224,159,62,.14);
+  --body:'Atkinson Hyperlegible',Helvetica,Arial,sans-serif;
+  --head:'Lexend',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --maxw:1440px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);font-size:18px;line-height:1.65;color:var(--testo);background-color:var(--sfondo);
+  background-image:linear-gradient(rgba(59,201,236,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(59,201,236,.045) 1px,transparent 1px);
+  background-size:44px 44px}
+h1,h2,h3,h4{font-family:var(--head);line-height:1.25;color:var(--testo)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.testo{max-width:72ch}
+.num{font-family:var(--mono);font-weight:700}
+button{font-family:var(--head);cursor:pointer}
+:focus-visible{outline:3px solid var(--ciano);outline-offset:2px;border-radius:6px}
+p{margin-bottom:14px}
+
+/* ============ BRAND (wordmark) ============ */
+.brandbar{display:flex;justify-content:center;padding:16px 10px 0}
+.brand-txt{display:flex;flex-direction:column;text-align:center;line-height:1.25}
+.brand-name{font-family:var(--head);font-size:14px;font-weight:700;letter-spacing:.6px;color:var(--testo);text-transform:uppercase}
+.brand-role{font-family:var(--head);font-size:11.5px;font-weight:500;letter-spacing:.2px;color:var(--muted)}
+
+/* ============ HEADER ============ */
+header{padding:24px 0 8px;text-align:center}
+.hero-sun{width:78px;height:78px;margin:0 auto 8px;display:block;filter:drop-shadow(0 0 18px rgba(255,201,61,.35))}
+h1{font-size:2.7rem;font-weight:700;letter-spacing:-.01em}
+h1 .h-sole{color:var(--sole)}
+.sottotitolo{font-size:1.14rem;color:var(--muted);margin-top:8px;max-width:74ch;margin-left:auto;margin-right:auto}
+.sottotitolo .evidenza{color:var(--sole);font-weight:700}
+.statobar{display:inline-flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;background:var(--pann);border:1.5px solid var(--brd);border-radius:999px;padding:8px 20px;font-family:var(--mono);font-size:12.5px;font-weight:500;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.led{width:10px;height:10px;border-radius:50%;background:var(--energia);box-shadow:0 0 8px var(--energia);animation:pulsa 2s ease-in-out infinite}
+@keyframes pulsa{0%,100%{opacity:1}50%{opacity:.35}}
+.statobar .sep{color:var(--brd2)}
+
+/* ============ TOPBAR ============ */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(10,21,36,.92);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--brd);padding:10px 0;margin-top:18px}
+.topbar-in{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;align-items:center}
+.pill{border:1.5px solid var(--brd2);background:var(--pann);color:var(--testo);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:600;min-height:44px;display:inline-flex;align-items:center;gap:8px;transition:all .18s}
+.pill:hover{border-color:var(--ciano);background:var(--cianoL)}
+.pill.attiva{background:var(--ciano);color:#06121F;border-color:var(--ciano);box-shadow:0 0 14px rgba(59,201,236,.35)}
+.pill .p-num{font-family:var(--mono);font-size:12.5px;font-weight:700;background:var(--soleL);color:var(--sole);border-radius:999px;width:23px;height:23px;display:inline-flex;align-items:center;justify-content:center}
+.pill.attiva .p-num{background:#06121F;color:var(--sole)}
+.pill-doc{border-color:var(--brd2);color:var(--muted)}
+.pill-doc:hover{color:var(--ciano)}
+
+/* ============ SEZIONI ============ */
+.sezione{display:none;padding:40px 0 60px}
+.sezione.attiva{display:block;animation:appare .4s ease}
+@keyframes appare{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.s-head{margin-bottom:26px}
+.s-etich{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--ciano);background:var(--cianoL);border:1px solid rgba(59,201,236,.3);border-radius:999px;padding:6px 16px;margin-bottom:12px}
+h2{font-size:2rem}
+.s-intro{font-size:1.12rem;color:var(--muted);margin-top:8px;max-width:74ch}
+h3{font-size:1.32rem;margin:30px 0 12px}
+.card{background:var(--pann);border:1.5px solid var(--brd);border-radius:16px;padding:22px 24px}
+.fact{background:var(--cianoL);border-left:4px solid var(--ciano);border-radius:0 12px 12px 0;padding:16px 20px;margin:18px 0;max-width:74ch}
+.fact-t{font-family:var(--head);font-weight:700;font-size:13.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ciano);margin-bottom:6px}
+.azione{background:var(--soleL);border:1.5px solid rgba(255,201,61,.4);border-radius:16px;padding:20px 24px;margin:34px 0 6px;max-width:84ch}
+.azione-t{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:700;font-size:1.08rem;color:var(--sole);margin-bottom:8px}
+.azione p{margin-bottom:6px}
+.nota-muta{font-size:13.5px;color:var(--muted)}
+
+/* bottoni */
+.btn-avanti{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,var(--sole),var(--sole2));color:#231500;border:none;border-radius:12px;padding:14px 26px;font-size:17px;font-weight:700;margin-top:30px;box-shadow:0 0 18px rgba(255,201,61,.28);min-height:48px}
+.btn-avanti:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(255,201,61,.45)}
+.btn-tech{display:inline-flex;align-items:center;gap:8px;background:var(--ciano);color:#06121F;border:none;border-radius:12px;padding:12px 22px;font-size:16px;font-weight:700;min-height:46px}
+.btn-tech:hover{box-shadow:0 0 16px rgba(59,201,236,.45)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--testo);border:1.5px solid var(--brd2);border-radius:12px;padding:11px 20px;font-size:15.5px;font-weight:600;min-height:46px}
+.btn-ghost:hover{border-color:var(--ciano);color:var(--ciano)}
+
+/* ============ SCHERMI (cornice da sala controllo) ============ */
+.schermo{background:#060F1B;border:1.5px solid var(--brd);border-radius:14px;padding:12px;box-shadow:inset 0 0 30px rgba(59,201,236,.05)}
+.schermo-label{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);margin:2px 4px 10px}
+.schermo-label .led{width:8px;height:8px}
+
+/* ============ PLAYER AUDIO ============ */
+.player{background:var(--pann2);border:1.5px solid var(--brd2);border-radius:16px;padding:18px 20px;margin:14px 0}
+.player-testa{display:flex;align-items:center;gap:14px}
+.pl-btn{flex:0 0 auto;width:58px;height:58px;border-radius:50%;border:none;background:linear-gradient(180deg,var(--sole),var(--sole2));color:#231500;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(255,201,61,.3)}
+.pl-btn:hover{box-shadow:0 0 24px rgba(255,201,61,.5)}
+.pl-info{flex:1;min-width:0}
+.pl-titolo{font-family:var(--head);font-weight:700;font-size:1.05rem}
+.pl-barra{height:12px;background:#0A1828;border:1px solid var(--brd);border-radius:999px;margin-top:10px;cursor:pointer;position:relative;overflow:hidden}
+.pl-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ciano),var(--sole));border-radius:999px}
+.pl-tempo{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px;display:flex;justify-content:space-between}
+.pl-badge{display:none;margin-top:10px;background:var(--ambraL);border:1px solid var(--ambra);color:var(--ambra);border-radius:10px;padding:8px 14px;font-family:var(--head);font-size:14px;font-weight:600}
+.pl-badge.mostra{display:inline-block}
+/* card-concetto sincronizzate */
+.vcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px}
+.vcard{background:var(--pann);border:1.5px dashed var(--brd2);border-radius:14px;padding:14px 16px;opacity:.45;transition:all .5s;position:relative}
+.vcard .v-num{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:1px;color:var(--muted)}
+.vcard .v-tit{font-family:var(--head);font-weight:700;font-size:1rem;margin-top:4px}
+.vcard .v-txt{font-size:14.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+.vcard .v-lucchetto{position:absolute;top:12px;right:12px;width:20px;height:20px}
+.vcard.viva{opacity:1;border-style:solid;border-color:var(--sole);box-shadow:0 0 14px rgba(255,201,61,.15)}
+.vcard.viva .v-lucchetto{display:none}
+.vcard.viva .v-num{color:var(--sole)}
+.trascrizione{margin-top:14px}
+.trascrizione summary{font-family:var(--head);font-size:14.5px;font-weight:600;color:var(--ciano);cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px}
+.trascrizione .tr-corpo{background:var(--pann);border:1px solid var(--brd);border-radius:12px;padding:16px 20px;margin-top:8px;max-width:74ch}
+.trascrizione .tr-corpo p{font-size:16.5px}
+
+/* ============ SEZIONE 1: SCOPERTA ============ */
+.scoperta-grid{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:34px;align-items:start;margin-top:10px}
+.stimolo-fig{margin:0}
+.stimolo-img-box{position:relative;border:1.5px solid var(--brd2);border-radius:16px;overflow:hidden;cursor:zoom-in;background:#fff;box-shadow:0 0 24px rgba(59,201,236,.12)}
+.stimolo-img-box img{width:100%;height:430px;object-fit:cover;object-position:top;display:block}
+.stimolo-sfuma{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,rgba(6,15,27,.92));display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px}
+.stimolo-apri{display:inline-flex;align-items:center;gap:8px;background:var(--ciano);color:#06121F;border-radius:999px;padding:9px 18px;font-family:var(--head);font-size:14.5px;font-weight:700}
+.stimolo-fig figcaption{font-size:14.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.osserva-box textarea,.meta-card textarea{width:100%;min-height:110px;border:1.5px solid var(--brd2);border-radius:12px;padding:14px;font-family:var(--body);font-size:18px;resize:vertical;background:#0C1A2C;color:var(--testo)}
+.osserva-box textarea:focus,.meta-card textarea:focus{border-color:var(--ciano);outline:none}
+.scaffold{background:var(--pann2);border-radius:12px;padding:14px 18px;margin-top:12px;font-size:15.5px}
+.scaffold-t{font-family:var(--head);font-weight:700;font-size:13px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.scaffold ul{margin-left:20px}
+.scaffold li{margin-bottom:3px}
+.lightbox{display:none;position:fixed;inset:0;z-index:200;background:rgba(3,8,15,.94);overflow:auto;padding:30px 16px;text-align:center}
+.lightbox.aperta{display:block}
+.lightbox img{max-width:min(950px,96%);border-radius:12px}
+.lightbox-chiudi{position:fixed;top:18px;right:22px;background:var(--ciano);border:none;border-radius:999px;width:48px;height:48px;display:flex;align-items:center;justify-content:center}
+
+/* ============ SEZIONE 2: kWh ============ */
+.kwh-scala{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:24px 0}
+.kwh-step{background:var(--pann);border:1.5px solid var(--brd);border-radius:16px;padding:20px;text-align:center}
+.kwh-step .icona{width:52px;height:52px;margin:0 auto 10px;display:block}
+.kwh-step .unita{font-family:var(--mono);font-weight:700;font-size:1.5rem}
+.kwh-step .desc{font-size:15.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.conv-controlli{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:16px 0 8px}
+.conv-controlli label{font-family:var(--head);font-weight:600}
+.conv-input{font-family:var(--mono);font-weight:700;font-size:22px;width:150px;border:1.5px solid var(--brd2);border-radius:12px;padding:10px 14px;color:var(--sole);background:#0C1A2C}
+.conv-input:focus{border-color:var(--ciano);outline:none}
+.chip{border:1.5px solid var(--brd2);background:var(--pann);border-radius:999px;padding:9px 16px;font-family:var(--head);font-size:14.5px;font-weight:600;color:var(--testo);min-height:44px}
+.chip:hover{border-color:var(--sole);background:var(--soleL)}
+.chip.on{background:var(--sole);color:#231500;border-color:var(--sole)}
+.chip .c-num{font-family:var(--mono)}
+.equiv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px;margin-top:18px}
+.equiv-card{background:var(--pann2);border:1.5px solid var(--brd);border-radius:16px;padding:18px;text-align:center;transition:transform .15s}
+.equiv-card:hover{transform:translateY(-3px);border-color:var(--brd2)}
+.equiv-card .icona{width:46px;height:46px;margin:0 auto 8px;display:block}
+.equiv-val{font-family:var(--mono);font-weight:700;font-size:1.7rem;color:var(--sole)}
+.equiv-nome{font-family:var(--head);font-weight:600;font-size:15.5px;margin-top:4px}
+.equiv-nota{font-size:13.5px;color:var(--muted);margin-top:4px}
+
+/* ============ SEZIONE 3: NUMERI ============ */
+.tot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:20px 0}
+.tot-card{background:var(--pann);border:1.5px solid var(--brd);border-radius:16px;padding:20px;border-top:4px solid var(--ciano)}
+.tot-card.t-sole{border-top-color:var(--sole)}
+.tot-card.t-verde{border-top-color:var(--energia)}
+.tot-card.t-muted{border-top-color:var(--brd2)}
+.tot-nome{font-family:var(--head);font-weight:600;font-size:14px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+.tot-val{font-family:var(--mono);font-weight:700;font-size:2rem;margin:6px 0 8px}
+.tot-val .u{font-size:1.05rem;color:var(--muted);font-weight:500}
+.tot-desc{font-size:15.5px;color:var(--muted);line-height:1.5}
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
+.eco-card{background:var(--energiaL);border:1.5px solid rgba(61,220,151,.4);border-radius:16px;padding:20px;text-align:center}
+.eco-card .icona{width:50px;height:50px;margin:0 auto 8px;display:block}
+.eco-val{font-family:var(--mono);font-weight:700;font-size:1.9rem;color:var(--energia)}
+.eco-nome{font-family:var(--head);font-weight:600;margin-top:4px}
+.eco-come{margin-top:10px}
+.eco-come summary{font-family:var(--head);font-size:14px;font-weight:600;color:var(--ciano);cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center}
+.eco-come .spiega{font-size:14.5px;text-align:left;background:var(--pann);border-radius:10px;padding:12px 14px;margin-top:8px;line-height:1.55}
+.detective{margin-top:26px}
+.det-card{background:var(--pann);border:1.5px solid var(--brd);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.det-card summary{display:flex;align-items:center;gap:12px;padding:16px 20px;font-family:var(--head);font-weight:600;font-size:1.02rem;cursor:pointer;min-height:52px;list-style:none}
+.det-card summary::-webkit-details-marker{display:none}
+.det-card summary .lente{flex:0 0 auto;width:28px;height:28px}
+.det-card .det-corpo{padding:0 20px 18px;border-top:1px dashed var(--brd2)}
+.det-card .det-corpo p{padding-top:12px;margin-bottom:8px;font-size:16.5px}
+.flusso-box{margin:26px 0}
+.flusso-box svg{width:100%;height:auto;max-width:900px;display:block;margin:0 auto}
+
+/* ============ SEZIONE 4: SIMULATORE ============ */
+.sim-grid{display:grid;grid-template-columns:310px minmax(0,1fr) 250px;gap:20px;margin-top:14px;align-items:start}
+.sim-pan{background:var(--pann);border:1.5px solid var(--brd);border-radius:16px;padding:20px}
+.sim-pan h3{margin:0 0 14px;font-size:1.1rem}
+.stagioni{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.stg{border:1.5px solid var(--brd2);background:var(--pann2);border-radius:12px;padding:10px 14px;font-family:var(--head);font-weight:600;font-size:15px;color:var(--testo);text-align:left;display:flex;align-items:center;gap:10px;min-height:46px}
+.stg .s-ic{width:26px;height:26px;flex:0 0 auto}
+.stg.on{background:var(--ciano);color:#06121F;border-color:var(--ciano)}
+.meteo-riga{display:flex;gap:8px;margin-bottom:8px}
+.mbtn{flex:1;border:1.5px solid var(--brd2);background:var(--pann2);border-radius:12px;padding:9px 10px;font-family:var(--head);font-weight:600;font-size:14px;color:var(--testo);display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px}
+.mbtn .s-ic{width:22px;height:22px}
+.mbtn.on{background:var(--sole);color:#231500;border-color:var(--sole)}
+.previsioni{font-size:13.5px;color:var(--muted);background:var(--pann2);border-radius:10px;padding:8px 12px;margin-bottom:16px;min-height:38px}
+.previsioni .num{color:var(--ciano)}
+.slider-blocco{margin-bottom:16px}
+.slider-testa{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.slider-testa .s-l{font-family:var(--head);font-weight:600;font-size:15.5px}
+.slider-testa .s-v{font-family:var(--mono);font-weight:700;font-size:15px;background:var(--soleL);color:var(--sole);border-radius:8px;padding:3px 10px}
+input[type=range]{width:100%;accent-color:var(--sole);height:44px;background:transparent}
+.slider-scala{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.compass-box{text-align:center;margin-top:4px}
+.compass-box svg{width:120px;height:120px}
+.btn-giorno{width:100%;justify-content:center;margin-top:8px}
+.btn-giorno[disabled]{opacity:.55;cursor:default;transform:none}
+.scena-card{padding:14px}
+.scena-card svg{width:100%;height:auto;display:block}
+.curva-wrap{margin-top:12px}
+.sim-dati .dato{margin-bottom:18px}
+.dato-l{font-family:var(--head);font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.dato-v{font-family:var(--mono);font-weight:700;font-size:1.9rem}
+.dato-v .u{font-size:1rem;color:var(--muted);font-weight:500}
+.dato-pw .dato-v{color:var(--ciano);text-shadow:0 0 12px rgba(59,201,236,.4)}
+.dato-en .dato-v{color:var(--sole);text-shadow:0 0 12px rgba(255,201,61,.35)}
+.dato-km .dato-v{color:var(--energia);text-shadow:0 0 12px rgba(61,220,151,.35)}
+.pw-barra{height:14px;background:#0A1828;border:1px solid var(--brd);border-radius:999px;overflow:hidden;margin-top:6px}
+.pw-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ciano),var(--sole));border-radius:999px;transition:width .1s linear}
+.record-riga{font-size:14.5px;color:var(--muted);border-top:1px dashed var(--brd2);padding-top:12px}
+.record-riga .num{color:var(--sole)}
+.strada-card{margin-top:20px;padding:18px 18px 8px}
+.strada-testa{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.strada-testa h3{margin:0;font-size:1.15rem}
+.km-live{font-family:var(--mono);font-weight:700;font-size:1.5rem;color:var(--energia)}
+.km-live .u{font-size:.95rem;color:var(--muted);font-weight:500}
+.strada-card svg{width:100%;height:auto;display:block}
+@keyframes ruota{to{transform:rotate(360deg)}}
+.ruota{transform-box:fill-box;transform-origin:center}
+.in-moto .ruota{animation:ruota .5s linear infinite}
+.missioni-card{margin-top:20px}
+.missioni-lista{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.missione{display:inline-flex;align-items:center;gap:9px;border:1.5px dashed var(--brd2);border-radius:999px;padding:9px 16px;font-family:var(--head);font-size:14px;font-weight:600;color:var(--muted);min-height:44px}
+.missione .m-ic{width:20px;height:20px;flex:0 0 auto}
+.missione.fatta{border-style:solid;border-color:var(--energia);color:var(--energia);background:var(--energiaL)}
+.risultato{display:none;margin-top:20px;border-left:6px solid var(--ciano)}
+.risultato.mostra{display:block;animation:appare .4s ease}
+.risultato.r-oro{border-left-color:var(--sole)}
+.risultato.r-verde{border-left-color:var(--energia)}
+.risultato.r-ambra{border-left-color:var(--ambra)}
+.ris-testa{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.ris-testa .medaglia{width:52px;height:52px;flex:0 0 auto}
+.ris-titolo{font-family:var(--head);font-weight:700;font-size:1.35rem}
+.ris-sottotitolo{color:var(--muted);font-size:15px}
+.ris-dati{display:flex;flex-wrap:wrap;gap:26px;margin:12px 0}
+.ris-dato{display:flex;flex-direction:column}
+.ris-dato .rd-l{font-size:13px;color:var(--muted);font-family:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.ris-dato .rd-v{font-family:var(--mono);font-weight:700;font-size:1.5rem}
+.ris-msg{max-width:84ch;margin-bottom:8px}
+.ris-btn{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+
+/* ============ SEZIONE 5: CODING ============ */
+.cod-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;margin-top:14px;align-items:start}
+.prog-righe{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.prog-riga{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--pann2);border:1.5px solid var(--brd2);border-radius:12px;padding:10px 12px}
+.pr-t{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ciano)}
+.prog-riga select{font-family:var(--mono);font-weight:700;font-size:16px;background:#0C1A2C;color:var(--sole);border:1.5px solid var(--brd2);border-radius:8px;padding:8px 10px;min-height:44px}
+.pr-x{background:transparent;border:1.5px solid var(--brd2);color:var(--muted);border-radius:8px;width:40px;height:40px;font-size:18px;margin-left:auto;display:flex;align-items:center;justify-content:center}
+.pr-x:hover{border-color:var(--ambra);color:var(--ambra)}
+.prog-note{font-size:14px;color:var(--muted)}
+.pseudocodice{background:#060F1B;border:1.5px solid var(--brd);border-radius:12px;padding:16px 18px;font-family:var(--mono);font-size:14.5px;line-height:1.8;color:var(--ciano);overflow-x:auto;white-space:pre;margin-top:12px}
+.pseudocodice .pc-kw{color:var(--sole)}
+.cod-stagioni{display:flex;gap:8px;margin:8px 0 4px;flex-wrap:wrap}
+.cod-ris .dato{margin-bottom:14px}
+.badge-prog{display:none;margin-top:12px;background:var(--soleL);border:1.5px solid var(--sole);border-radius:12px;padding:12px 16px;font-family:var(--head);font-weight:700;color:var(--sole);align-items:center;gap:10px}
+.badge-prog.mostra{display:inline-flex}
+.badge-prog svg{width:26px;height:26px;flex:0 0 auto}
+
+/* ============ SEZIONE 6: QUIZ ============ */
+.quiz-box{max-width:820px}
+.quiz-prog{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.quiz-prog .qp-txt{font-family:var(--mono);font-weight:600;font-size:13.5px;color:var(--muted);white-space:nowrap}
+.qp-barra{flex:1;height:12px;background:#0A1828;border:1px solid var(--brd);border-radius:999px;overflow:hidden}
+.qp-fill{height:100%;width:0;background:linear-gradient(90deg,var(--ciano),var(--sole));transition:width .3s}
+.quiz-dom{font-family:var(--head);font-weight:600;font-size:1.3rem;margin-bottom:18px}
+.quiz-opz{display:flex;flex-direction:column;gap:10px}
+.opz{display:flex;align-items:center;gap:12px;text-align:left;background:var(--pann2);border:1.5px solid var(--brd2);border-radius:12px;padding:14px 18px;font-family:var(--body);font-size:17.5px;color:var(--testo);min-height:52px;transition:all .15s}
+.opz:hover{border-color:var(--ciano);background:var(--cianoL)}
+.opz .segno{flex:0 0 auto;width:26px;height:26px;visibility:hidden}
+.opz.giusta{border-color:var(--energia);background:var(--energiaL)}
+.opz.sbagliata{border-color:var(--ambra);background:var(--ambraL)}
+.opz.giusta .segno,.opz.sbagliata .segno{visibility:visible}
+.opz[disabled]{cursor:default}
+.quiz-spiega{display:none;margin-top:16px;border-radius:12px;padding:16px 20px;font-size:16.5px;line-height:1.6}
+.quiz-spiega.ok{display:block;background:var(--energiaL);border:1.5px solid var(--energia)}
+.quiz-spiega.ko{display:block;background:var(--ambraL);border:1.5px solid var(--ambra)}
+.quiz-spiega .qs-t{font-family:var(--head);font-weight:700;margin-bottom:4px}
+.quiz-fine{display:none;text-align:center;padding:20px 0}
+.quiz-fine.mostra{display:block;animation:appare .4s ease}
+.anello{width:170px;height:170px;border-radius:50%;margin:14px auto;display:flex;align-items:center;justify-content:center}
+.anello-in{width:128px;height:128px;border-radius:50%;background:var(--pann);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.anello-in .a-num{font-family:var(--mono);font-weight:700;font-size:2rem}
+.anello-in .a-lab{font-size:13px;color:var(--muted)}
+.quiz-medaglia{font-family:var(--head);font-weight:700;font-size:1.3rem;margin:8px 0 4px}
+.quiz-comm{color:var(--muted);max-width:56ch;margin:0 auto 10px}
+
+/* ============ SEZIONE 7: META ============ */
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin:22px 0}
+.meta-card label{font-family:var(--head);font-weight:600;font-size:1.05rem;display:block;margin-bottom:10px}
+.meta-card textarea{min-height:130px}
+.privacy-nota{font-size:14.5px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-top:8px}
+.copiato-avviso{display:none;color:var(--energia);font-family:var(--head);font-weight:600;margin-left:10px}
+
+/* ============ MODAL DOCENTI ============ */
+.modal{display:none;position:fixed;inset:0;z-index:150;background:rgba(3,8,15,.75);padding:30px 16px;overflow:auto}
+.modal.aperta{display:flex;align-items:flex-start;justify-content:center}
+.modal-box{background:var(--pann);border:1.5px solid var(--brd2);border-radius:18px;max-width:840px;width:100%;padding:28px 30px;position:relative}
+.modal-titolo{font-size:1.5rem}
+.modal-chiudi{position:absolute;top:14px;right:14px;background:var(--pann2);border:1.5px solid var(--brd2);border-radius:999px;width:44px;height:44px;display:flex;align-items:center;justify-content:center}
+.modal-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 20px}
+.mtab{border:1.5px solid var(--brd2);background:var(--pann2);border-radius:999px;padding:8px 18px;font-family:var(--head);font-weight:600;font-size:14.5px;color:var(--testo);min-height:44px}
+.mtab.on{background:var(--ciano);color:#06121F;border-color:var(--ciano)}
+.mtab-corpo{display:none;font-size:16.5px}
+.mtab-corpo.on{display:block}
+.mtab-corpo ul{margin:0 0 14px 22px}
+.mtab-corpo li{margin-bottom:7px}
+
+footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;text-align:center;color:var(--muted);font-size:14.5px}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1100px){
+  .sim-grid{grid-template-columns:290px 1fr}
+  .sim-dati{grid-column:1 / -1;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 26px}
+  .cod-grid{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  h1{font-size:2rem}
+  .scoperta-grid{grid-template-columns:1fr}
+  .kwh-scala{grid-template-columns:1fr}
+  .sim-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BRAND ============ -->
+<div class="brandbar">
+  <div class="brand-txt">
+    <span class="brand-name">Scuola Sacra Famiglia</span>
+    <span class="brand-role">Animatore Digitale &middot; Andrea Cerioli</span>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="wrap">
+  <svg class="hero-sun" viewBox="0 0 48 48" role="img" aria-label="Sole sopra un pannello solare">
+    <circle cx="24" cy="20" r="8" fill="var(--sole)"/>
+    <g stroke="var(--sole)" stroke-width="2.4" stroke-linecap="round">
+      <line x1="24" y1="6" x2="24" y2="9.5"/><line x1="34" y1="10" x2="31.5" y2="12.5"/>
+      <line x1="38" y1="20" x2="34.5" y2="20"/><line x1="14" y1="10" x2="16.5" y2="12.5"/>
+      <line x1="10" y1="20" x2="13.5" y2="20"/>
+    </g>
+    <rect x="9" y="33" width="30" height="8" rx="1.8" fill="var(--ciano)"/>
+    <line x1="19" y1="33" x2="19" y2="41" stroke="var(--sfondo)" stroke-width="1.6"/>
+    <line x1="29" y1="33" x2="29" y2="41" stroke="var(--sfondo)" stroke-width="1.6"/>
+  </svg>
+  <h1>Cacciatori di <span class="h-sole">Sole</span></h1>
+  <p class="sottotitolo">Benvenuto nella <span class="evidenza">sala di controllo</span> del fotovoltaico della nostra scuola: impara a leggere l&rsquo;energia, insegui il sole, poi <span class="evidenza">programmalo</span>.</p>
+  <div class="statobar" role="status">
+    <span class="led" aria-hidden="true"></span>
+    <span>Impianto Piscina Andreana</span><span class="sep">|</span>
+    <span>Orzinuovi</span><span class="sep">|</span>
+    <span>Sistema attivo</span>
+  </div>
+</header>
+
+<!-- ============ TOPBAR ============ -->
+<nav class="topbar" aria-label="Sezioni del percorso">
+  <div class="wrap topbar-in" id="navPills"></div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============================================================
+     SEZIONE 1 — LA SCOPERTA
+============================================================ -->
+<section class="sezione" id="sez-0">
+  <div class="s-head">
+    <span class="s-etich">Passo 1 &middot; La scoperta</span>
+    <h2>Una centrale nascosta sul tetto</h2>
+    <p class="s-intro">Prima di ogni spiegazione, guarda con i tuoi occhi: questa &egrave; la schermata <strong>vera</strong> del computer che controlla l&rsquo;impianto fotovoltaico della nostra piscina, fotografata il 9 luglio 2026 alle 05:47 del mattino.</p>
+  </div>
+
+  <div class="scoperta-grid">
+    <figure class="stimolo-fig">
+      <div class="stimolo-img-box" id="stimoloBox" role="button" tabindex="0" aria-label="Apri la schermata completa del portale di monitoraggio">
+        <img src="impianto-reale.png" alt="Schermata del portale di monitoraggio dell'impianto fotovoltaico della Piscina Andreana: totali di energia generata, consumata, esportata e importata, grafici giornalieri e mensili">
+        <div class="stimolo-sfuma"><span class="stimolo-apri">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          <span>Tocca per vedere tutta la schermata</span>
+        </span></div>
+      </div>
+      <figcaption>Il portale di monitoraggio dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo; di Orzinuovi. Ogni numero che vedi &egrave; reale.</figcaption>
+
+      <div class="osserva-box" style="margin-top:22px">
+        <h3 style="margin-top:0">Prima consegna: osserva</h3>
+        <p>Apri la schermata e guardala per un minuto intero, come un detective. Poi scrivi qui <strong>2 o 3 cose che noti</strong>.</p>
+        <textarea id="osservazioni" aria-label="Le tue osservazioni sulla schermata"></textarea>
+        <div class="scaffold">
+          <div class="scaffold-t">Cosa guardare (se non sai da dove partire)</div>
+          <ul>
+            <li>Quali <strong>unit&agrave; di misura</strong> compaiono? Le conosci tutte?</li>
+            <li>C&rsquo;&egrave; un numero <strong>enorme</strong> e un numero <strong>piccolissimo</strong>: quali?</li>
+            <li>Cosa c&rsquo;entrano gli <strong>alberi</strong>, i <strong>chilometri</strong> e la <strong>CO<sub>2</sub></strong> con l&rsquo;elettricit&agrave;?</li>
+            <li>A che <strong>ora</strong> &egrave; stata fatta questa fotografia?</li>
+          </ul>
+        </div>
+      </div>
+    </figure>
+
+    <div>
+      <h3 style="margin-top:0">Ora ascolta: com&rsquo;&egrave; cominciata</h3>
+      <div class="player" data-player="scoperta">
+        <div class="player-testa">
+          <button class="pl-btn" aria-label="Riproduci o metti in pausa il racconto">
+            <svg class="ic-play" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+            <svg class="ic-pause" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1.5"/><rect x="13.5" y="4.5" width="4.5" height="15" rx="1.5"/></svg>
+          </button>
+          <div class="pl-info">
+            <div class="pl-titolo">Traccia 01 &middot; La centrale invisibile</div>
+            <div class="pl-barra" role="slider" aria-label="Avanzamento audio"><div class="pl-fill"></div></div>
+            <div class="pl-tempo"><span class="pl-corr">0:00</span><span class="pl-tot">--:--</span></div>
+          </div>
+        </div>
+        <span class="pl-badge">Traccia MP3 in preparazione: intanto le card sono gi&agrave; sbloccate e puoi leggere il testo qui sotto.</span>
+      </div>
+
+      <div class="vcards" data-vcards="scoperta">
+        <div class="vcard" data-t="0">
+          <span class="v-num">01</span>
+          <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <div class="v-tit">La centrale che nessuno vede</div>
+          <div class="v-txt">Niente ciminiere, niente rumore: ci passi accanto ogni giorno.</div>
+        </div>
+        <div class="vcard" data-t="22">
+          <span class="v-num">02</span>
+          <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <div class="v-tit">La fotografia delle 05:47</div>
+          <div class="v-txt">Il sole era appena sorto e la centrale gi&agrave; lavorava, piano piano.</div>
+        </div>
+        <div class="vcard" data-t="45">
+          <span class="v-num">03</span>
+          <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <div class="v-tit">Il mistero: 23.297 km</div>
+          <div class="v-txt">Chilometri? Ma se i pannelli stanno fermi sul tetto&hellip; Messo da parte: ci torneremo.</div>
+        </div>
+        <div class="vcard" data-t="68">
+          <span class="v-num">04</span>
+          <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <div class="v-tit">La chiave: tre lettere</div>
+          <div class="v-txt">Tutta la schermata parla una lingua sola: k-W-h. Si impara al passo 2.</div>
+        </div>
+      </div>
+
+      <details class="trascrizione">
+        <summary>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h9l5 5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5M8 13h8M8 17h6"/></svg>
+          <span>Preferisci leggere? Apri il testo del racconto</span>
+        </summary>
+        <div class="tr-corpo">
+          <p>C&rsquo;&egrave; una centrale elettrica nella nostra scuola. Non ha ciminiere, non fa rumore, non manda fumo. Ci passi accanto tutti i giorni, e non la vedi. Per tanto tempo non l&rsquo;ho vista neanche io.</p>
+          <p>Poi, una mattina d&rsquo;estate &mdash; il nove luglio, alle cinque e quarantasette &mdash; ho aperto il computer che la controlla, e ho fotografato il suo pannello di controllo. &Egrave; la schermata che hai davanti: ogni numero che leggi &egrave; vero.</p>
+          <p>Quella mattina la centrale aveva gi&agrave; cominciato a lavorare. Piano, pianissimo: il sole era sorto da pochi minuti. Ma nel suo totale, lavorando in silenzio giorno dopo giorno, aveva gi&agrave; prodotto quasi settemila kilowattora.</p>
+          <p>Tra tutti i numeri, per&ograve;, uno mi ha incuriosito pi&ugrave; degli altri: ventitremila duecentonovantasette. Chilometri. Chilometri? I pannelli stanno fermi, fissati sul tetto della piscina. Di quale viaggio parliamo? Ecco: questo mistero non te lo svelo adesso. Lo metto da parte, e ci torneremo, promesso.</p>
+          <p>Prima ti serve una chiave. Perch&eacute; tutta quella schermata parla una lingua sola, fatta di tre lettere: kappa, doppia vu, acca. Impariamola insieme &mdash; e la centrale invisibile non avr&agrave; pi&ugrave; segreti.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <button class="btn-avanti" data-vai="1"><span>Impariamo la lingua dei kWh</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 2 — IL kWh
+============================================================ -->
+<section class="sezione" id="sez-1">
+  <div class="s-head">
+    <span class="s-etich">Passo 2 &middot; La lingua dell&rsquo;energia</span>
+    <h2>Che cos&rsquo;&egrave; un kWh?</h2>
+    <p class="s-intro">Watt, kilowatt, kilowattora: sembrano parole da ingegneri, ma funzionano come la bicicletta. Ascolta la traccia: le card si accendono man mano che la voce ci arriva.</p>
+  </div>
+
+  <div class="player" data-player="kwh" style="max-width:820px">
+    <div class="player-testa">
+      <button class="pl-btn" aria-label="Riproduci o metti in pausa la spiegazione">
+        <svg class="ic-play" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+        <svg class="ic-pause" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1.5"/><rect x="13.5" y="4.5" width="4.5" height="15" rx="1.5"/></svg>
+      </button>
+      <div class="pl-info">
+        <div class="pl-titolo">Traccia 02 &middot; Potenza ed energia, in bicicletta</div>
+        <div class="pl-barra" role="slider" aria-label="Avanzamento audio"><div class="pl-fill"></div></div>
+        <div class="pl-tempo"><span class="pl-corr">0:00</span><span class="pl-tot">--:--</span></div>
+      </div>
+    </div>
+    <span class="pl-badge">Traccia MP3 in preparazione: intanto le card sono gi&agrave; sbloccate e puoi leggere il testo qui sotto.</span>
+  </div>
+
+  <div class="vcards" data-vcards="kwh" style="max-width:1100px">
+    <div class="vcard" data-t="6">
+      <span class="v-num">01</span>
+      <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <div class="v-tit">Watt = la spinta di adesso</div>
+      <div class="v-txt">Quanto premi sui pedali in questo istante. LED: 10 W. Phon: 2.000 W.</div>
+    </div>
+    <div class="vcard" data-t="32">
+      <span class="v-num">02</span>
+      <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <div class="v-tit">kWh = tutta la strada fatta</div>
+      <div class="v-txt">Il lavoro completo, dall&rsquo;inizio alla fine della pedalata.</div>
+    </div>
+    <div class="vcard" data-t="50">
+      <span class="v-num">03</span>
+      <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <div class="v-tit">1 kWh = 1.000 W &times; 1 ora</div>
+      <div class="v-txt">La regola unica. &Egrave; esattamente ci&ograve; che conta il contatore.</div>
+    </div>
+    <div class="vcard" data-t="66">
+      <span class="v-num">04</span>
+      <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <div class="v-tit">Quanto vale 1 kWh?</div>
+      <div class="v-txt">Pi&ugrave; di 30 ricariche di iPad, 100 ore di LED, 6 km in auto elettrica.</div>
+    </div>
+    <div class="vcard" data-t="86">
+      <span class="v-num">05</span>
+      <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      <div class="v-tit">La trappola: kW &ne; kWh</div>
+      <div class="v-txt">kW &egrave; la spinta di adesso, kWh la strada fatta. Non confonderli mai.</div>
+    </div>
+  </div>
+
+  <details class="trascrizione">
+    <summary>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h9l5 5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5M8 13h8M8 17h6"/></svg>
+      <span>Preferisci leggere? Apri il testo della spiegazione</span>
+    </summary>
+    <div class="tr-corpo">
+      <p>Per leggere la nostra centrale devi conoscere due parole: potenza, ed energia. Sembrano uguali, ma non lo sono. E te lo spiego con la bicicletta.</p>
+      <p>La potenza &egrave; quanto stai spingendo sui pedali in questo preciso momento: puoi pedalare piano, o dare tutto in salita. Si misura in watt. Una lampadina led spinge pochissimo: dieci watt. Un asciugacapelli invece sprinta: duemila watt.</p>
+      <p>L&rsquo;energia, invece, &egrave; tutta la strada che hai fatto pedalando: il lavoro completo, dall&rsquo;inizio alla fine. E si misura in kilowattora.</p>
+      <p>La regola &egrave; una sola, tienila stretta: un kilowattora &egrave; il lavoro di mille watt che spingono per un&rsquo;ora intera. Il contatore di casa tua conta esattamente questo.</p>
+      <p>E adesso la domanda vera: un kilowattora &egrave; tanto, o &egrave; poco? Pensa: con un solo kilowattora ricarichi il tuo iPad pi&ugrave; di trenta volte. Oppure tieni accesa una lampadina led per cento ore. Oppure fai sei chilometri con un&rsquo;auto elettrica.</p>
+      <p>Attento per&ograve; alla trappola: kilowatt e kilowattora non sono la stessa cosa. Il kilowatt &egrave; la spinta di adesso; il kilowattora &egrave; la strada fatta. Chi li confonde legge i numeri al contrario. Tu, da oggi, non li confonderai pi&ugrave;.</p>
+    </div>
+  </details>
+
+  <div class="kwh-scala">
+    <div class="kwh-step">
+      <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <div class="unita">W &middot; watt</div>
+      <div class="desc">La potenza: quanto &laquo;spinge&raquo; adesso. Una lampadina LED: circa 10 W.</div>
+    </div>
+    <div class="kwh-step">
+      <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+      <div class="unita">kW &middot; kilowatt</div>
+      <div class="desc">1 kW = 1.000 W. Un asciugacapelli al massimo: circa 2 kW di potenza.</div>
+    </div>
+    <div class="kwh-step">
+      <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+      <div class="unita">kWh &middot; kilowattora</div>
+      <div class="desc">L&rsquo;energia: 1.000 W per 1 ora di lavoro. &Egrave; ci&ograve; che conta il contatore.</div>
+    </div>
+  </div>
+
+  <h3>Il convertitore: quanto vale un kWh nella tua vita?</h3>
+  <div class="card convertitore">
+    <p style="margin-bottom:4px">Scegli una quantit&agrave; di energia (o scrivila tu) e guarda cosa ci potresti fare davvero.</p>
+    <div class="conv-controlli">
+      <label for="convInput">Energia:</label>
+      <input type="number" class="conv-input" id="convInput" value="1" min="0" step="0.1" inputmode="decimal" aria-label="Quantità di energia in kilowattora"> <span style="font-family:var(--head);font-weight:600">kWh</span>
+      <span id="convChips" style="display:inline-flex;flex-wrap:wrap;gap:8px"></span>
+    </div>
+    <div class="equiv-grid" id="equivGrid"></div>
+    <p class="nota-muta" style="margin:14px 0 0">Valori arrotondati, calcolati con consumi tipici: servono per farsi un&rsquo;idea, non per fare l&rsquo;ingegnere (per ora).</p>
+  </div>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Stasera, a casa, cerca <strong>l&rsquo;etichetta con i watt</strong> su tre apparecchi diversi (caricabatterie, phon, microonde, lampada&hellip;). Scrivili sul diario e portali domani: costruiremo la classifica dei &laquo;pesi massimi&raquo; della classe. Chi trover&agrave; l&rsquo;apparecchio pi&ugrave; potente? E quello pi&ugrave; parsimonioso?</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="2"><span>Ora leggiamo i numeri veri</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+<!-- ============================================================
+     SEZIONE 3 — I NUMERI VERI
+============================================================ -->
+<section class="sezione" id="sez-2">
+  <div class="s-head">
+    <span class="s-etich">Passo 3 &middot; I numeri veri</span>
+    <h2>Il cruscotto della nostra centrale</h2>
+    <p class="s-intro">Adesso che parli la lingua dei kWh, torniamo alla schermata vera. Ogni parola del portale descrive un viaggio diverso dell&rsquo;energia.</p>
+  </div>
+
+  <h3 style="margin-top:6px">Il viaggio dell&rsquo;energia</h3>
+  <div class="flusso-box schermo">
+    <div class="schermo-label"><span class="led" aria-hidden="true"></span><span>Schema impianto &middot; flussi in tempo reale</span></div>
+    <svg viewBox="0 0 900 300" role="img" aria-label="Schema del viaggio dell'energia: dal sole ai pannelli, dall'inverter verso la scuola, la batteria o la rete elettrica">
+      <g>
+        <circle cx="120" cy="60" r="26" fill="var(--sole)"/>
+        <g stroke="var(--sole)" stroke-width="3" stroke-linecap="round">
+          <line x1="120" y1="16" x2="120" y2="26"/><line x1="152" y1="28" x2="145" y2="35"/>
+          <line x1="164" y1="60" x2="154" y2="60"/><line x1="88" y1="28" x2="95" y2="35"/>
+          <line x1="76" y1="60" x2="86" y2="60"/>
+        </g>
+      </g>
+      <g stroke="var(--sole)" stroke-width="2.5" stroke-dasharray="6 7" stroke-linecap="round">
+        <line x1="140" y1="86" x2="215" y2="150"/>
+        <line x1="110" y1="92" x2="185" y2="162"/>
+      </g>
+      <g transform="translate(170,140) rotate(-18)">
+        <rect x="0" y="0" width="130" height="34" rx="4" fill="var(--ciano)"/>
+        <g stroke="#06121F" stroke-width="2">
+          <line x1="33" y1="0" x2="33" y2="34"/><line x1="66" y1="0" x2="66" y2="34"/><line x1="99" y1="0" x2="99" y2="34"/>
+        </g>
+      </g>
+      <text x="230" y="215" text-anchor="middle" font-family="Lexend,sans-serif" font-size="16" font-weight="600" fill="var(--testo)">I pannelli</text>
+      <text x="230" y="236" text-anchor="middle" font-family="Lexend,sans-serif" font-size="13.5" fill="var(--sole)" font-weight="600">energia GENERATA</text>
+      <g stroke="var(--muted)" stroke-width="3" fill="none" stroke-linecap="round"><path d="M320 165 H 385"/><path d="M377 157 l8 8 -8 8" fill="none"/></g>
+      <rect x="395" y="130" width="110" height="70" rx="12" fill="var(--pann2)" stroke="var(--ciano)" stroke-width="3"/>
+      <path d="M415 178 q 12 -30 22 0 q 10 30 22 0" stroke="var(--ciano)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <line x1="465" y1="150" x2="490" y2="150" stroke="var(--ciano)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="465" y1="162" x2="482" y2="162" stroke="var(--ciano)" stroke-width="3" stroke-linecap="round"/>
+      <text x="450" y="222" text-anchor="middle" font-family="Lexend,sans-serif" font-size="16" font-weight="600" fill="var(--testo)">L&rsquo;inverter</text>
+      <text x="450" y="243" text-anchor="middle" font-family="Lexend,sans-serif" font-size="13.5" fill="var(--muted)">trasforma la corrente</text>
+      <g stroke="var(--energia)" stroke-width="3" fill="none" stroke-linecap="round"><path d="M505 145 C 560 110, 600 90, 650 78"/><path d="M640 72 l11 4 -6 10" fill="none"/></g>
+      <g transform="translate(660,30)">
+        <path d="M10 40 L45 12 L80 40" fill="none" stroke="var(--testo)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="18" y="40" width="54" height="36" rx="3" fill="var(--pann2)" stroke="var(--testo)" stroke-width="3"/>
+        <path d="M26 62 q 7 -8 13 0 q 7 8 13 0 q 7 -8 13 0" stroke="var(--ciano)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </g>
+      <text x="705" y="128" text-anchor="middle" font-family="Lexend,sans-serif" font-size="16" font-weight="600" fill="var(--testo)">La piscina</text>
+      <text x="705" y="148" text-anchor="middle" font-family="Lexend,sans-serif" font-size="13.5" fill="var(--energia)" font-weight="600">energia CONSUMATA</text>
+      <g stroke="var(--ciano)" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M505 185 C 560 210, 600 225, 648 235"/>
+        <path d="M638 240 l11 -3 -4 -11" fill="none"/>
+        <path d="M660 250 C 610 245, 560 232, 512 208"/>
+        <path d="M522 204 l-11 3 4 11" fill="none"/>
+      </g>
+      <g transform="translate(672,190)" stroke="var(--testo)" stroke-width="3" stroke-linecap="round" fill="none">
+        <path d="M12 70 L28 8 L44 70"/><path d="M6 26 H 50"/><path d="M2 44 H 54"/>
+        <path d="M17 44 L39 26 M39 44 L17 26"/>
+      </g>
+      <text x="790" y="230" font-family="Lexend,sans-serif" font-size="16" font-weight="600" fill="var(--testo)">La rete</text>
+      <text x="790" y="250" font-family="Lexend,sans-serif" font-size="13.5" fill="var(--ciano)" font-weight="600">ESPORTATA e</text>
+      <text x="790" y="268" font-family="Lexend,sans-serif" font-size="13.5" fill="var(--ciano)" font-weight="600">IMPORTATA</text>
+      <g transform="translate(415,255)">
+        <rect x="0" y="0" width="56" height="28" rx="6" fill="var(--pann2)" stroke="var(--energia)" stroke-width="3"/>
+        <rect x="56" y="8" width="7" height="12" rx="2" fill="var(--energia)"/>
+        <rect x="6" y="6" width="26" height="16" rx="3" fill="var(--energia)" opacity=".55"/>
+      </g>
+      <line x1="450" y1="200" x2="443" y2="252" stroke="var(--energia)" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 6"/>
+      <text x="560" y="277" font-family="Lexend,sans-serif" font-size="13.5" fill="var(--energia)" font-weight="600">batteria: CARICATA / SCARICATA</text>
+    </svg>
+  </div>
+
+  <h3>I quattro numeri da saper leggere</h3>
+  <div class="tot-grid">
+    <div class="tot-card t-sole">
+      <div class="tot-nome">Energia generata</div>
+      <div class="tot-val"><span data-reale="gen"></span> <span class="u">kWh</span></div>
+      <div class="tot-desc">Tutta l&rsquo;energia prodotta dai pannelli da quando l&rsquo;impianto &egrave; acceso. &Egrave; il numero pi&ugrave; importante: il raccolto del sole.</div>
+    </div>
+    <div class="tot-card t-verde">
+      <div class="tot-nome">Energia consumata</div>
+      <div class="tot-val"><span data-reale="cons"></span> <span class="u">kWh</span></div>
+      <div class="tot-desc">Quella usata sul posto, per pompe, luci e macchine della piscina. Autoconsumo: dal tetto alla presa, senza viaggi.</div>
+    </div>
+    <div class="tot-card">
+      <div class="tot-nome">Energia esportata</div>
+      <div class="tot-val"><span data-reale="esp"></span> <span class="u">kWh</span></div>
+      <div class="tot-desc">Quella che non serviva subito ed &egrave; stata <strong>ceduta alla rete elettrica</strong>: va ad alimentare le case del quartiere.</div>
+    </div>
+    <div class="tot-card t-muted">
+      <div class="tot-nome">Energia importata</div>
+      <div class="tot-val"><span data-reale="imp"></span> <span class="u">kWh</span></div>
+      <div class="tot-desc">Quella presa dalla rete quando il sole non bastava (di notte, per esempio). Guarda com&rsquo;&egrave; piccola!</div>
+    </div>
+  </div>
+
+  <h3>E quei chilometri misteriosi? Il loop si chiude</h3>
+  <div class="testo">
+    <p>Il portale traduce l&rsquo;energia pulita in tre immagini. Ecco il trucco: ogni kWh prodotto dal sole <strong>evita</strong> di produrne uno bruciando gas o carbone, e quindi evita circa <strong>0,4 kg di CO<sub>2</sub></strong>. Da l&igrave; nascono tutti e tre i numeri verdi:</p>
+  </div>
+  <div class="eco-grid">
+    <div class="eco-card">
+      <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 19a5 5 0 0 1-2-9.6A6 6 0 0 1 17.6 8 4.5 4.5 0 0 1 17 17.5"/><path d="M12 12v9M9.5 16.5 12 14l2.5 2.5"/></svg>
+      <div class="eco-val"><span data-reale="co2"></span> kg</div>
+      <div class="eco-nome">di CO<sub>2</sub> evitata</div>
+      <details class="eco-come"><summary>Come si calcola?</summary>
+        <div class="spiega"><span class="num" data-reale="gen"></span> kWh generati &times; 0,4 kg = circa <span class="num" data-calc="co2calc"></span> kg di CO<sub>2</sub> risparmiata. Torna con il portale!</div>
+      </details>
+    </div>
+    <div class="eco-card">
+      <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-7M12 15c-4.5 0-7-2.5-7-6.5C8 8.5 10 9.5 12 12c2-2.5 4-3.5 7-3.5 0 4-2.5 6.5-7 6.5z"/></svg>
+      <div class="eco-val"><span data-reale="alberi"></span></div>
+      <div class="eco-nome">alberi equivalenti</div>
+      <details class="eco-come"><summary>Come si calcola?</summary>
+        <div class="spiega">Un albero assorbe circa 22 kg di CO<sub>2</sub> all&rsquo;anno. <span class="num" data-reale="co2"></span> &divide; 22 = circa <span class="num" data-calc="alberiCalc"></span> alberi: un piccolo bosco che lavora per noi.</div>
+      </details>
+    </div>
+    <div class="eco-card">
+      <svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16v-4l2-5h9l3 5h2v4h-2M4 16h2m10 0H8"/><circle cx="7" cy="17" r="1.8"/><circle cx="16.5" cy="17" r="1.8"/></svg>
+      <div class="eco-val"><span data-reale="kmAuto"></span> km</div>
+      <div class="eco-nome">di auto a benzina &laquo;risparmiati&raquo;</div>
+      <details class="eco-come"><summary>Come si calcola?</summary>
+        <div class="spiega">Un&rsquo;auto a benzina emette circa 0,12 kg di CO<sub>2</sub> per km. <span class="num" data-reale="co2"></span> &divide; 0,12 = circa <span class="num" data-calc="kmCalc"></span> km: <strong>ecco svelato il mistero dei 23.297 km!</strong> Non &egrave; un viaggio fatto, &egrave; un inquinamento evitato: pi&ugrave; di mezzo giro del mondo.</div>
+      </details>
+    </div>
+  </div>
+
+  <h3 class="detective">Il gioco del detective dei dati</h3>
+  <p class="testo">Un buon lettore di dati non si ferma ai numeri: si fa <strong>domande</strong>. Prova a rispondere prima di aprire l&rsquo;indizio &mdash; e attenzione: non chiediamo mai &laquo;di chi &egrave; la colpa&raquo;, ci chiediamo <strong>che cosa non torna e perch&eacute;</strong>.</p>
+  <details class="det-card">
+    <summary>
+      <svg class="lente" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <span>Caso n. 1 &mdash; Alle 05:47 la produzione del giorno era solo 0,23 kWh. L&rsquo;impianto &egrave; guasto?</span>
+    </summary>
+    <div class="det-corpo">
+      <p><strong>Indizio:</strong> guarda l&rsquo;ora della fotografia e chiediti: da quanto tempo c&rsquo;era luce?</p>
+      <p>Il sole era sorto da pochissimo: la giornata di lavoro dei pannelli era appena cominciata. Un dato si legge sempre insieme al suo <strong>momento</strong>. Lo stesso numero, alle 18:00, avrebbe raccontato una storia completamente diversa.</p>
+    </div>
+  </details>
+  <details class="det-card">
+    <summary>
+      <svg class="lente" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <span>Caso n. 2 &mdash; L&rsquo;energia esportata (8.593 kWh) &egrave; pi&ugrave; grande di quella generata (6.988 kWh). Com&rsquo;&egrave; possibile?</span>
+    </summary>
+    <div class="det-corpo">
+      <p><strong>Indizio:</strong> chi conta queste due cose? &Egrave; lo stesso strumento? &Egrave; partito nello stesso momento?</p>
+      <p>Questo &egrave; un vero mistero da tecnici: sulla carta non potrebbe succedere, perch&eacute; non puoi cedere pi&ugrave; energia di quanta ne produci. Contatori diversi possono essere stati accesi o azzerati in momenti diversi. Qual &egrave; la domanda che faresti al tecnico dell&rsquo;impianto per venirne a capo? Scrivetela in classe: le domande giuste valgono quanto le risposte.</p>
+    </div>
+  </details>
+  <details class="det-card">
+    <summary>
+      <svg class="lente" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+      <span>Caso n. 3 &mdash; La scuola ha consumato 606,6 kWh ma ne ha presi dalla rete solo 18,4. Cosa significa?</span>
+    </summary>
+    <div class="det-corpo">
+      <p><strong>Indizio:</strong> se consumi 606 e ne compri 18, da dove arriva tutto il resto?</p>
+      <p>Quasi tutta l&rsquo;energia usata (circa il <span class="num" data-calc="autoPerc"></span>%) veniva direttamente dal tetto: si chiama <strong>autoconsumo</strong>, ed &egrave; il super-potere del fotovoltaico. L&rsquo;energia migliore &egrave; quella che non deve viaggiare.</p>
+    </div>
+  </details>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Chiedi a casa di poter guardare <strong>una bolletta della luce</strong> (va bene anche vecchia). Cerca la voce con i <strong>kWh del mese</strong> e portala a scuola scritta sul diario. In classe risponderemo a una domanda vera: quante famiglie potrebbe alimentare il tetto della nostra piscina?</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="3"><span>Al volante: il simulatore del sole</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 4 — SIMULATORE
+============================================================ -->
+<section class="sezione" id="sez-3">
+  <div class="s-head">
+    <span class="s-etich">Passo 4 &middot; Il simulatore</span>
+    <h2>Caccia al sole: batti l&rsquo;ingegnere</h2>
+    <p class="s-intro">Comandi un impianto immaginario da <strong>10 pannelli (4 kW)</strong> a Orzinuovi. Scegli stagione, meteo, <strong>inclinazione</strong> e <strong>orientamento</strong>, poi avvia la giornata: l&rsquo;energia raccolta ricarica un&rsquo;auto elettrica in viaggio. Ma non sei solo: sulla corsia sopra corre <strong>l&rsquo;auto fantasma dell&rsquo;ingegnere</strong>, che ha orientato i suoi pannelli nel modo migliore possibile. Riuscirai a starle dietro? E le sfide in fondo alla pagina, le sblocchi tutte?</p>
+  </div>
+
+  <div class="sim-grid">
+    <!-- CONTROLLI -->
+    <div class="sim-pan">
+      <h3>1. Le tue scelte</h3>
+      <div class="stagioni" id="stagioniBox"></div>
+      <div class="meteo-riga" id="meteoBox"></div>
+      <div class="previsioni" id="meteoTesto"></div>
+      <div class="slider-blocco">
+        <div class="slider-testa"><span class="s-l">Inclinazione</span><span class="s-v" id="tiltVal">65&deg;</span></div>
+        <input type="range" id="tilt" min="0" max="90" value="65" step="1" aria-label="Inclinazione del pannello in gradi">
+        <div class="slider-scala"><span>sdraiato (0&deg;)</span><span>in piedi (90&deg;)</span></div>
+      </div>
+      <div class="slider-blocco">
+        <div class="slider-testa"><span class="s-l">Orientamento</span><span class="s-v" id="azVal">Sud-Est (115&deg;)</span></div>
+        <input type="range" id="azimut" min="90" max="270" value="115" step="1" aria-label="Orientamento del pannello, da est a ovest">
+        <div class="slider-scala"><span>Est</span><span>Sud</span><span>Ovest</span></div>
+      </div>
+      <div class="compass-box">
+        <svg viewBox="0 0 140 140" role="img" aria-label="Bussola con la direzione del pannello">
+          <circle cx="70" cy="70" r="56" fill="var(--pann2)" stroke="var(--brd2)" stroke-width="2.5"/>
+          <text x="70" y="26" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="700" fill="var(--muted)">N</text>
+          <text x="120" y="75" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="700" fill="var(--testo)">E</text>
+          <text x="70" y="128" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="700" fill="var(--testo)">S</text>
+          <text x="20" y="75" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="700" fill="var(--testo)">O</text>
+          <g id="bussolaAgo" transform="rotate(115 70 70)">
+            <path d="M70 30 L78 70 L70 64 L62 70 Z" fill="var(--sole)"/>
+            <line x1="70" y1="64" x2="70" y2="104" stroke="var(--ciano)" stroke-width="3.5" stroke-linecap="round"/>
+          </g>
+          <circle cx="70" cy="70" r="5" fill="var(--ciano)"/>
+        </svg>
+        <div class="nota-muta">La freccia gialla &egrave; la faccia del pannello</div>
+      </div>
+      <button class="btn-avanti btn-giorno" id="btnGiorno" style="margin-top:8px"><span>Avvia la giornata</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+      </button>
+      <p class="nota-muta" style="margin:10px 0 0">Suggerimento da scopritori: puoi muovere le leve <strong>anche mentre il sole viaggia</strong>&hellip;</p>
+    </div>
+
+    <!-- SCENA -->
+    <div class="sim-pan scena-card schermo">
+      <div class="schermo-label"><span class="led" aria-hidden="true"></span><span>CAM 01 &middot; tetto &mdash; in diretta</span></div>
+      <svg id="scena" viewBox="0 0 560 330" role="img" aria-label="Scena del cielo con il sole che si muove, eventuali nuvole e il pannello solare orientabile">
+        <defs>
+          <linearGradient id="gCielo" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#BFE0F2"/><stop offset="1" stop-color="#EAF4FA"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="560" height="272" fill="url(#gCielo)" rx="12"/>
+        <rect x="0" y="268" width="560" height="62" fill="#C6D8B4" rx="10"/>
+        <path id="arcoSole" d="" fill="none" stroke="var(--sole2)" stroke-width="2" stroke-dasharray="3 8" opacity=".8"/>
+        <line id="raggio" x1="0" y1="0" x2="0" y2="0" stroke="var(--sole2)" stroke-width="3" stroke-linecap="round" opacity="0"/>
+        <g id="sole" transform="translate(-40,-40)">
+          <circle r="15" fill="#FFD75E" stroke="#F0A81C" stroke-width="2"/>
+          <g stroke="#F0A81C" stroke-width="2.4" stroke-linecap="round">
+            <line x1="0" y1="-24" x2="0" y2="-19"/><line x1="17" y1="-17" x2="13.5" y2="-13.5"/>
+            <line x1="24" y1="0" x2="19" y2="0"/><line x1="17" y1="17" x2="13.5" y2="13.5"/>
+            <line x1="-17" y1="-17" x2="-13.5" y2="-13.5"/><line x1="-24" y1="0" x2="-19" y2="0"/>
+            <line x1="-17" y1="17" x2="-13.5" y2="13.5"/><line x1="0" y1="24" x2="0" y2="19"/>
+          </g>
+        </g>
+        <g id="nuvola" opacity="0">
+          <ellipse cx="0" cy="0" rx="34" ry="15" fill="#F2F5F7"/>
+          <ellipse cx="-20" cy="6" rx="22" ry="12" fill="#E4EAEE"/>
+          <ellipse cx="22" cy="6" rx="24" ry="13" fill="#E9EEF2"/>
+        </g>
+        <rect x="256" y="240" width="10" height="30" rx="3" fill="#5C6B7A"/>
+        <g id="pannello" transform="translate(261,242) rotate(-65)">
+          <rect x="-62" y="-11" width="124" height="14" rx="3" fill="#132A44"/>
+          <g stroke="#3BC9EC" stroke-width="1.4" opacity=".8">
+            <line x1="-37" y1="-11" x2="-37" y2="3"/><line x1="-12" y1="-11" x2="-12" y2="3"/>
+            <line x1="13" y1="-11" x2="13" y2="3"/><line x1="38" y1="-11" x2="38" y2="3"/>
+          </g>
+        </g>
+        <circle cx="261" cy="242" r="6" fill="#0B1E33"/>
+        <text id="orologio" x="538" y="34" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="26" font-weight="700" fill="#16324F">--:--</text>
+        <text x="538" y="54" text-anchor="end" font-family="Lexend,sans-serif" font-size="13" fill="#54636F">ora del giorno</text>
+        <text id="etichettaStag" x="22" y="34" font-family="Lexend,sans-serif" font-size="15" font-weight="600" fill="#16324F"></text>
+      </svg>
+      <div class="curva-wrap schermo" style="border:none;padding:0;box-shadow:none">
+        <div class="schermo-label" style="margin-top:12px"><span class="led" aria-hidden="true"></span><span>Telemetria &middot; potenza (kW)</span></div>
+        <svg id="curva" viewBox="0 0 560 100" role="img" aria-label="Grafico della potenza prodotta durante la giornata">
+          <line x1="30" y1="88" x2="545" y2="88" stroke="var(--brd2)" stroke-width="2"/>
+          <line x1="30" y1="88" x2="30" y2="6" stroke="var(--brd2)" stroke-width="2"/>
+          <text x="24" y="14" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--muted)">4</text>
+          <text x="24" y="52" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--muted)">2</text>
+          <text x="24" y="90" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--muted)">0</text>
+          <polyline id="curvaLinea" points="" fill="none" stroke="var(--sole)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- DATI LIVE -->
+    <div class="sim-pan sim-dati">
+      <h3>2. Il cruscotto</h3>
+      <div class="dato dato-pw">
+        <div class="dato-l">Potenza adesso</div>
+        <div class="dato-v"><span id="pwOra">0,00</span> <span class="u">kW</span></div>
+        <div class="pw-barra"><div class="pw-fill" id="pwFill"></div></div>
+      </div>
+      <div class="dato dato-en">
+        <div class="dato-l">Energia raccolta</div>
+        <div class="dato-v"><span id="enTot">0,0</span> <span class="u">kWh</span></div>
+      </div>
+      <div class="dato dato-km">
+        <div class="dato-l">Autonomia dell&rsquo;auto</div>
+        <div class="dato-v"><span id="kmTot">0</span> <span class="u">km</span></div>
+        <div class="nota-muta" style="margin-top:4px">1 kWh &asymp; 6,7 km in auto elettrica</div>
+      </div>
+      <div class="dato">
+        <div class="dato-l">L&rsquo;ingegnere &egrave; a</div>
+        <div class="dato-v" style="color:var(--ciano)"><span id="kmGhost">0</span> <span class="u">km</span></div>
+      </div>
+      <div class="record-riga">Record di oggi in classe: <span class="num" id="recordKm">ancora nessuno</span></div>
+    </div>
+  </div>
+
+  <!-- STRADA -->
+  <div class="card strada-card">
+    <div class="strada-testa">
+      <h3>3. Il viaggio &mdash; partenza: Orzinuovi &middot; corsia sopra: l&rsquo;ingegnere</h3>
+      <div class="km-live"><span id="kmLive">0</span> <span class="u">km</span></div>
+    </div>
+    <svg id="strada" viewBox="0 0 1000 170" role="img" aria-label="Strada a due corsie: sopra l'auto fantasma dell'ingegnere, sotto la tua auto elettrica; traguardi: Brescia, Milano, Lago di Garda, Venezia">
+      <rect x="0" y="82" width="1000" height="62" rx="8" fill="#1B2B40"/>
+      <line x1="12" y1="113" x2="988" y2="113" stroke="#93ADC4" stroke-width="2.5" stroke-dasharray="18 16" opacity=".6"/>
+      <g id="traguardi"></g>
+      <g id="ghost" transform="translate(30,0)" opacity=".75">
+        <g transform="translate(-26,84)">
+          <path d="M4 20 C 4 13, 9 11.5, 14 11 L 19 5 C 21 2.5, 24 2, 28.5 2 L 36.5 2 C 40.5 2, 43 3.7, 44.5 6 L 48.5 11 C 54.5 12, 58 14.5, 58 20 Z" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-dasharray="5 4"/>
+          <g class="ruota"><circle cx="15" cy="21" r="5" fill="none" stroke="var(--ciano)" stroke-width="2"/><line x1="15" y1="17" x2="15" y2="25" stroke="var(--ciano)" stroke-width="1.4"/></g>
+          <g class="ruota"><circle cx="47" cy="21" r="5" fill="none" stroke="var(--ciano)" stroke-width="2"/><line x1="47" y1="17" x2="47" y2="25" stroke="var(--ciano)" stroke-width="1.4"/></g>
+        </g>
+        <text x="5" y="78" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="var(--ciano)" letter-spacing="1">ING.</text>
+      </g>
+      <g id="auto" transform="translate(30,0)">
+        <g transform="translate(-26,112)">
+          <path d="M4 26 C 4 18, 10 16, 16 15 L 22 7 C 24 4, 28 3, 34 3 L 44 3 C 49 3, 52 5, 54 8 L 59 15 C 66 16, 70 19, 70 26 Z" fill="var(--energia)"/>
+          <path d="M25 14 L 29 8.5 C 30 7, 32 6.5, 35 6.5 L 42 6.5 L 43.5 14 Z" fill="#0E2438"/>
+          <path d="M47 14 L 46 6.8 C 50 7, 52 8.5, 53.5 11 L 55.5 14 Z" fill="#0E2438"/>
+          <rect x="30" y="17" width="14" height="4" rx="2" fill="#EAF3FB" opacity=".9"/>
+          <path d="M36 16 l 4 0 -2.6 4 3.6 0 -5.6 6 1.6-4.6 -3 0 z" fill="var(--sole)" transform="translate(-14,1) scale(.85)"/>
+          <g class="ruota"><circle cx="18" cy="27" r="6.5" fill="#EAF3FB"/><circle cx="18" cy="27" r="2.6" fill="#0E2438"/><line x1="18" y1="21.5" x2="18" y2="32.5" stroke="#0E2438" stroke-width="1.6"/><line x1="12.5" y1="27" x2="23.5" y2="27" stroke="#0E2438" stroke-width="1.6"/></g>
+          <g class="ruota"><circle cx="56" cy="27" r="6.5" fill="#EAF3FB"/><circle cx="56" cy="27" r="2.6" fill="#0E2438"/><line x1="56" y1="21.5" x2="56" y2="32.5" stroke="#0E2438" stroke-width="1.6"/><line x1="50.5" y1="27" x2="61.5" y2="27" stroke="#0E2438" stroke-width="1.6"/></g>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- MISSIONI -->
+  <div class="card missioni-card">
+    <h3 style="margin:0">Le sfide del cacciatore</h3>
+    <p class="nota-muta" style="margin:4px 0 0">Si sbloccano giocando, in qualsiasi ordine. Quante ne conquisti oggi?</p>
+    <div class="missioni-lista" id="missioniLista"></div>
+  </div>
+
+  <!-- RISULTATO -->
+  <div class="card risultato" id="risultato">
+    <div class="ris-testa">
+      <svg class="medaglia" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5.5"/><path d="M9 13.6 7 21l5-2.4L17 21l-2-7.4"/><path d="M12 6.5 12.9 8.3l2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 8.6l2-.3z" fill="var(--sole)" stroke="none"/></svg>
+      <div>
+        <div class="ris-titolo" id="risTitolo"></div>
+        <div class="ris-sottotitolo" id="risSotto"></div>
+      </div>
+    </div>
+    <div class="ris-dati">
+      <div class="ris-dato"><span class="rd-l">Energia raccolta</span><span class="rd-v" style="color:var(--sole)"><span id="risEn"></span> kWh</span></div>
+      <div class="ris-dato"><span class="rd-l">Il tuo viaggio</span><span class="rd-v" style="color:var(--energia)"><span id="risKm"></span> km</span></div>
+      <div class="ris-dato"><span class="rd-l">L&rsquo;ingegnere</span><span class="rd-v" style="color:var(--ciano)"><span id="risKmGhost"></span> km</span></div>
+      <div class="ris-dato"><span class="rd-l">Sfida</span><span class="rd-v" style="color:var(--testo)"><span id="risEff"></span>%</span></div>
+      <div class="ris-dato"><span class="rd-l">Valore energia</span><span class="rd-v" style="color:var(--energia)"><span id="risEuro"></span> &euro;</span></div>
+    </div>
+    <p class="ris-msg" id="risMsg"></p>
+    <div class="ris-btn">
+      <button class="btn-tech" id="btnRiprova"><span>Riprova con altre scelte</span></button>
+      <button class="btn-ghost" id="btnCambiaStagione"><span>Prova un&rsquo;altra stagione</span></button>
+    </div>
+  </div>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Domani, sulla strada per la scuola, gioca al <strong>cacciatore di tetti</strong>: scegli il tetto del paese che secondo te sarebbe perfetto per i pannelli e preparati a difendere la tua scelta in classe con due argomenti (verso dove guarda? &egrave; inclinato bene? c&rsquo;&egrave; qualcosa che gli fa ombra?).</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="4"><span>E se il pannello si muovesse da solo? Programmalo</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+<!-- ============================================================
+     SEZIONE 5 — IL CODICE DEL SOLE
+============================================================ -->
+<section class="sezione" id="sez-4">
+  <div class="s-head">
+    <span class="s-etich">Passo 5 &middot; Coding</span>
+    <h2>Il codice del sole: programma il pilota automatico</h2>
+    <p class="s-intro">Nel simulatore muovevi le leve con le mani. Ma nell&rsquo;impianto vero chi ci pensa? Un <strong>computer</strong>: l&rsquo;inverter esegue istruzioni scritte da qualcuno &mdash; un <strong>programma</strong>. Adesso il programmatore sei tu: componi le istruzioni, eseguile, guarda il risultato, correggi. Si chiama <strong>debug</strong>, ed &egrave; quello che fanno i programmatori veri tutto il giorno.</p>
+  </div>
+
+  <div class="fact">
+    <div class="fact-t">Come funziona il tuo programma</div>
+    <p style="margin:0">Il pannello parte <strong>a 30&deg; verso Sud</strong>. Poi, quando l&rsquo;orologio raggiunge l&rsquo;ora di un&rsquo;istruzione, il pannello la esegue e <strong>resta cos&igrave;</strong> finch&eacute; non arriva l&rsquo;istruzione successiva. L&rsquo;ordine conta: &egrave; una sequenza, come una ricetta.</p>
+  </div>
+
+  <div class="cod-grid">
+    <!-- EDITOR -->
+    <div class="sim-pan">
+      <h3 style="display:flex;align-items:center;gap:10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7 3 12l5 5M16 7l5 5-5 5M13.5 4.5l-3 15"/></svg>
+        <span>Il tuo programma</span> <span class="nota-muta" id="progConta" style="margin-left:auto"></span>
+      </h3>
+      <div class="cod-stagioni" id="codStagioni"></div>
+      <div class="prog-righe" id="progRighe"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <button class="btn-ghost" id="btnAggiungi">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Aggiungi istruzione</span>
+        </button>
+        <button class="btn-avanti" id="btnEsegui" style="margin-top:0"><span>Esegui il programma</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+        </button>
+      </div>
+      <div class="pseudocodice" id="pseudocodice" aria-label="Il tuo programma scritto in pseudocodice"></div>
+      <p class="prog-note" style="margin-top:10px">Questo &egrave; il tuo programma scritto come lo leggerebbe l&rsquo;inverter. Ogni riga &egrave; un&rsquo;istruzione; l&rsquo;esecuzione va dall&rsquo;alto verso il basso, seguendo l&rsquo;orologio.</p>
+    </div>
+
+    <!-- RISULTATO ESECUZIONE -->
+    <div class="sim-pan cod-ris">
+      <h3>L&rsquo;esecuzione</h3>
+      <div class="schermo" style="margin-bottom:14px">
+        <div class="schermo-label"><span class="led" aria-hidden="true"></span><span>Telemetria del programma &middot; potenza (kW)</span></div>
+        <svg id="codCurva" viewBox="0 0 560 110" role="img" aria-label="Grafico della potenza prodotta dal programma durante la giornata">
+          <line x1="30" y1="94" x2="545" y2="94" stroke="var(--brd2)" stroke-width="2"/>
+          <line x1="30" y1="94" x2="30" y2="8" stroke="var(--brd2)" stroke-width="2"/>
+          <text x="24" y="16" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--muted)">4</text>
+          <text x="24" y="56" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--muted)">2</text>
+          <text x="24" y="96" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="11" fill="var(--muted)">0</text>
+          <polyline id="codLinea" points="" fill="none" stroke="var(--ciano)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="dato dato-en">
+        <div class="dato-l">Energia del programma</div>
+        <div class="dato-v"><span id="codEn">--</span> <span class="u">kWh</span></div>
+      </div>
+      <div class="dato dato-km">
+        <div class="dato-l">Viaggio dell&rsquo;auto</div>
+        <div class="dato-v"><span id="codKm">--</span> <span class="u">km</span></div>
+      </div>
+      <div class="dato">
+        <div class="dato-l">Contro il miglior pannello fisso</div>
+        <div class="dato-v" style="color:var(--ciano)"><span id="codEff">--</span><span class="u">%</span></div>
+        <div class="nota-muta" style="margin-top:4px">Sopra il 100% = il tuo codice batte qualunque pannello immobile</div>
+      </div>
+      <p id="codMsg" style="font-size:16px"></p>
+      <span class="badge-prog" id="badgeProg">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5.5"/><path d="M9 13.6 7 21l5-2.4L17 21l-2-7.4"/></svg>
+        <span>PROGRAMMATORE SOLARE: il tuo codice batte ogni pannello fisso!</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Scrivi sul diario, <strong>a parole tue</strong>, il programma della tua giornata perfetta di domani come se fossi un inverter: &laquo;ALLE 7:00 &rarr; sveglia. ALLE 7:20 &rarr; colazione&hellip;&raquo;. Domani controlla: quante istruzioni hai eseguito davvero? Dove &egrave; servito un <strong>debug</strong>?</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="5"><span>Mettiti alla prova</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 6 — VERIFICA
+============================================================ -->
+<section class="sezione" id="sez-5">
+  <div class="s-head">
+    <span class="s-etich">Passo 6 &middot; La verifica</span>
+    <h2>Sei diventato un cacciatore di sole?</h2>
+    <p class="s-intro">Una domanda alla volta. Se sbagli non succede niente: leggi la spiegazione e vai avanti, &egrave; cos&igrave; che si impara.</p>
+  </div>
+
+  <div class="card quiz-box" id="quizBox">
+    <div class="quiz-prog">
+      <span class="qp-txt" id="qpTxt"></span>
+      <div class="qp-barra"><div class="qp-fill" id="qpFill"></div></div>
+    </div>
+    <div id="quizCorpo">
+      <div class="quiz-dom" id="quizDom"></div>
+      <div class="quiz-opz" id="quizOpz"></div>
+      <div class="quiz-spiega" id="quizSpiega"><div class="qs-t" id="qsT"></div><div id="qsTxt"></div></div>
+      <div style="margin-top:18px;text-align:right"><button class="btn-tech" id="btnProssima" style="display:none"><span>Prossima domanda</span></button></div>
+    </div>
+    <div class="quiz-fine" id="quizFine">
+      <div class="anello" id="anello"><div class="anello-in"><span class="a-num num" id="anelloNum"></span><span class="a-lab" id="anelloLab"></span></div></div>
+      <div class="quiz-medaglia" id="quizMedaglia"></div>
+      <p class="quiz-comm" id="quizComm"></p>
+      <button class="btn-ghost" id="btnRifai"><span>Rifai la verifica</span></button>
+    </div>
+  </div>
+
+  <button class="btn-avanti" data-vai="6"><span>L&rsquo;ultimo passo: cosa ho capito</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 7 — METACOGNIZIONE
+============================================================ -->
+<section class="sezione" id="sez-6">
+  <div class="s-head">
+    <span class="s-etich">Passo 7 &middot; Il cerchio si chiude</span>
+    <h2>Cosa ho capito davvero?</h2>
+    <p class="s-intro">Siamo partiti da una centrale che nessuno vedeva e da 23.297 chilometri misteriosi. Ora la centrale la sai leggere, quei chilometri sai spiegarli, e il pannello lo sai perfino programmare. Resta l&rsquo;ultimo passo, il pi&ugrave; importante: fermarsi a pensare.</p>
+  </div>
+
+  <div class="meta-grid">
+    <div class="card meta-card">
+      <label for="meta1">1. Che cosa ho capito che prima non sapevo?</label>
+      <textarea id="meta1" aria-label="Che cosa ho capito che prima non sapevo"></textarea>
+    </div>
+    <div class="card meta-card">
+      <label for="meta2">2. Come ci sono arrivato? Quale attivit&agrave; mi ha aiutato di pi&ugrave;?</label>
+      <textarea id="meta2" aria-label="Come ci sono arrivato"></textarea>
+    </div>
+    <div class="card meta-card">
+      <label for="meta3">3. Che cosa cambier&ograve; da domani per sprecare meno energia?</label>
+      <textarea id="meta3" aria-label="Che cosa cambierò da domani"></textarea>
+    </div>
+  </div>
+
+  <button class="btn-tech" id="btnCopia"><span>Copia le mie risposte</span></button><span class="copiato-avviso" id="copiatoAvviso">Copiate! Incollale dove ti dice il docente.</span>
+  <p class="privacy-nota">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+    <span>Questa pagina non salva e non invia niente: le tue risposte restano tue. Se chiudi la pagina, spariscono.</span>
+  </p>
+
+  <div class="fact" style="margin-top:30px">
+    <div class="fact-t">E il viaggio continua</div>
+    <p style="margin:0">La prossima volta che passi davanti alla piscina, alza gli occhi: la centrale invisibile adesso la vedi. E ogni lampadina che spegni quando esci da una stanza &egrave; un pezzetto di quel lavoro che resta disponibile per qualcun altro.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Cacciatori di Sole &middot; Scuola Sacra Famiglia &middot; Orzinuovi &middot; dati reali dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo;</span>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Schermata completa del portale di monitoraggio">
+  <button class="lightbox-chiudi" id="lightboxChiudi" aria-label="Chiudi">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06121F" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+  </button>
+  <img src="impianto-reale.png" alt="Schermata completa del portale di monitoraggio dell'impianto fotovoltaico">
+</div>
+
+<!-- MODAL DOCENTI -->
+<div class="modal" id="modalDoc" role="dialog" aria-label="Informazioni per i docenti">
+  <div class="modal-box">
+    <button class="modal-chiudi" id="modalChiudi" aria-label="Chiudi">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--testo)" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+    <h2 class="modal-titolo">Info per i docenti</h2>
+    <div class="modal-tabs" id="modalTabs">
+      <button class="mtab on" data-tab="0">Metodologia</button>
+      <button class="mtab" data-tab="1">Struttura</button>
+      <button class="mtab" data-tab="2">Dati e fonti</button>
+    </div>
+    <div class="mtab-corpo on">
+      <p><strong>Obiettivo didattico:</strong> educazione ambientale ed energetica + pensiero computazionale, attraverso dati reali. Lo studente impara a distinguere potenza ed energia, a leggere un cruscotto di monitoraggio, a ottimizzare l&rsquo;orientamento dei pannelli e a <strong>programmare</strong> un controllore (sequenza, stato, debug).</p>
+      <ul>
+        <li><strong>Dewey (learning by doing):</strong> il kWh si maneggia con convertitore e simulatore, il programma si scrive e si esegue.</li>
+        <li><strong>Piaget (conflitto cognitivo):</strong> l&rsquo;apertura rovescia lo schema (&laquo;una centrale a scuola? dove?&raquo;) e il dato &laquo;impossibile&raquo; (esportata &gt; generata) attiva la ricostruzione.</li>
+        <li><strong>Bruner (scoperta):</strong> il simulatore non d&agrave; la risposta: la si trova sperimentando; l&rsquo;inseguitore solare si scopre da soli e poi si <em>automatizza</em> col programma.</li>
+        <li><strong>Vygotskij (scaffolding):</strong> box &laquo;cosa guardare&raquo;, indizi del detective, suggerimenti calibrati nei risultati, auto fantasma come modello esperto.</li>
+        <li><strong>Zeigarnik:</strong> narrazione audio con anelli aperti (i 23.297 km) e card-concetto bloccate che si accendono con la voce.</li>
+        <li><strong>Metacognizione:</strong> chiusura con le tre domande e consegna comportamentale.</li>
+      </ul>
+      <p>Tag: Educazione ambientale &middot; STEM &middot; Coding/pensiero computazionale &middot; Lettura di dati. Linguaggio non colpevolizzante: si ragiona su &laquo;che cosa non torna&raquo;, mai su &laquo;chi ha sbagliato&raquo;.</p>
+    </div>
+    <div class="mtab-corpo">
+      <p><strong>Percorso in 7 passi</strong> (logica EAS: situazione-stimolo &rarr; produzione &rarr; rielaborazione):</p>
+      <ul>
+        <li><strong>1. La scoperta:</strong> stimolo con la schermata reale + osservazione scritta + traccia audio 01 con card sincronizzate.</li>
+        <li><strong>2. Il kWh:</strong> traccia audio 02 (analogia della bicicletta) + card sincronizzate + convertitore interattivo.</li>
+        <li><strong>3. I numeri veri:</strong> schema dei flussi, i 4 totalizzatori, i calcoli dietro CO<sub>2</sub>/alberi/km, detective dei dati.</li>
+        <li><strong>4. Il simulatore:</strong> stagione + meteo variabile (nuvole con previsioni) + inclinazione/orientamento &rarr; energia &rarr; km dell&rsquo;auto elettrica; auto fantasma dell&rsquo;ingegnere (miglior pannello fisso, stesso meteo) come avversario; 5 sfide progressive; valore in euro.</li>
+        <li><strong>5. Il codice del sole:</strong> lo studente compone un programma (istruzioni orarie), lo legge in pseudocodice, lo esegue e fa debug; obiettivo: battere il miglior pannello fisso &rarr; capire perch&eacute; esistono gli inseguitori solari.</li>
+        <li><strong>6. Verifica:</strong> quiz con feedback esplicativo, mai punitivo (incluse 2 domande di coding).</li>
+        <li><strong>7. Metacognizione:</strong> tre domande + impegno concreto.</li>
+      </ul>
+      <p><strong>Audio:</strong> i due MP3 (audio-scoperta.mp3, audio-kwh.mp3) vanno nella stessa cartella della pagina. I tempi di sblocco delle card si tarano nelle costanti <span class="num">TEMPI</span> in testa allo script. Finch&eacute; i file non ci sono, le card risultano sbloccate e la trascrizione &egrave; sempre disponibile.</p>
+    </div>
+    <div class="mtab-corpo">
+      <ul>
+        <li><strong>Fonte dei dati:</strong> portale di monitoraggio ZCS Azzurro dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo; (Orzinuovi), 9 luglio 2026, ore 05:47.</li>
+        <li><strong>Numeri reali usati:</strong> generata 6.988,8 kWh &middot; consumata 606,6 kWh &middot; importata 18,4 kWh &middot; esportata 8.593,2 kWh &middot; CO<sub>2</sub> 2.796 kg &middot; 128 alberi &middot; 23.297 km.</li>
+        <li><strong>Coefficienti divulgativi:</strong> 0,4 kg CO<sub>2</sub>/kWh evitata; 22 kg CO<sub>2</sub>/albero/anno; 0,12 kg CO<sub>2</sub>/km (auto a benzina); 0,15 kWh/km (auto elettrica); iPad &asymp; 0,03 kWh a ricarica; 0,25 &euro;/kWh come valore indicativo dell&rsquo;energia.</li>
+        <li><strong>Il simulatore</strong> usa un impianto immaginario da 4 kW (10 pannelli da 400 W), dichiarato come modello: non descrive l&rsquo;impianto reale. Fisica semplificata ma coerente: altezza solare e durata del giorno stagionali a 45&deg; N, coseno dell&rsquo;angolo di incidenza, foschia invernale padana, nuvole casuali col fattore 0,25.</li>
+        <li><strong>Privacy:</strong> l&rsquo;app non raccoglie, non salva e non invia alcun dato.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+
+/* ============ DATI REALI (dal portale, 9/7/2026) ============ */
+const REALE = { gen:6988.8, cons:606.6, imp:18.4, esp:8593.2, co2:2796, alberi:128, kmAuto:23297, record:75.56 };
+
+const fmt = (n, dec=0) => {
+  const [int, d] = n.toFixed(dec).split('.');
+  const conPunti = int.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return d ? conPunti + ',' + d : conPunti;
+};
+
+const CALCOLI = {
+  co2calc:   () => fmt(REALE.gen * 0.4),
+  alberiCalc:() => fmt(REALE.co2 / 22),
+  kmCalc:    () => fmt(REALE.co2 / 0.12),
+  autoPerc:  () => fmt((1 - REALE.imp / REALE.cons) * 100)
+};
+document.querySelectorAll('[data-reale]').forEach(el => {
+  const v = REALE[el.dataset.reale];
+  el.textContent = fmt(v, Number.isInteger(v) ? 0 : 1);
+});
+document.querySelectorAll('[data-calc]').forEach(el => { el.textContent = CALCOLI[el.dataset.calc](); });
+
+/* ============ AUDIO PLAYER + CARD SINCRONIZZATE ============
+   Taratura: i tempi di sblocco sono nei data-t delle .vcard (secondi).
+   Anticipo di 0,15 s perché la card non resti mai indietro sulla voce. */
+const ANTICIPO = 0.15;
+function creaPlayer(root) {
+  const audio = new Audio();
+  audio.preload = 'metadata';
+  audio.src = 'audio-' + root.dataset.player + '.mp3';
+  const icPlay = root.querySelector('.ic-play'), icPause = root.querySelector('.ic-pause');
+  const btn = root.querySelector('.pl-btn'), barra = root.querySelector('.pl-barra');
+  const fill = root.querySelector('.pl-fill'), corr = root.querySelector('.pl-corr'), tot = root.querySelector('.pl-tot');
+  const badge = root.querySelector('.pl-badge');
+  const cards = [...document.querySelectorAll('.vcards[data-vcards="' + root.dataset.player + '"] .vcard')];
+  const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+  let pronto = false;
+  const sbloccaTutte = () => cards.forEach(c => c.classList.add('viva'));
+  const mostraPlay = () => { icPlay.style.display = ''; icPause.style.display = 'none'; };
+  audio.addEventListener('loadedmetadata', () => { pronto = true; tot.textContent = mmss(audio.duration); });
+  audio.addEventListener('error', () => { badge.classList.add('mostra'); sbloccaTutte(); });
+  audio.addEventListener('timeupdate', () => {
+    if (audio.duration) { fill.style.width = (audio.currentTime / audio.duration * 100) + '%'; corr.textContent = mmss(audio.currentTime); }
+    cards.forEach(c => { if (audio.currentTime + ANTICIPO >= +c.dataset.t) c.classList.add('viva'); });
+  });
+  audio.addEventListener('ended', () => { mostraPlay(); sbloccaTutte(); });
+  btn.addEventListener('click', () => {
+    if (!pronto) { badge.classList.add('mostra'); sbloccaTutte(); return; }
+    if (audio.paused) { audio.play(); icPlay.style.display = 'none'; icPause.style.display = ''; }
+    else { audio.pause(); mostraPlay(); }
+  });
+  barra.addEventListener('click', e => {
+    if (!audio.duration) return;
+    const r = barra.getBoundingClientRect();
+    audio.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * audio.duration;
+  });
+  return { pausa(){ if (!audio.paused) { audio.pause(); mostraPlay(); } } };
+}
+const players = [...document.querySelectorAll('.player[data-player]')].map(creaPlayer);
+
+/* ============ NAVIGAZIONE ============ */
+const SEZIONI = ['La scoperta', 'Il kWh', 'I numeri veri', 'Il simulatore', 'Il codice', 'La verifica', 'Cosa ho capito'];
+const navPills = document.getElementById('navPills');
+SEZIONI.forEach((nome, i) => {
+  const b = document.createElement('button');
+  b.className = 'pill';
+  b.innerHTML = '<span class="p-num">' + (i + 1) + '</span><span>' + nome + '</span>';
+  b.addEventListener('click', () => vai(i));
+  navPills.appendChild(b);
+});
+const pillDoc = document.createElement('button');
+pillDoc.className = 'pill pill-doc';
+pillDoc.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".5" fill="currentColor"/></svg><span>Info docenti</span>';
+pillDoc.addEventListener('click', () => document.getElementById('modalDoc').classList.add('aperta'));
+navPills.appendChild(pillDoc);
+
+function vai(i) {
+  players.forEach(pl => pl.pausa());
+  document.querySelectorAll('.sezione').forEach((s, j) => s.classList.toggle('attiva', j === i));
+  navPills.querySelectorAll('.pill:not(.pill-doc)').forEach((p, j) => p.classList.toggle('attiva', j === i));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => vai(+b.dataset.vai)));
+vai(0);
+
+/* ============ LIGHTBOX + MODAL ============ */
+const lightbox = document.getElementById('lightbox');
+const stimoloBox = document.getElementById('stimoloBox');
+stimoloBox.addEventListener('click', () => lightbox.classList.add('aperta'));
+stimoloBox.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lightbox.classList.add('aperta'); } });
+document.getElementById('lightboxChiudi').addEventListener('click', () => lightbox.classList.remove('aperta'));
+lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('aperta'); });
+const modalDoc = document.getElementById('modalDoc');
+document.getElementById('modalChiudi').addEventListener('click', () => modalDoc.classList.remove('aperta'));
+modalDoc.addEventListener('click', e => { if (e.target === modalDoc) modalDoc.classList.remove('aperta'); });
+const mtabs = document.querySelectorAll('.mtab');
+const mcorpi = document.querySelectorAll('.mtab-corpo');
+mtabs.forEach(t => t.addEventListener('click', () => {
+  mtabs.forEach(x => x.classList.toggle('on', x === t));
+  mcorpi.forEach((c, i) => c.classList.toggle('on', i === +t.dataset.tab));
+}));
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { lightbox.classList.remove('aperta'); modalDoc.classList.remove('aperta'); }
+});
+
+/* ============ CONVERTITORE kWh ============ */
+const ICONE = {
+  ipad: '<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--testo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></svg>',
+  led: '<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>',
+  tv: '<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="13" rx="2"/><line x1="9" y1="21" x2="15" y2="21"/></svg>',
+  phon: '<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--ambra)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5"/><circle cx="9" cy="9" r="1.8"/><path d="M13.8 11.5 19 13.5c.6.2.6 1 .1 1.3L14 17M9 14v3.5c0 2 1 3.5 3 3.5"/></svg>',
+  lavatrice: '<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--testo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><circle cx="12" cy="13" r="4.5"/><path d="M8 13c1.3-1 2.7 1 4 0s2.7 1 4 0"/><circle cx="7.5" cy="6" r=".6" fill="currentColor"/><circle cx="10.5" cy="6" r=".6" fill="currentColor"/></svg>',
+  auto: '<svg class="icona" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16v-4l2-5h9l3 5h2v4h-2M4 16h2m10 0H8"/><circle cx="7" cy="17" r="1.8"/><circle cx="16.5" cy="17" r="1.8"/><path d="M12.5 9.5 11 12h2l-1.5 2.5"/></svg>'
+};
+const EQUIV = [
+  { icona:'ipad', nome:'ricariche complete di iPad', perUnita:0.03, dec:0, nota:'una ricarica &asymp; 0,03 kWh' },
+  { icona:'led', nome:'ore di lampadina LED accesa', perUnita:0.01, dec:0, nota:'LED da 10 watt' },
+  { icona:'tv', nome:'ore di TV', perUnita:0.1, dec:0, nota:'TV da 100 watt' },
+  { icona:'phon', nome:'minuti di asciugacapelli', perUnita:1/30, dec:0, nota:'phon da 2.000 watt' },
+  { icona:'lavatrice', nome:'lavaggi in lavatrice', perUnita:1, dec:1, nota:'circa 1 kWh a lavaggio' },
+  { icona:'auto', nome:'km in auto elettrica', perUnita:0.15, dec:0, nota:'0,15 kWh per ogni km' }
+];
+const CHIPS = [
+  { v:1, label:'1 kWh' },
+  { v:REALE.record, label:'la giornata record' },
+  { v:REALE.cons, label:'i consumi della piscina' },
+  { v:REALE.gen, label:'tutta l&rsquo;energia generata' }
+];
+const convInput = document.getElementById('convInput');
+const equivGrid = document.getElementById('equivGrid');
+const convChips = document.getElementById('convChips');
+EQUIV.forEach(eq => {
+  const d = document.createElement('div');
+  d.className = 'equiv-card';
+  d.innerHTML = ICONE[eq.icona] + '<div class="equiv-val" data-eq></div><div class="equiv-nome">' + eq.nome + '</div><div class="equiv-nota">' + eq.nota + '</div>';
+  equivGrid.appendChild(d);
+});
+CHIPS.forEach(ch => {
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.innerHTML = '<span>' + ch.label + '&nbsp;</span><span class="c-num">(' + fmt(ch.v, Number.isInteger(ch.v) ? 0 : 1) + ')</span>';
+  b.addEventListener('click', () => { convInput.value = ch.v; aggiornaConvertitore(); });
+  convChips.appendChild(b);
+});
+function aggiornaConvertitore() {
+  const kwh = Math.max(0, parseFloat(String(convInput.value).replace(',', '.')) || 0);
+  convChips.querySelectorAll('.chip').forEach((c, i) => c.classList.toggle('on', Math.abs(CHIPS[i].v - kwh) < 1e-9));
+  equivGrid.querySelectorAll('[data-eq]').forEach((el, i) => {
+    const n = kwh / EQUIV[i].perUnita;
+    el.textContent = fmt(n, n >= 100 ? 0 : EQUIV[i].dec);
+  });
+}
+convInput.addEventListener('input', aggiornaConvertitore);
+aggiornaConvertitore();
+
+/* ============ MOTORE SOLARE (condiviso da simulatore e coding) ============ */
+const KWP = 4;              // 10 pannelli da 400 W (modello dichiarato)
+const KWH_PER_KM = 0.15;    // consumo auto elettrica
+const EURO_KWH = 0.25;      // valore indicativo dell'energia
+const KM_MAX = 250;         // scala della strada
+const RAD = Math.PI / 180;
+const STAGIONI = [
+  { id:'giugno',  label:'21 giugno &middot; estate',    alba:5.5, tram:21.5,  altMax:68, azAlba:55,  azTram:305, cielo:1.0 },
+  { id:'marzo',   label:'21 marzo &middot; primavera',  alba:6.5, tram:18.5,  altMax:45, azAlba:90,  azTram:270, cielo:0.85 },
+  { id:'dicembre',label:'21 dicembre &middot; inverno', alba:8.0, tram:16.75, altMax:21, azAlba:124, azTram:236, cielo:0.55 }
+];
+const TRAGUARDI = [
+  { km:32,  nome:'Brescia' },
+  { km:65,  nome:'Milano' },
+  { km:85,  nome:'Lago di Garda' },
+  { km:210, nome:'Venezia' }
+];
+function potenzaKw(st, t, tilt, az) {
+  const f = (t - st.alba) / (st.tram - st.alba);
+  if (f <= 0 || f >= 1) return { p:0, f:Math.min(Math.max(f,0),1) };
+  const alt = st.altMax * Math.sin(Math.PI * f) * RAD;
+  const azSole = (st.azAlba + (st.azTram - st.azAlba) * f) * RAD;
+  const cosInc = Math.sin(alt) * Math.cos(tilt * RAD) + Math.cos(alt) * Math.sin(tilt * RAD) * Math.cos(azSole - az * RAD);
+  const diretta = 750 * Math.pow(Math.sin(alt), 0.5) * Math.max(0, cosInc);
+  const diffusa = 70 * (1 + Math.cos(tilt * RAD)) / 2;
+  return { p: Math.max(0, KWP * st.cielo * (diretta + diffusa) / 1000), f };
+}
+function energiaGiorno(st, tilt, az) {
+  let e = 0;
+  for (let t = st.alba; t < st.tram; t += 0.25) e += potenzaKw(st, t, tilt, az).p * 0.25;
+  return e;
+}
+const cacheMigliore = {};
+function migliore(st) {
+  if (cacheMigliore[st.id]) return cacheMigliore[st.id];
+  let best = { e:0, tilt:30, az:180 };
+  for (let b = 0; b <= 90; b += 5)
+    for (let g = 90; g <= 270; g += 10) {
+      const e = energiaGiorno(st, b, g);
+      if (e > best.e) best = { e, tilt:b, az:g };
+    }
+  cacheMigliore[st.id] = best;
+  return best;
+}
+function oraTesto(t) {
+  const h = Math.floor(t), m = Math.round((t - h) * 60);
+  return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+}
+
+/* ============ METEO ============ */
+let meteoVariabile = false;
+let meteoCorrente = { nuvole: [], testo: 'Cielo sereno garantito tutto il giorno.' };
+function creaMeteo(st) {
+  if (!meteoVariabile) { meteoCorrente = { nuvole: [], testo: 'Cielo sereno garantito tutto il giorno.' }; return; }
+  const n = 1 + Math.floor(Math.random() * 3);
+  const nuvole = [];
+  for (let i = 0; i < n; i++) {
+    const inizio = st.alba + 1 + Math.random() * (st.tram - st.alba - 3.5);
+    nuvole.push({ inizio, fine: inizio + 0.7 + Math.random() * 1.8 });
+  }
+  nuvole.sort((a, b) => a.inizio - b.inizio);
+  meteoCorrente = {
+    nuvole,
+    testo: 'Previsioni: nuvole verso le ' + nuvole.map(c => oraTesto(c.inizio)).join(', le ') + '. Pianifica di conseguenza!'
+  };
+}
+const fattoreNuvole = t => meteoCorrente.nuvole.some(c => t >= c.inizio && t <= c.fine) ? 0.25 : 1;
+
+/* ============ SIMULATORE ============ */
+let stagione = STAGIONI[0];
+let inCorsa = false, timerSim = null;
+let trackerUsato = false, sceltaIniziale = null;
+let recordKm = 0;
+let tCorrente = 0, energia = 0, ghostE = 0, puntiCurva = [];
+
+const elTilt = document.getElementById('tilt'), elAz = document.getElementById('azimut');
+const elTiltVal = document.getElementById('tiltVal'), elAzVal = document.getElementById('azVal');
+const elAgo = document.getElementById('bussolaAgo');
+const elPannello = document.getElementById('pannello');
+const elSole = document.getElementById('sole'), elArco = document.getElementById('arcoSole'), elRaggio = document.getElementById('raggio');
+const elNuvola = document.getElementById('nuvola');
+const elOrologio = document.getElementById('orologio'), elEtStag = document.getElementById('etichettaStag');
+const elCurva = document.getElementById('curvaLinea');
+const elPwOra = document.getElementById('pwOra'), elPwFill = document.getElementById('pwFill');
+const elEnTot = document.getElementById('enTot'), elKmTot = document.getElementById('kmTot'), elKmLive = document.getElementById('kmLive');
+const elKmGhost = document.getElementById('kmGhost');
+const elAuto = document.getElementById('auto'), elGhost = document.getElementById('ghost'), elStrada = document.getElementById('strada');
+const elBtnGiorno = document.getElementById('btnGiorno');
+const elRisultato = document.getElementById('risultato');
+const elRecord = document.getElementById('recordKm');
+const elMeteoTesto = document.getElementById('meteoTesto');
+
+const ICONE_STG = [
+  '<svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="3" x2="12" y2="5.5"/><line x1="12" y1="18.5" x2="12" y2="21"/><line x1="3" y1="12" x2="5.5" y2="12"/><line x1="18.5" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="7.4" y2="7.4"/><line x1="16.6" y1="16.6" x2="18.4" y2="18.4"/><line x1="5.6" y1="18.4" x2="7.4" y2="16.6"/><line x1="16.6" y1="7.4" x2="18.4" y2="5.6"/></svg>',
+  '<svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-8M12 13c-3.5 0-5.5-2-5.5-5C9 8.5 10.5 9 12 11c1.5-2 3-2.5 5.5-3 0 3-2 5-5.5 5z"/></svg>',
+  '<svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="3" x2="12" y2="21"/><line x1="4.2" y1="7.5" x2="19.8" y2="16.5"/><line x1="19.8" y1="7.5" x2="4.2" y2="16.5"/><line x1="12" y1="6.5" x2="9.8" y2="4.8"/><line x1="12" y1="6.5" x2="14.2" y2="4.8"/><line x1="12" y1="17.5" x2="9.8" y2="19.2"/><line x1="12" y1="17.5" x2="14.2" y2="19.2"/></svg>'
+];
+const stagioniBox = document.getElementById('stagioniBox');
+STAGIONI.forEach((st, i) => {
+  const b = document.createElement('button');
+  b.className = 'stg' + (i === 0 ? ' on' : '');
+  b.innerHTML = ICONE_STG[i] + '<span>' + st.label + '</span>';
+  b.addEventListener('click', () => {
+    if (inCorsa) return;
+    stagione = st;
+    stagioniBox.querySelectorAll('.stg').forEach((x, j) => x.classList.toggle('on', j === i));
+    creaMeteo(stagione);
+    elMeteoTesto.innerHTML = meteoCorrente.testo;
+    resetGiorno();
+  });
+  stagioniBox.appendChild(b);
+});
+
+/* meteo UI */
+const meteoBox = document.getElementById('meteoBox');
+const METEO_OPZ = [
+  { v:false, label:'Sereno', ic:'<svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="4" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="20"/><line x1="4" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="20" y2="12"/></svg>' },
+  { v:true, label:'Variabile', ic:'<svg class="s-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3.5"/><path d="M8 3.5v1.5M3.5 9H5M4.8 5.8l1 1"/><path d="M10 18h7a3.5 3.5 0 0 0 .5-7A5 5 0 0 0 8 12.5 3 3 0 0 0 10 18z"/></svg>' }
+];
+METEO_OPZ.forEach((m, i) => {
+  const b = document.createElement('button');
+  b.className = 'mbtn' + (i === 0 ? ' on' : '');
+  b.innerHTML = m.ic + '<span>' + m.label + '</span>';
+  b.addEventListener('click', () => {
+    if (inCorsa) return;
+    meteoVariabile = m.v;
+    meteoBox.querySelectorAll('.mbtn').forEach((x, j) => x.classList.toggle('on', j === i));
+    creaMeteo(stagione);
+    elMeteoTesto.innerHTML = meteoCorrente.testo;
+  });
+  meteoBox.appendChild(b);
+});
+elMeteoTesto.innerHTML = meteoCorrente.testo;
+
+function nomeDirezione(az) {
+  if (az < 112) return 'Est';
+  if (az < 158) return 'Sud-Est';
+  if (az < 203) return 'Sud';
+  if (az < 248) return 'Sud-Ovest';
+  return 'Ovest';
+}
+function aggiornaControlli() {
+  const tilt = +elTilt.value, az = +elAz.value;
+  elTiltVal.textContent = tilt + '°';
+  elAzVal.textContent = nomeDirezione(az) + ' (' + az + '°)';
+  elAgo.setAttribute('transform', 'rotate(' + az + ' 70 70)');
+  elPannello.setAttribute('transform', 'translate(261,242) rotate(' + (-tilt) + ')');
+  if (inCorsa && sceltaIniziale && (Math.abs(tilt - sceltaIniziale.tilt) > 2 || Math.abs(az - sceltaIniziale.az) > 3)) trackerUsato = true;
+}
+elTilt.addEventListener('input', aggiornaControlli);
+elAz.addEventListener('input', aggiornaControlli);
+
+function apiceArco() { return 268 - (40 + (stagione.altMax / 90) * 200); }
+function puntoSole(f) {
+  const y0 = 268, yc = 2 * apiceArco() - y0;
+  return { x: 30 + 500 * f, y: (1 - f) * (1 - f) * y0 + 2 * f * (1 - f) * yc + f * f * y0 };
+}
+function disegnaArco() {
+  const y0 = 268, yc = 2 * apiceArco() - y0;
+  elArco.setAttribute('d', 'M30,' + y0 + ' Q280,' + yc + ' 530,' + y0);
+  elEtStag.textContent = stagione.label.replace('&middot;', '·');
+}
+
+/* traguardi */
+const gTraguardi = document.getElementById('traguardi');
+const xStrada = km => 40 + (km / KM_MAX) * 920;
+TRAGUARDI.forEach((tr, i) => {
+  const x = xStrada(tr.km);
+  const yTesto = i % 2 === 0 ? 44 : 20;
+  const yBand = yTesto + 8;
+  const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  g.innerHTML = '<line x1="' + x + '" y1="' + yBand + '" x2="' + x + '" y2="98" stroke="var(--brd2)" stroke-width="2.5"/>' +
+    '<path d="M' + x + ' ' + yBand + ' h20 l-6 7 6 7 h-20 z" fill="var(--sole)" stroke="var(--sole2)" stroke-width="1.5"/>' +
+    '<text x="' + x + '" y="' + yTesto + '" text-anchor="middle" font-family="Lexend,sans-serif" font-size="15" font-weight="600" fill="var(--testo)">' + tr.nome + '</text>' +
+    '<text x="' + x + '" y="162" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" fill="var(--muted)">' + tr.km + ' km</text>';
+  gTraguardi.appendChild(g);
+});
+
+/* missioni */
+const MISSIONI = [
+  { id:'brescia', txt:'Inverno: arriva a Brescia', check:r => r.stId === 'dicembre' && r.km >= 32 },
+  { id:'garda', txt:'Primavera: tocca il Lago di Garda', check:r => r.stId === 'marzo' && r.km >= 85 },
+  { id:'venezia', txt:'Estate: arriva fino a Venezia', check:r => r.stId === 'giugno' && r.km >= 210 },
+  { id:'nuvole', txt:'Fai 100 km in un giorno con nuvole', check:r => r.km >= 100 && r.conNuvole },
+  { id:'ingegnere', txt:'Batti l&rsquo;auto dell&rsquo;ingegnere', check:r => r.km > r.kmGhost }
+];
+const missioniFatte = new Set();
+const missioniLista = document.getElementById('missioniLista');
+function renderMissioni() {
+  missioniLista.innerHTML = '';
+  MISSIONI.forEach(m => {
+    const fatta = missioniFatte.has(m.id);
+    const d = document.createElement('span');
+    d.className = 'missione' + (fatta ? ' fatta' : '');
+    d.innerHTML = (fatta
+      ? '<svg class="m-ic" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5 11 15.5 16.5 9.5"/></svg>'
+      : '<svg class="m-ic" viewBox="0 0 24 24" fill="none" stroke="var(--brd2)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>')
+      + '<span>' + m.txt + '</span>';
+    missioniLista.appendChild(d);
+  });
+}
+renderMissioni();
+
+function resetGiorno(mantieniRisultato) {
+  clearInterval(timerSim);
+  inCorsa = false; trackerUsato = false; sceltaIniziale = null;
+  tCorrente = stagione.alba; energia = 0; ghostE = 0; puntiCurva = [];
+  disegnaArco();
+  const p0 = puntoSole(0);
+  elSole.setAttribute('transform', 'translate(' + p0.x + ',' + p0.y + ')');
+  elRaggio.setAttribute('opacity', 0);
+  elNuvola.setAttribute('opacity', 0);
+  elCurva.setAttribute('points', '');
+  elOrologio.textContent = oraTesto(stagione.alba);
+  elPwOra.textContent = '0,00'; elPwFill.style.width = '0%';
+  elEnTot.textContent = '0,0'; elKmTot.textContent = '0'; elKmLive.textContent = '0'; elKmGhost.textContent = '0';
+  elAuto.setAttribute('transform', 'translate(30,0)');
+  elGhost.setAttribute('transform', 'translate(30,0)');
+  elStrada.classList.remove('in-moto');
+  elBtnGiorno.disabled = false;
+  elBtnGiorno.querySelector('span').textContent = 'Avvia la giornata';
+  if (!mantieniRisultato) elRisultato.classList.remove('mostra', 'r-oro', 'r-verde', 'r-ambra');
+  aggiornaControlli();
+}
+
+function passoSim() {
+  const DT = 1 / 6;
+  tCorrente += DT;
+  const tilt = +elTilt.value, az = +elAz.value;
+  const { p: pSereno, f } = potenzaKw(stagione, tCorrente, tilt, az);
+  const fN = fattoreNuvole(tCorrente);
+  const p = pSereno * fN;
+  energia += p * DT;
+  const best = migliore(stagione);
+  ghostE += potenzaKw(stagione, tCorrente, best.tilt, best.az).p * fN * DT;
+
+  const pos = puntoSole(Math.min(Math.max(f, 0), 1));
+  elSole.setAttribute('transform', 'translate(' + pos.x + ',' + pos.y + ')');
+  elOrologio.textContent = oraTesto(tCorrente);
+
+  if (fN < 1) { elNuvola.setAttribute('transform', 'translate(' + pos.x + ',' + (pos.y - 4) + ')'); elNuvola.setAttribute('opacity', '0.95'); }
+  else elNuvola.setAttribute('opacity', '0');
+
+  if (p > 0.05) {
+    elRaggio.setAttribute('x1', pos.x); elRaggio.setAttribute('y1', pos.y);
+    elRaggio.setAttribute('x2', 261); elRaggio.setAttribute('y2', 236);
+    elRaggio.setAttribute('opacity', (0.15 + 0.75 * p / KWP).toFixed(2));
+  } else elRaggio.setAttribute('opacity', 0);
+
+  puntiCurva.push((30 + 515 * f).toFixed(1) + ',' + (88 - (p / KWP) * 80).toFixed(1));
+  elCurva.setAttribute('points', puntiCurva.join(' '));
+
+  elPwOra.textContent = fmt(p, 2);
+  elPwFill.style.width = Math.min(100, p / KWP * 100) + '%';
+  elEnTot.textContent = fmt(energia, 1);
+  const km = energia / KWH_PER_KM, kmGhost = ghostE / KWH_PER_KM;
+  elKmTot.textContent = fmt(km);
+  elKmLive.textContent = fmt(km);
+  elKmGhost.textContent = fmt(kmGhost);
+
+  elAuto.setAttribute('transform', 'translate(' + (30 + Math.min(km / KM_MAX, 1) * 930).toFixed(1) + ',0)');
+  elGhost.setAttribute('transform', 'translate(' + (30 + Math.min(kmGhost / KM_MAX, 1) * 930).toFixed(1) + ',0)');
+  elStrada.classList.toggle('in-moto', p > 0.05);
+
+  if (tCorrente >= stagione.tram) fineGiorno();
+}
+
+function fineGiorno() {
+  clearInterval(timerSim);
+  inCorsa = false;
+  elStrada.classList.remove('in-moto');
+  elBtnGiorno.disabled = false;
+  elBtnGiorno.querySelector('span').textContent = 'Rivivi la giornata';
+
+  const km = energia / KWH_PER_KM, kmGhost = ghostE / KWH_PER_KM;
+  const eff = ghostE > 0 ? energia / ghostE * 100 : 0;
+  const conNuvole = meteoCorrente.nuvole.length > 0;
+  if (km > recordKm) { recordKm = km; elRecord.textContent = fmt(recordKm) + ' km'; }
+
+  const r = elRisultato;
+  r.classList.remove('r-oro', 'r-verde', 'r-ambra');
+  let titolo, sotto, classe;
+  if (eff > 100) {
+    titolo = 'Hai battuto l’ingegnere!'; classe = 'r-oro';
+    sotto = trackerUsato
+      ? 'Muovendo il pannello hai inseguito il sole: nessun pannello fisso può starti dietro. Hai inventato l’inseguitore solare.'
+      : 'La tua auto è arrivata più lontano di quella dell’ingegnere.';
+  } else if (eff >= 95) {
+    titolo = 'Sole d’oro: orientamento da manuale'; classe = 'r-oro';
+    sotto = 'Praticamente alla pari con l’ingegnere: il tuo pannello ha catturato quasi tutto il sole disponibile.';
+  } else if (eff >= 80) {
+    titolo = 'Ottima caccia al sole'; classe = 'r-verde';
+    sotto = 'Ci sei quasi: piccoli ritocchi e raggiungi l’auto fantasma.';
+  } else if (eff >= 55) {
+    titolo = 'Buon inizio, si può fare di meglio'; classe = '';
+    sotto = 'Una parte del sole ti è sfuggita: osserva dove passa e riprova.';
+  } else {
+    titolo = 'Il sole ti è sfuggito'; classe = 'r-ambra';
+    sotto = 'Nessun problema: ogni tentativo insegna qualcosa. Leggi il suggerimento e riprova.';
+  }
+  if (classe) r.classList.add(classe);
+
+  const az = +elAz.value, tilt = +elTilt.value;
+  const hint = [];
+  if (eff < 95) {
+    if (az < 150) hint.push('Il tuo pannello guardava verso est: al mattino era felice, ma a mezzogiorno il sole era a sud. Dove conviene farlo guardare?');
+    else if (az > 210) hint.push('Il tuo pannello guardava verso ovest: si è svegliato tardi! Il sole di mezzogiorno era a sud.');
+    if (stagione.id === 'dicembre' && tilt < 40) hint.push('D’inverno il sole resta basso: un pannello più «in piedi» lo guarda dritto in faccia.');
+    if (stagione.id === 'giugno' && tilt > 50) hint.push('D’estate a mezzogiorno il sole è quasi sopra la testa: prova un pannello più sdraiato.');
+    if (!hint.length) hint.push('Ritocca inclinazione e orientamento di poco alla volta e confronta i kWh: è così che lavorano i progettisti.');
+  } else if (!trackerUsato) {
+    hint.push('Sfida extra: prova a muovere le leve MENTRE il sole viaggia. Cosa succede all’energia?');
+  }
+  if (conNuvole) hint.push('Oggi c’erano nuvole: guarda i crolli nella telemetria. Non è un guasto, è il meteo — e vale anche per l’ingegnere.');
+
+  document.getElementById('risTitolo').textContent = titolo;
+  document.getElementById('risSotto').textContent = sotto;
+  document.getElementById('risEn').textContent = fmt(energia, 1);
+  document.getElementById('risKm').textContent = fmt(km);
+  document.getElementById('risKmGhost').textContent = fmt(kmGhost);
+  document.getElementById('risEff').textContent = fmt(Math.min(eff, 999));
+  document.getElementById('risEuro').textContent = fmt(energia * EURO_KWH, 2);
+  document.getElementById('risMsg').textContent = hint.join(' ');
+  r.classList.add('mostra');
+  r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  const esito = { stId: stagione.id, km, kmGhost, eff, conNuvole };
+  MISSIONI.forEach(m => { if (!missioniFatte.has(m.id) && m.check(esito)) missioniFatte.add(m.id); });
+  renderMissioni();
+
+  creaMeteo(stagione);
+  elMeteoTesto.innerHTML = meteoCorrente.testo;
+}
+
+elBtnGiorno.addEventListener('click', () => {
+  resetGiorno(true);
+  inCorsa = true;
+  sceltaIniziale = { tilt: +elTilt.value, az: +elAz.value };
+  elBtnGiorno.disabled = true;
+  elBtnGiorno.querySelector('span').textContent = 'Il sole sta viaggiando…';
+  timerSim = setInterval(passoSim, 55);
+});
+document.getElementById('btnRiprova').addEventListener('click', () => {
+  resetGiorno();
+  document.querySelector('.sim-grid').scrollIntoView({ behavior: 'smooth' });
+});
+document.getElementById('btnCambiaStagione').addEventListener('click', () => {
+  const i = (STAGIONI.indexOf(stagione) + 1) % STAGIONI.length;
+  stagioniBox.querySelectorAll('.stg')[i].click();
+  document.querySelector('.sim-grid').scrollIntoView({ behavior: 'smooth' });
+});
+resetGiorno();
+
+/* ============ IL CODICE DEL SOLE ============ */
+const ORE_PROG = [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+const TILT_PROG = [0,10,20,30,40,50,60,70,80,90];
+const AZ_PROG = [['Est',90],['Sud-Est',135],['Sud',180],['Sud-Ovest',225],['Ovest',270]];
+const MAX_ISTRUZIONI = 8;
+const PARTENZA = { tilt:30, az:180 };
+let programma = [ { ora:9, tilt:30, az:135 } ];
+let stCod = STAGIONI[0];
+
+const progRighe = document.getElementById('progRighe');
+const progConta = document.getElementById('progConta');
+const pseudocodice = document.getElementById('pseudocodice');
+const codStagioni = document.getElementById('codStagioni');
+
+STAGIONI.forEach((st, i) => {
+  const b = document.createElement('button');
+  b.className = 'chip' + (i === 0 ? ' on' : '');
+  b.innerHTML = '<span>' + st.label + '</span>';
+  b.addEventListener('click', () => {
+    stCod = st;
+    codStagioni.querySelectorAll('.chip').forEach((x, j) => x.classList.toggle('on', j === i));
+  });
+  codStagioni.appendChild(b);
+});
+
+function nomeAz(v) { const t = AZ_PROG.find(a => a[1] === v); return t ? t[0] : v + '°'; }
+function selectHtml(cls, opts, val, suffix) {
+  return '<select class="' + cls + '" aria-label="' + cls + '">' +
+    opts.map(o => {
+      const [lab, v] = Array.isArray(o) ? o : [o + (suffix || ''), o];
+      return '<option value="' + v + '"' + (v === val ? ' selected' : '') + '>' + lab + '</option>';
+    }).join('') + '</select>';
+}
+function renderProgramma() {
+  progRighe.innerHTML = '';
+  programma.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'prog-riga';
+    div.innerHTML = '<span class="pr-t">ALLE ORE</span>' +
+      selectHtml('pr-ora', ORE_PROG.map(h => [String(h).padStart(2, '0') + ':00', h]), r.ora) +
+      '<span class="pr-t">&rarr; INCLINA</span>' +
+      selectHtml('pr-tilt', TILT_PROG.map(v => [v + '°', v]), r.tilt) +
+      '<span class="pr-t">ORIENTA</span>' +
+      selectHtml('pr-az', AZ_PROG, r.az) +
+      '<button class="pr-x" aria-label="Elimina questa istruzione"' + (programma.length <= 1 ? ' disabled' : '') + '>&times;</button>';
+    div.querySelector('.pr-ora').addEventListener('change', e => { r.ora = +e.target.value; renderPseudo(); });
+    div.querySelector('.pr-tilt').addEventListener('change', e => { r.tilt = +e.target.value; renderPseudo(); });
+    div.querySelector('.pr-az').addEventListener('change', e => { r.az = +e.target.value; renderPseudo(); });
+    div.querySelector('.pr-x').addEventListener('click', () => { programma.splice(i, 1); renderProgramma(); });
+    progRighe.appendChild(div);
+  });
+  progConta.textContent = 'istruzioni: ' + programma.length + '/' + MAX_ISTRUZIONI;
+  document.getElementById('btnAggiungi').disabled = programma.length >= MAX_ISTRUZIONI;
+  renderPseudo();
+}
+function renderPseudo() {
+  const righe = [...programma].sort((a, b) => a.ora - b.ora);
+  let txt = '<span class="pc-kw">INIZIO GIORNATA</span> &rarr; inclina ' + PARTENZA.tilt + '°, orienta ' + nomeAz(PARTENZA.az).toUpperCase() + '\n';
+  righe.forEach(r => {
+    txt += '<span class="pc-kw">QUANDO</span> ora &ge; ' + String(r.ora).padStart(2, '0') + ':00 &rarr; inclina ' + r.tilt + '°, orienta ' + nomeAz(r.az).toUpperCase() + '\n';
+  });
+  txt += '<span class="pc-kw">FINE GIORNATA</span> &rarr; somma i kWh raccolti';
+  pseudocodice.innerHTML = txt;
+}
+document.getElementById('btnAggiungi').addEventListener('click', () => {
+  if (programma.length >= MAX_ISTRUZIONI) return;
+  const ultima = programma[programma.length - 1];
+  programma.push({ ora: Math.min(20, (ultima ? ultima.ora : 8) + 4), tilt: 30, az: 180 });
+  renderProgramma();
+});
+renderProgramma();
+
+function eseguiProgramma(st, prog) {
+  const righe = [...prog].sort((a, b) => a.ora - b.ora);
+  let e = 0; const pts = [];
+  for (let t = st.alba; t < st.tram; t += 0.25) {
+    let tilt = PARTENZA.tilt, az = PARTENZA.az;
+    righe.forEach(r => { if (r.ora <= t) { tilt = r.tilt; az = r.az; } });
+    const { p, f } = potenzaKw(st, t, tilt, az);
+    e += p * 0.25;
+    pts.push((30 + 515 * f).toFixed(1) + ',' + (94 - (p / KWP) * 86).toFixed(1));
+  }
+  return { e, pts };
+}
+
+let timerCod = null;
+document.getElementById('btnEsegui').addEventListener('click', () => {
+  clearInterval(timerCod);
+  const { e, pts } = eseguiProgramma(stCod, programma);
+  const best = migliore(stCod);
+  const eff = e / best.e * 100;
+  const km = e / KWH_PER_KM;
+  const linea = document.getElementById('codLinea');
+  linea.setAttribute('points', '');
+  let i = 0;
+  timerCod = setInterval(() => {
+    i += 2;
+    linea.setAttribute('points', pts.slice(0, i).join(' '));
+    if (i >= pts.length) {
+      clearInterval(timerCod);
+      document.getElementById('codEn').textContent = fmt(e, 1);
+      document.getElementById('codKm').textContent = fmt(km);
+      document.getElementById('codEff').textContent = fmt(Math.min(eff, 999));
+      const msg = [];
+      if (eff > 100) {
+        msg.push('Il tuo programma insegue il sole: nessun pannello immobile può raggiungerlo. È esattamente il motivo per cui esistono gli inseguitori solari — e dentro hanno un programma come il tuo.');
+      } else if (programma.length < 2) {
+        msg.push('Con una sola istruzione il tuo pannello è quasi fisso. Cosa succederebbe se a metà giornata gli dicessi di girarsi?');
+      } else if (eff >= 90) {
+        msg.push('Ci sei quasi! Il sole sorge a est e tramonta a ovest: le tue istruzioni lo aspettano nei posti giusti alle ore giuste?');
+      } else {
+        msg.push('Leggi la telemetria: dove crolla la potenza? Lì manca (o sbaglia) un’istruzione. Correggi e riesegui: questo è il debug.');
+      }
+      if (recordKm > 0) {
+        msg.push(km > recordKm
+          ? 'E il tuo programma ha superato il tuo record manuale (' + fmt(recordKm) + ' km): l’automazione paga!'
+          : 'Il tuo record manuale (' + fmt(recordKm) + ' km) per ora resiste: il programma può fare di meglio.');
+      }
+      document.getElementById('codMsg').textContent = msg.join(' ');
+      document.getElementById('badgeProg').classList.toggle('mostra', eff > 100);
+    }
+  }, 16);
+});
+
+/* ============ QUIZ ============ */
+const SVG_OK = '<svg class="segno" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--energiaL)" stroke="none"/><path d="M7 12.5 10.5 16 17 8.5"/></svg>';
+const SVG_KO = '<svg class="segno" viewBox="0 0 24 24" fill="none" stroke="var(--ambra)" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="var(--ambraL)" stroke="none"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg>';
+
+const QUIZ = [
+  { q:'Che cosa misura il kilowattora (kWh)?',
+    o:['La potenza di un apparecchio in questo istante','Una quantità di energia, cioè il lavoro fatto in totale','La velocità della corrente nei fili','La temperatura dei pannelli'],
+    c:1, e:'Il kWh è energia: 1.000 watt che lavorano per un’ora intera. La potenza del momento, invece, si misura in watt o kilowatt.' },
+  { q:'Una lampadina LED da 10 watt resta accesa per 100 ore. Quanta energia ha usato?',
+    o:['10 kWh','1 kWh','100 kWh','0,1 kWh'],
+    c:1, e:'Potenza × tempo = energia: 10 W × 100 h = 1.000 Wh, cioè 1 kWh. Per questo il LED è un campione di risparmio.' },
+  { q:'Con 1 kWh, un’auto elettrica percorre circa…',
+    o:['600 metri','6–7 chilometri','60 chilometri','200 chilometri'],
+    c:1, e:'Un’auto elettrica consuma circa 0,15 kWh al km: con 1 kWh fa 6–7 km. Nel simulatore l’hai visto succedere.' },
+  { q:'Qual è la differenza tra kW e kWh?',
+    o:['Nessuna: sono due modi di scrivere la stessa cosa','kW è la potenza (quanto spinge ora), kWh è l’energia (quanto lavoro ha fatto)','I kW si usano d’estate e i kWh d’inverno','kW è per le case, kWh per le scuole'],
+    c:1, e:'È come velocità e distanza in bicicletta: quanto spingi adesso (kW) e quanta strada hai fatto in totale (kWh).' },
+  { q:'Alle 05:47 del mattino il contatore giornaliero segnava solo 0,23 kWh. Perché?',
+    o:['L’impianto era guasto','Il sole era appena sorto: la giornata era appena cominciata','I pannelli erano sporchi','Di luglio i pannelli producono poco'],
+    c:1, e:'Un dato si legge sempre insieme al suo momento: alle 05:47 i pannelli avevano appena iniziato a lavorare. È il caso n. 1 del detective.' },
+  { q:'In Italia, verso quale direzione conviene orientare un pannello fisso?',
+    o:['Nord','Est','Sud','Non fa nessuna differenza'],
+    c:2, e:'Da noi il sole a mezzogiorno è sempre verso sud: un pannello rivolto a sud lo guarda in faccia nelle ore migliori. L’hai sperimentato nel simulatore.' },
+  { q:'«Energia esportata» significa che quell’energia…',
+    o:['è andata sprecata','è stata ceduta alla rete elettrica, per le case vicine','è rimasta nei pannelli','è stata spedita all’estero'],
+    c:1, e:'Quando i pannelli producono più di quello che serve, l’energia in più entra nella rete elettrica e alimenta chi ne ha bisogno in quel momento.' },
+  { q:'D’inverno il sole a mezzogiorno resta basso. Come conviene mettere il pannello?',
+    o:['Sdraiato, quasi orizzontale','Più «in piedi», per guardare il sole dritto in faccia','Rivolto a nord','È meglio spegnerlo'],
+    c:1, e:'Il pannello rende di più quando i raggi lo colpiscono perpendicolarmente: sole basso, pannello più verticale. D’estate vale il contrario.' },
+  { q:'Il tuo programma dice: ALLE 09 → orienta EST; ALLE 13 → orienta SUD. Alle 11, il pannello dove guarda?',
+    o:['A est','A sud','Torna alla partenza','Si spegne in attesa'],
+    c:0, e:'Un’istruzione resta valida finché non ne arriva una nuova: alle 11 vale ancora quella delle 09. I programmatori lo chiamano «stato» del sistema.' },
+  { q:'Che cos’è un programma?',
+    o:['Un elenco di numeri da imparare a memoria','Una sequenza ordinata di istruzioni che una macchina esegue','Un disegno tecnico dell’impianto','Una password segreta dell’inverter'],
+    c:1, e:'Proprio come la tua lista «ALLE ORE → FAI»: l’inverter la esegue dall’alto in basso seguendo l’orologio. Scriverla, provarla e correggerla è fare coding.' }
+];
+
+let qIdx = 0, qPunti = 0, qRisposto = false;
+const elQpTxt = document.getElementById('qpTxt'), elQpFill = document.getElementById('qpFill');
+const elQuizDom = document.getElementById('quizDom'), elQuizOpz = document.getElementById('quizOpz');
+const elSpiega = document.getElementById('quizSpiega'), elQsT = document.getElementById('qsT'), elQsTxt = document.getElementById('qsTxt');
+const elBtnProssima = document.getElementById('btnProssima');
+const elQuizCorpo = document.getElementById('quizCorpo'), elQuizFine = document.getElementById('quizFine');
+
+function mostraDomanda() {
+  const d = QUIZ[qIdx];
+  qRisposto = false;
+  elQpTxt.textContent = 'Domanda ' + (qIdx + 1) + ' di ' + QUIZ.length;
+  elQpFill.style.width = (qIdx / QUIZ.length * 100) + '%';
+  elQuizDom.textContent = d.q;
+  elQuizOpz.innerHTML = '';
+  elSpiega.className = 'quiz-spiega';
+  elBtnProssima.style.display = 'none';
+  d.o.forEach((testo, i) => {
+    const b = document.createElement('button');
+    b.className = 'opz';
+    b.innerHTML = (i === d.c ? SVG_OK : SVG_KO) + '<span>' + testo + '</span>';
+    b.addEventListener('click', () => rispondi(i));
+    elQuizOpz.appendChild(b);
+  });
+}
+function rispondi(i) {
+  if (qRisposto) return;
+  qRisposto = true;
+  const d = QUIZ[qIdx];
+  const ok = i === d.c;
+  if (ok) qPunti++;
+  elQuizOpz.querySelectorAll('.opz').forEach((b, j) => {
+    b.disabled = true;
+    if (j === d.c) b.classList.add('giusta');
+    else if (j === i) b.classList.add('sbagliata');
+  });
+  elSpiega.className = 'quiz-spiega ' + (ok ? 'ok' : 'ko');
+  elQsT.textContent = ok ? 'Esatto!' : 'Non proprio: ecco il punto.';
+  elQsTxt.textContent = d.e;
+  elBtnProssima.style.display = 'inline-flex';
+  elBtnProssima.querySelector('span').textContent = qIdx + 1 < QUIZ.length ? 'Prossima domanda' : 'Vedi il risultato';
+}
+elBtnProssima.addEventListener('click', () => {
+  qIdx++;
+  if (qIdx < QUIZ.length) mostraDomanda();
+  else fineQuiz();
+});
+function fineQuiz() {
+  elQuizCorpo.style.display = 'none';
+  elQuizFine.classList.add('mostra');
+  elQpFill.style.width = '100%';
+  elQpTxt.textContent = 'Verifica completata';
+  const perc = Math.round(qPunti / QUIZ.length * 100);
+  const colore = perc >= 75 ? 'var(--energia)' : (perc >= 50 ? 'var(--sole)' : 'var(--ambra)');
+  document.getElementById('anello').style.background = 'conic-gradient(' + colore + ' ' + perc + '%, #0A1828 0)';
+  document.getElementById('anelloNum').textContent = qPunti + '/' + QUIZ.length;
+  document.getElementById('anelloLab').textContent = perc + '% giuste';
+  let med, comm;
+  if (perc === 100) { med = 'Cacciatore di Sole leggendario'; comm = 'Hai letto ogni dato come un tecnico esperto. Ora tocca a te: insegna a qualcuno a casa cosa significa kWh.'; }
+  else if (perc >= 75) { med = 'Cacciatore di Sole esperto'; comm = 'Ottima lettura! Rivedi solo le spiegazioni delle domande sbagliate: sono i pezzi che ti mancano per il punteggio pieno.'; }
+  else if (perc >= 50) { med = 'Apprendista dell’energia'; comm = 'Buona base! Torna al passo 2 e al simulatore, poi rifai la verifica: vedrai la differenza.'; }
+  else { med = 'Primo giro di ricognizione'; comm = 'Nessun problema: rileggi le spiegazioni con calma e riprova. Ogni tentativo è energia accumulata.'; }
+  document.getElementById('quizMedaglia').textContent = med;
+  document.getElementById('quizComm').textContent = comm;
+}
+document.getElementById('btnRifai').addEventListener('click', () => {
+  qIdx = 0; qPunti = 0;
+  elQuizFine.classList.remove('mostra');
+  elQuizCorpo.style.display = 'block';
+  mostraDomanda();
+});
+mostraDomanda();
+
+/* ============ METACOGNIZIONE: copia risposte ============ */
+document.getElementById('btnCopia').addEventListener('click', () => {
+  const t = ['Che cosa ho capito che prima non sapevo?', 'Come ci sono arrivato?', 'Che cosa cambierò da domani?'];
+  const r = [1, 2, 3].map((n, i) => t[i] + '\n' + (document.getElementById('meta' + n).value.trim() || '(non ho ancora risposto)')).join('\n\n');
+  const testo = 'CACCIATORI DI SOLE — le mie riflessioni\n\n' + r;
+  const fine = () => {
+    const avv = document.getElementById('copiatoAvviso');
+    avv.style.display = 'inline';
+    setTimeout(() => { avv.style.display = 'none'; }, 3500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(testo).then(fine, fine);
+  else fine();
+});
+</script>
+</body>
+</html>
