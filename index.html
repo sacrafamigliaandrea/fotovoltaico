@@ -41,34 +41,64 @@ button{font-family:var(--head);cursor:pointer}
 :focus-visible{outline:3px solid var(--ciano);outline-offset:2px;border-radius:6px}
 p{margin-bottom:14px}
 
-/* ============ BRAND (wordmark) ============ */
-.brandbar{display:flex;justify-content:center;padding:16px 10px 0}
-.brand-txt{display:flex;flex-direction:column;text-align:center;line-height:1.25}
-.brand-name{font-family:var(--head);font-size:14px;font-weight:700;letter-spacing:.6px;color:var(--testo);text-transform:uppercase}
-.brand-role{font-family:var(--head);font-size:11.5px;font-weight:500;letter-spacing:.2px;color:var(--muted)}
-
-/* ============ HEADER ============ */
-header{padding:24px 0 8px;text-align:center}
-.hero-sun{width:78px;height:78px;margin:0 auto 8px;display:block;filter:drop-shadow(0 0 18px rgba(255,201,61,.35))}
-h1{font-size:2.7rem;font-weight:700;letter-spacing:-.01em}
-h1 .h-sole{color:var(--sole)}
-.sottotitolo{font-size:1.14rem;color:var(--muted);margin-top:8px;max-width:74ch;margin-left:auto;margin-right:auto}
-.sottotitolo .evidenza{color:var(--sole);font-weight:700}
-.statobar{display:inline-flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;background:var(--pann);border:1.5px solid var(--brd);border-radius:999px;padding:8px 20px;font-family:var(--mono);font-size:12.5px;font-weight:500;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
-.led{width:10px;height:10px;border-radius:50%;background:var(--energia);box-shadow:0 0 8px var(--energia);animation:pulsa 2s ease-in-out infinite}
+/* ============ SHELL (sidebar + contenuto) ============ */
+.led{width:10px;height:10px;border-radius:50%;background:var(--energia);box-shadow:0 0 8px var(--energia);animation:pulsa 2s ease-in-out infinite;flex:0 0 auto}
 @keyframes pulsa{0%,100%{opacity:1}50%{opacity:.35}}
-.statobar .sep{color:var(--brd2)}
+.shell{display:flex;align-items:flex-start;min-height:100vh}
+h1 .h-sole{color:var(--sole)}
+.sottotitolo .evidenza{color:var(--sole);font-weight:700}
 
-/* ============ TOPBAR ============ */
-.topbar{position:sticky;top:0;z-index:50;background:rgba(10,21,36,.92);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--brd);padding:10px 0;margin-top:18px}
-.topbar-in{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;align-items:center}
-.pill{border:1.5px solid var(--brd2);background:var(--pann);color:var(--testo);border-radius:999px;padding:10px 16px;font-size:15px;font-weight:600;min-height:44px;display:inline-flex;align-items:center;gap:8px;transition:all .18s}
+/* --- SIDEBAR --- */
+.sidebar{position:sticky;top:0;align-self:flex-start;flex:0 0 250px;width:250px;height:100vh;overflow-y:auto;
+  background:var(--sfondo2);border-right:1.5px solid var(--brd);z-index:50;
+  display:flex;flex-direction:column;gap:12px;padding:18px 14px}
+.side-brand{display:flex;align-items:center;gap:11px;padding:2px 6px 10px;border-bottom:1.5px solid var(--brd)}
+.hero-sun{width:46px;height:46px;flex:0 0 auto;display:block;filter:drop-shadow(0 0 14px rgba(255,201,61,.35))}
+.side-title{display:flex;flex-direction:column;line-height:1.18;min-width:0}
+.side-app{font-family:var(--head);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.side-claim{font-size:11px;color:var(--muted);margin-top:2px}
+.side-school{font-family:var(--head);font-size:10.5px;font-weight:600;letter-spacing:.3px;color:var(--muted);text-transform:uppercase;padding:0 6px}
+/* pannello che pulsa (impianto "in funzione") */
+.hero-panel{transform-box:fill-box;transform-origin:center;animation:pannPulse 1.8s ease-in-out infinite}
+@keyframes pannPulse{0%,100%{opacity:.45}50%{opacity:1}}
+.hero-sun .hero-glow{transform-box:fill-box;transform-origin:center;animation:pannGlow 1.8s ease-in-out infinite}
+@keyframes pannGlow{0%,100%{opacity:0}50%{opacity:.5}}
+@media (prefers-reduced-motion:reduce){.hero-panel,.hero-sun .hero-glow,.led{animation:none}.hero-panel{opacity:1}}
+
+.side-nav{display:flex;flex-direction:column;gap:5px;flex:1 1 auto}
+.side-foot{display:flex;flex-direction:column;gap:9px;border-top:1.5px solid var(--brd);padding-top:12px}
+.side-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;line-height:1.35}
+
+.pill{border:1.5px solid var(--brd2);background:var(--pann);color:var(--testo);border-radius:10px;padding:10px 12px;font-size:14.5px;font-weight:600;min-height:44px;width:100%;display:inline-flex;align-items:center;gap:9px;text-align:left;transition:all .16s}
 .pill:hover{border-color:var(--ciano);background:var(--cianoL)}
-.pill.attiva{background:var(--ciano);color:#06121F;border-color:var(--ciano);box-shadow:0 0 14px rgba(59,201,236,.35)}
-.pill .p-num{font-family:var(--mono);font-size:12.5px;font-weight:700;background:var(--soleL);color:var(--sole);border-radius:999px;width:23px;height:23px;display:inline-flex;align-items:center;justify-content:center}
+.pill.attiva{background:var(--ciano);color:#06121F;border-color:var(--ciano);box-shadow:0 0 14px rgba(59,201,236,.3)}
+.pill .p-num{font-family:var(--mono);font-size:12px;font-weight:700;background:var(--soleL);color:var(--sole);border-radius:7px;width:22px;height:22px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center}
 .pill.attiva .p-num{background:#06121F;color:var(--sole)}
+.pill-appr{border-color:var(--sole);color:var(--sole);margin-top:4px}
+.pill-appr:hover{background:var(--soleL);border-color:var(--sole)}
+.pill-appr.attiva{background:var(--sole);color:#231500;border-color:var(--sole);box-shadow:0 0 14px rgba(255,201,61,.35)}
 .pill-doc{border-color:var(--brd2);color:var(--muted)}
-.pill-doc:hover{color:var(--ciano)}
+.pill-doc:hover{color:var(--ciano);border-color:var(--ciano)}
+
+/* --- CONTENUTO --- */
+.content{flex:1 1 auto;min-width:0;max-width:1160px;margin:0 auto;padding:26px 34px 0}
+h1{font-size:2.7rem;font-weight:700;letter-spacing:-.01em}
+
+/* --- RESPONSIVE: sidebar → barra orizzontale con pill a capo --- */
+@media (max-width:900px){
+  .shell{flex-direction:column}
+  .sidebar{position:sticky;top:0;flex:none;width:100%;height:auto;max-height:none;overflow:visible;
+    flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px;
+    border-right:none;border-bottom:1.5px solid var(--brd);
+    background:rgba(13,27,46,.96);backdrop-filter:blur(8px);padding:10px 14px}
+  .side-brand{border-bottom:none;padding:0;margin-right:6px}
+  .side-claim,.side-school{display:none}
+  .side-nav{flex-direction:row;flex-wrap:wrap;flex:1 1 100%;gap:7px}
+  .side-foot{flex-direction:row;flex-wrap:wrap;border-top:none;padding-top:0;flex:1 1 100%;align-items:center}
+  .pill{width:auto;border-radius:999px}
+  .side-status{margin-left:auto}
+  .content{max-width:none;margin:0;padding:20px 18px 0}
+}
 
 /* ============ SEZIONI ============ */
 .sezione{display:none;padding:40px 0 60px}
@@ -371,6 +401,179 @@ input[type=range]{width:100%;accent-color:var(--sole);height:44px;background:tra
 .dexp-a{background:var(--cianoL);border:1px solid rgba(59,201,236,.3);border-radius:10px;padding:14px 16px;margin-top:4px;font-size:16px;line-height:1.6}
 .dexp-a-t{font-family:var(--head);font-weight:700;font-size:12.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ciano);margin-bottom:6px}
 
+/* ============ QUADRO DI AVVIAMENTO (interruttori 0/1) ============ */
+.quadro-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:20px;margin-top:14px;align-items:start}
+.switch-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.sw-row{display:flex;align-items:center;gap:14px;background:var(--pann2);border:1.5px solid var(--brd2);border-radius:12px;padding:11px 14px;transition:border-color .2s}
+.sw-row.on{border-color:var(--energia)}
+.sw-row.attesa{border-color:var(--ambra)}
+.sw-ic{flex:0 0 auto;width:34px;height:34px;color:var(--ciano)}
+.sw-info{flex:1;min-width:0}
+.sw-nome{font-family:var(--head);font-weight:700;font-size:15.5px}
+.sw-nome .sw-ess{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.5px;color:var(--sole);background:var(--soleL);border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.sw-fun{font-size:13px;color:var(--muted);line-height:1.4}
+.sw-attesa{font-family:var(--head);font-size:12.5px;font-weight:600;color:var(--ambra);margin-top:3px;display:none}
+.sw-row.attesa .sw-attesa{display:block}
+.sw-toggle{position:relative;flex:0 0 auto;width:68px;height:34px;border-radius:999px;background:#0A1828;border:1.5px solid var(--brd2);cursor:pointer;transition:all .18s}
+.sw-toggle .knob{position:absolute;top:2px;left:2px;width:26px;height:26px;border-radius:50%;background:var(--muted);transition:all .2s;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px;color:var(--pann)}
+.sw-toggle .knob::after{content:'0'}
+.sw-toggle.on{background:rgba(61,220,151,.22);border-color:var(--energia)}
+.sw-toggle.on .knob{left:38px;background:var(--energia);color:#06121F}
+.sw-toggle.on .knob::after{content:'1'}
+.sw-row.attesa .sw-toggle.on{background:var(--ambraL);border-color:var(--ambra)}
+.sw-row.attesa .sw-toggle.on .knob{background:var(--ambra)}
+.parola-bin{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#060F1B;border:1.5px solid var(--brd);border-radius:12px;padding:12px 16px;margin-bottom:12px}
+.parola-bin .pb-l{font-family:var(--head);font-size:13px;font-weight:600;color:var(--muted);max-width:52%}
+.parola-bin .pb-v{font-family:var(--mono);font-weight:700;font-size:1.7rem;letter-spacing:6px;color:var(--ciano)}
+.parola-bin .pb-v .bit1{color:var(--energia)}
+/* schermo stato */
+.catena{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;margin:6px 0 14px}
+.nodo{display:flex;flex-direction:column;align-items:center;gap:5px;width:78px;text-align:center;opacity:.4;transition:opacity .25s}
+.nodo .nodo-box{width:52px;height:52px;border-radius:12px;background:var(--pann2);border:1.5px solid var(--brd2);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .25s}
+.nodo .nodo-lab{font-family:var(--head);font-size:12px;font-weight:600;color:var(--muted);line-height:1.2}
+.nodo.on{opacity:1}
+.nodo.on .nodo-box{border-color:var(--energia);color:var(--energia);background:var(--energiaL);box-shadow:0 0 12px rgba(61,220,151,.25)}
+.nodo.on .nodo-lab{color:var(--testo)}
+.conn{width:24px;height:3px;border-radius:2px;background:var(--brd2);position:relative;overflow:hidden}
+.conn.flusso{background:var(--energia)}
+.conn.flusso::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:scorre 1s linear infinite}
+@keyframes scorre{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.catena-extra{display:flex;justify-content:center;gap:26px;margin-bottom:10px}
+.catena-extra .nodo::after{content:'opzionale';font-family:var(--mono);font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.stato-box{text-align:center;padding:14px 12px 6px;border-top:1.5px solid var(--brd);margin-top:6px}
+.stato-led{width:16px;height:16px;border-radius:50%;margin:0 auto 8px;background:var(--ambra);box-shadow:0 0 10px var(--ambra);transition:all .3s}
+.stato-box.acceso .stato-led{background:var(--energia);box-shadow:0 0 14px var(--energia)}
+.stato-txt{font-family:var(--head);font-weight:700;font-size:1.3rem;letter-spacing:.5px;color:var(--ambra)}
+.stato-box.acceso .stato-txt{color:var(--energia)}
+.stato-hint{font-size:15px;color:var(--muted);margin-top:6px;min-height:22px;max-width:46ch;margin-left:auto;margin-right:auto}
+.stato-live{text-align:center;font-family:var(--head);font-size:1.05rem;margin-top:6px;color:var(--testo)}
+.stato-live .num{color:var(--ciano);font-size:1.3rem}
+@media (max-width:900px){.quadro-grid{grid-template-columns:1fr}}
+.parola-bin{flex-direction:column;align-items:stretch;gap:8px}
+.parola-bin .pb-riga{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.bin-dec{font-family:var(--head);font-size:14px;color:var(--muted);text-align:right}
+.bin-dec .bstr{font-family:var(--mono);font-weight:700;letter-spacing:3px;color:var(--ciano)}
+.bin-dec b{font-family:var(--mono);color:var(--sole);font-size:1.05rem}
+/* missione del quadro */
+.missione-quadro{margin-top:14px;border-left:4px solid var(--sole)}
+.mq-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.mq-count{font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.6px;color:var(--muted)}
+.mq-nav{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--brd2);background:var(--pann2);color:var(--testo);display:flex;align-items:center;justify-content:center}
+.mq-nav:hover{border-color:var(--ciano);color:var(--ciano)}
+.mq-title{font-family:var(--head);font-weight:700;font-size:1.2rem;color:var(--sole)}
+.mq-desc{font-size:15.5px;color:var(--testo);margin:4px 0 8px;max-width:80ch}
+.mq-steps{list-style:none;margin:8px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.mq-steps li{display:flex;align-items:center;gap:8px;font-family:var(--head);font-size:13.5px;font-weight:600;color:var(--muted);border:1.5px solid var(--brd2);border-radius:999px;padding:6px 14px}
+.mq-steps .num{width:20px;height:20px;border-radius:50%;background:var(--pann2);color:var(--muted);font-family:var(--mono);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.mq-steps li.done{color:var(--energia);border-color:var(--energia)}
+.mq-steps li.done .num{background:var(--energia);color:#06121F}
+.mq-steps li.current{color:var(--sole);border-color:var(--sole)}
+.mq-steps li.current .num{background:var(--sole);color:#231500}
+.mq-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:10px}
+.mq-moves{font-family:var(--head);font-size:14.5px;font-weight:600;color:var(--muted)}
+.mq-moves b{font-family:var(--mono);color:var(--testo);font-size:1.05rem}
+.mq-moves.over b{color:var(--ambra)}
+.mq-fb{font-family:var(--head);font-size:14px;font-weight:600}
+.mq-fb.ok{color:var(--energia)}
+.mq-fb.warn{color:var(--ambra)}
+
+/* ============ LA TUA GIORNATA (consumi + istogramma) ============ */
+.consumi-intro{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 16px}
+.consumi-preset{border:1.5px solid var(--brd2);background:var(--pann);border-radius:999px;padding:8px 16px;font-family:var(--head);font-size:14px;font-weight:600;color:var(--testo);min-height:44px}
+.consumi-preset:hover{border-color:var(--ciano);background:var(--cianoL)}
+.dev-lista{display:flex;flex-direction:column;gap:8px}
+.dev-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 14px;background:var(--pann);border:1.5px solid var(--brd);border-radius:12px;padding:11px 14px;transition:border-color .2s,opacity .2s}
+.dev-row.spento{opacity:.66}
+.dev-row.acceso{border-color:var(--sole)}
+.dev-ic{flex:0 0 auto;width:30px;height:30px;color:var(--ciano)}
+.dev-info{flex:0 0 190px;min-width:150px}
+.dev-nome{font-family:var(--head);font-weight:700;font-size:15px;line-height:1.2}
+.dev-w{font-size:12.5px;color:var(--muted)}
+.dev-slider-wrap{flex:1 1 200px;min-width:150px;display:flex;align-items:center}
+.dev-slider{-webkit-appearance:none;appearance:none;width:100%;height:16px;border-radius:8px;background:#0A1828;border:1px solid var(--brd);outline:none;cursor:pointer}
+.dev-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--sole);border:3px solid #06121F;box-shadow:0 0 8px rgba(255,201,61,.45);cursor:grab}
+.dev-slider::-webkit-slider-thumb:active{cursor:grabbing}
+.dev-slider::-moz-range-thumb{width:19px;height:19px;border-radius:50%;background:var(--sole);border:3px solid #06121F;box-shadow:0 0 8px rgba(255,201,61,.45);cursor:grab}
+.dev-slider:focus-visible{outline:2px solid var(--ciano);outline-offset:3px}
+.dev-slider:disabled{cursor:default;opacity:.85}
+.dev-slider:disabled::-webkit-slider-thumb{cursor:default;background:var(--muted)}
+.dev-slider:disabled::-moz-range-thumb{cursor:default;background:var(--muted)}
+.dev-read{flex:0 0 132px;display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.dev-time{font-family:var(--head);font-weight:600;font-size:13px;color:var(--testo)}
+.dev-row.spento .dev-time{color:var(--muted)}
+.dev-kwh{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--sole);white-space:nowrap}
+.dev-row.spento .dev-kwh{color:var(--muted)}
+.dev-fisso{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);background:var(--pann2);border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:middle}
+.consumo-tot{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.ct-card{background:var(--pann);border:1.5px solid var(--brd);border-radius:16px;padding:18px 20px;border-top:4px solid var(--ciano)}
+.ct-card.t-euro{border-top-color:var(--energia)}
+.ct-card.t-anno{border-top-color:var(--sole)}
+.ct-lab{font-family:var(--head);font-weight:600;font-size:13.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+.ct-val{font-family:var(--mono);font-weight:700;font-size:2rem;margin-top:6px}
+.ct-val .u{font-size:1rem;color:var(--muted);font-weight:500}
+.ct-card.t-euro .ct-val{color:var(--energia)}
+.ct-card.t-anno .ct-val{color:var(--sole)}
+.ct-nota{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.consumo-msg{margin-top:14px;background:var(--cianoL);border-left:4px solid var(--ciano);border-radius:0 12px 12px 0;padding:14px 18px;font-size:15.5px;max-width:80ch}
+.consumo-msg b{color:var(--testo)}
+
+/* ============ RECAP FINALE (accendi ciò che hai imparato) ============ */
+.recap{margin-bottom:26px}
+.recap-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:12px}
+.recap-head h3{margin:0}
+.recap-score{text-align:right;flex:0 0 auto}
+.recap-num{font-family:var(--mono);font-weight:700;font-size:2rem;color:var(--sole);line-height:1}
+.recap-lab{font-family:var(--head);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.recap-bar{height:12px;background:#0A1828;border:1px solid var(--brd);border-radius:999px;overflow:hidden;margin-bottom:16px}
+.recap-fill{height:100%;width:0;background:linear-gradient(90deg,var(--ciano),var(--sole));border-radius:999px;transition:width .35s}
+.recap-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+.recap-item{display:flex;align-items:center;gap:12px;background:var(--pann);border:1.5px solid var(--brd);border-radius:12px;padding:11px 14px;transition:border-color .2s,opacity .2s}
+.recap-item.spento{opacity:.62}
+.recap-item.acceso{border-color:var(--sole);box-shadow:0 0 12px rgba(255,201,61,.12)}
+.ri-passo{flex:0 0 auto;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ciano);background:var(--cianoL);border:1px solid rgba(59,201,236,.3);border-radius:6px;padding:3px 8px;min-width:62px;text-align:center}
+.ri-txt{flex:1;font-size:15px;line-height:1.35}
+.recap-item .sw-toggle{flex:0 0 auto}
+.recap-item.acceso .sw-toggle.on{background:var(--soleL);border-color:var(--sole)}
+.recap-item.acceso .sw-toggle.on .knob{background:var(--sole);color:#231500}
+.recap-tutto{margin-top:14px}
+.recap-msg{margin-top:14px;background:var(--soleL);border-left:4px solid var(--sole);border-radius:0 12px 12px 0;padding:14px 18px;font-size:15.5px;max-width:82ch;min-height:22px}
+.recap-msg b{color:var(--testo)}
+.recap.completo .recap-num{color:var(--energia)}
+.recap.completo .recap-fill{background:linear-gradient(90deg,var(--energia),var(--sole))}
+.recap.completo .recap-msg{background:var(--energiaL);border-left-color:var(--energia)}
+
+/* ============ PROGETTA I TETTI (drag & drop pannelli) ============ */
+.tetti-grid{display:grid;grid-template-columns:minmax(0,1fr) 264px;gap:20px;align-items:start;margin-top:14px}
+.roof-stage{position:relative;border:1.5px solid var(--brd2);border-radius:16px;overflow:hidden;background:#060F1B;touch-action:none;user-select:none;-webkit-user-select:none}
+.roof-stage img{display:block;width:100%;height:auto;pointer-events:none}
+.roof-zone{position:absolute;border:2px dashed rgba(255,201,61,.7);background:rgba(255,201,61,.10);border-radius:6px;opacity:0;transition:opacity .2s;pointer-events:none}
+.roof-stage.dragging .roof-zone{opacity:1;animation:zonePulse 1.1s ease-in-out infinite}
+@keyframes zonePulse{0%,100%{border-color:rgba(255,201,61,.55)}50%{border-color:rgba(255,201,61,1)}}
+.roof-panel{position:absolute;transform:translate(-50%,-50%);width:4.4%;cursor:pointer;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))}
+.roof-panel svg{display:block;width:100%;height:auto}
+.roof-panel:hover{filter:drop-shadow(0 0 6px rgba(255,201,61,.8))}
+.roof-ghost{position:fixed;z-index:300;width:52px;transform:translate(-50%,-50%);pointer-events:none;opacity:.9;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.roof-ghost svg{display:block;width:100%;height:auto}
+.roof-flash{position:absolute;transform:translate(-50%,-50%);font-family:var(--head);font-weight:700;font-size:13px;color:var(--ambra);background:var(--ambraL);border:1.5px solid var(--ambra);border-radius:999px;padding:5px 12px;pointer-events:none;white-space:nowrap;animation:flashUp 1.4s ease-out forwards;z-index:200}
+@keyframes flashUp{0%{opacity:0;transform:translate(-50%,-50%) scale(.8)}15%{opacity:1;transform:translate(-50%,-60%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-120%)}}
+/* pannello (tray + fonte da trascinare) */
+.tetti-side{display:flex;flex-direction:column;gap:14px}
+.roof-source{background:var(--pann);border:1.5px solid var(--sole);border-radius:14px;padding:14px;text-align:center;cursor:grab;touch-action:none;transition:transform .12s,box-shadow .2s}
+.roof-source:active{cursor:grabbing}
+.roof-source.pronto{box-shadow:0 0 16px rgba(255,201,61,.25)}
+.roof-source svg{width:56px;height:auto;display:block;margin:0 auto 8px}
+.roof-source .rs-t{font-family:var(--head);font-weight:700;font-size:15px;color:var(--sole)}
+.roof-source .rs-d{font-size:12.5px;color:var(--muted);margin-top:2px}
+.roof-stats{background:var(--pann);border:1.5px solid var(--brd);border-radius:14px;padding:16px 18px}
+.rst-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px dashed var(--brd)}
+.rst-row:last-child{border-bottom:none}
+.rst-l{font-family:var(--head);font-size:13.5px;font-weight:600;color:var(--muted)}
+.rst-v{font-family:var(--mono);font-weight:700;font-size:1.15rem}
+.rst-v.c-sole{color:var(--sole)}.rst-v.c-ciano{color:var(--ciano)}.rst-v.c-energia{color:var(--energia)}
+.roof-btns{display:flex;gap:8px;flex-wrap:wrap}
+.roof-hint{font-size:13px;color:var(--muted);line-height:1.5}
+@media (max-width:900px){.tetti-grid{grid-template-columns:1fr}}
+
 footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;text-align:center;color:var(--muted);font-size:14.5px}
 
 /* ============ RESPONSIVE ============ */
@@ -389,43 +592,44 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
 </head>
 <body>
 
-<!-- ============ BRAND ============ -->
-<div class="brandbar">
-  <div class="brand-txt">
-    <span class="brand-name">Scuola Sacra Famiglia</span>
-    <span class="brand-role">Animatore Digitale &middot; Andrea Cerioli</span>
+<div class="shell">
+
+<!-- ============ SIDEBAR (menu + brand) ============ -->
+<aside class="sidebar">
+  <div class="side-brand">
+    <svg class="hero-sun" viewBox="0 0 48 48" role="img" aria-label="Energy Pixel: sole sopra un pannello fotovoltaico in funzione">
+      <circle cx="24" cy="20" r="8" fill="var(--sole)"/>
+      <g stroke="var(--sole)" stroke-width="2.4" stroke-linecap="round">
+        <line x1="24" y1="6" x2="24" y2="9.5"/><line x1="34" y1="10" x2="31.5" y2="12.5"/>
+        <line x1="38" y1="20" x2="34.5" y2="20"/><line x1="14" y1="10" x2="16.5" y2="12.5"/>
+        <line x1="10" y1="20" x2="13.5" y2="20"/>
+      </g>
+      <rect class="hero-glow" x="5" y="29.5" width="38" height="15" rx="4" fill="var(--ciano)"/>
+      <g class="hero-panel">
+        <rect x="9" y="33" width="30" height="8" rx="1.8" fill="var(--ciano)"/>
+        <line x1="19" y1="33" x2="19" y2="41" stroke="var(--sfondo2)" stroke-width="1.6"/>
+        <line x1="29" y1="33" x2="29" y2="41" stroke="var(--sfondo2)" stroke-width="1.6"/>
+      </g>
+    </svg>
+    <div class="side-title">
+      <span class="side-app">Energy <span class="h-sole">Pixel</span></span>
+      <span class="side-claim">Cattura, trasforma e usa il potere del sole</span>
+    </div>
   </div>
-</div>
+  <div class="side-school">Scuola Sacra Famiglia &middot; Animatore Digitale &middot; Andrea Cerioli</div>
 
-<!-- ============ HEADER ============ -->
-<header class="wrap">
-  <svg class="hero-sun" viewBox="0 0 48 48" role="img" aria-label="Sole sopra un pannello solare">
-    <circle cx="24" cy="20" r="8" fill="var(--sole)"/>
-    <g stroke="var(--sole)" stroke-width="2.4" stroke-linecap="round">
-      <line x1="24" y1="6" x2="24" y2="9.5"/><line x1="34" y1="10" x2="31.5" y2="12.5"/>
-      <line x1="38" y1="20" x2="34.5" y2="20"/><line x1="14" y1="10" x2="16.5" y2="12.5"/>
-      <line x1="10" y1="20" x2="13.5" y2="20"/>
-    </g>
-    <rect x="9" y="33" width="30" height="8" rx="1.8" fill="var(--ciano)"/>
-    <line x1="19" y1="33" x2="19" y2="41" stroke="var(--sfondo)" stroke-width="1.6"/>
-    <line x1="29" y1="33" x2="29" y2="41" stroke="var(--sfondo)" stroke-width="1.6"/>
-  </svg>
-  <h1>Energy <span class="h-sole">Pixel</span></h1>
-  <p class="sottotitolo"><span class="evidenza">Cattura, trasforma e usa</span> il potere del sole: entra nella sala di controllo del fotovoltaico della nostra scuola e impara a leggerne l&rsquo;energia.</p>
-  <div class="statobar" role="status">
-    <span class="led" aria-hidden="true"></span>
-    <span>Impianto Piscina Andreana</span><span class="sep">|</span>
-    <span>Orzinuovi</span><span class="sep">|</span>
-    <span>Sistema attivo</span>
+  <nav class="side-nav" id="navPills" aria-label="Sezioni del percorso"></nav>
+
+  <div class="side-foot" id="sideFoot">
+    <div class="side-status" role="status">
+      <span class="led" aria-hidden="true"></span>
+      <span>Impianto Piscina Andreana &middot; Orzinuovi &middot; Sistema attivo</span>
+    </div>
   </div>
-</header>
+</aside>
 
-<!-- ============ TOPBAR ============ -->
-<nav class="topbar" aria-label="Sezioni del percorso">
-  <div class="wrap topbar-in" id="navPills"></div>
-</nav>
-
-<main class="wrap">
+<!-- ============ CONTENUTO ============ -->
+<main class="content">
 
 <!-- ============================================================
      SEZIONE 1 — LA SCOPERTA
@@ -640,16 +844,69 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <p>Stasera, a casa, cerca <strong>l&rsquo;etichetta con i watt</strong> su tre apparecchi diversi (caricabatterie, phon, microonde, lampada&hellip;). Scrivili sul diario e portali domani: costruiremo la classifica dei &laquo;pesi massimi&raquo; della classe. Chi trover&agrave; l&rsquo;apparecchio pi&ugrave; potente? E quello pi&ugrave; parsimonioso?</p>
   </div>
 
-  <button class="btn-avanti" data-vai="2"><span>Ora leggiamo i numeri veri</span>
+  <button class="btn-avanti" data-vai="2"><span>Ora tocca a te: la tua giornata</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </section>
+
 <!-- ============================================================
-     SEZIONE 3 — I NUMERI VERI
+     SEZIONE 3 — LA TUA GIORNATA (consumi + istogramma)
+============================================================ -->
+<section class="sezione" id="sez-consumi">
+  <div class="s-head">
+    <span class="s-etich">Passo 3 &middot; La tua giornata</span>
+    <h2>Quanta energia consumi in un giorno?</h2>
+    <p class="s-intro">Ora che sai cos&rsquo;&egrave; un kWh, usalo su di te. Per ogni apparecchio <strong>trascina lo slider</strong> per stabilire <strong>quanto tempo</strong> lo usi in una giornata: il consumo &egrave; potenza &times; tempo, quindi pi&ugrave; lo tieni acceso pi&ugrave; la barra cresce. In fondo trovi il <strong>totale</strong> e quanto costa. Attento ai &laquo;pesi massimi&raquo;!</p>
+  </div>
+
+  <div class="consumi-intro">
+    <span class="nota-muta" style="align-self:center">Parti in fretta con una giornata pronta:</span>
+    <button class="consumi-preset" data-preset="tipica">Giornata tipica</button>
+    <button class="consumi-preset" data-preset="risparmio">Giornata attenta</button>
+    <button class="consumi-preset" data-preset="vuota">Azzera tutto</button>
+  </div>
+
+  <div class="dev-lista" id="devLista"></div>
+
+  <div class="consumo-tot">
+    <div class="ct-card">
+      <div class="ct-lab">Consumo di oggi</div>
+      <div class="ct-val"><span id="ctKwh">0,00</span> <span class="u">kWh</span></div>
+      <div class="ct-nota" id="ctKwhNota"></div>
+    </div>
+    <div class="ct-card t-euro">
+      <div class="ct-lab">Costo di oggi</div>
+      <div class="ct-val"><span id="ctEuro">0,00</span> <span class="u">&euro;</span></div>
+      <div class="ct-nota">al prezzo attuale di <strong>0,25 &euro;</strong> per kWh</div>
+    </div>
+    <div class="ct-card t-anno">
+      <div class="ct-lab">In un anno (&times; 365)</div>
+      <div class="ct-val"><span id="ctAnno">0</span> <span class="u">&euro;</span></div>
+      <div class="ct-nota"><span id="ctAnnoKwh">0</span> kWh: se ogni giorno fosse cos&igrave;</div>
+    </div>
+  </div>
+
+  <div class="consumo-msg" id="consumoMsg"></div>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Guarda i <strong>pesi massimi</strong> che ti segnala il riquadro qui sopra: sono gli apparecchi con pi&ugrave; kWh. Scegline <strong>uno</strong> e prova a <strong>ridurne il tempo</strong> trascinando lo slider (asciugacapelli pi&ugrave; corto? climatizzatore un&rsquo;ora in meno?): guarda di quanto scendono i kWh e gli euro. Scrivi sul diario la tua mossa di risparmio. Domani in classe confrontiamo i totali: chi ha la giornata pi&ugrave; leggera?</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="3"><span>Ora leggiamo i numeri veri della centrale</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 4 — I NUMERI VERI
 ============================================================ -->
 <section class="sezione" id="sez-2">
   <div class="s-head">
-    <span class="s-etich">Passo 3 &middot; I numeri veri</span>
+    <span class="s-etich">Passo 4 &middot; I numeri veri</span>
     <h2>Il cruscotto della nostra centrale</h2>
     <p class="s-intro">Adesso che parli la lingua dei kWh, torniamo alla schermata vera. Ogni parola del portale descrive un viaggio diverso dell&rsquo;energia.</p>
   </div>
@@ -812,17 +1069,137 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <p>Chiedi a casa di poter guardare <strong>una bolletta della luce</strong> (va bene anche vecchia). Cerca la voce con i <strong>kWh del mese</strong> e portala a scuola scritta sul diario. In classe risponderemo a una domanda vera: quante famiglie potrebbe alimentare il tetto della nostra piscina?</p>
   </div>
 
-  <button class="btn-avanti" data-vai="3"><span>Al volante: il simulatore del sole</span>
+  <button class="btn-avanti" data-vai="4"><span>Progetta i tetti della nostra scuola</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </section>
 
 <!-- ============================================================
-     SEZIONE 4 — SIMULATORE
+     SEZIONE 5 — PROGETTA I TETTI (drag & drop pannelli)
+============================================================ -->
+<section class="sezione" id="sez-tetti">
+  <div class="s-head">
+    <span class="s-etich">Passo 5 &middot; Progetta i tetti</span>
+    <h2>Metti tu i pannelli sui tetti della scuola</h2>
+    <p class="s-intro">Questa &egrave; la nostra scuola vista dall&rsquo;alto, come un disegno tecnico. I <strong>tetti abilitati al fotovoltaico</strong> sono quelli evidenziati in <strong>oro</strong>: non tutti i tetti vanno bene (ombre, forma, esposizione). <strong>Trascina i pannelli</strong> dal riquadro e posali sui tetti giusti: piscina, palestra e campi restano liberi. Ogni pannello che aggiungi fa crescere la potenza dell&rsquo;impianto.</p>
+  </div>
+
+  <div class="tetti-grid">
+    <div class="roof-stage" id="roofStage">
+      <img src="fv.jpg" alt="Vista aerea della Scuola Sacra Famiglia con i tetti abilitati al fotovoltaico evidenziati in oro" draggable="false">
+      <!-- le aree-tetto e i pannelli vengono aggiunti da JS -->
+    </div>
+
+    <div class="tetti-side">
+      <div class="roof-source" id="roofSource" role="button" tabindex="0" aria-label="Trascina un pannello sul tetto">
+        <svg viewBox="0 0 48 32" aria-hidden="true"><defs></defs><rect x="1" y="1" width="46" height="30" rx="2.5" fill="#F0A81C" stroke="#FFD75E" stroke-width="1.5"/><g stroke="#3a2a08" stroke-width="1" opacity=".8"><line x1="13" y1="1" x2="13" y2="31"/><line x1="25" y1="1" x2="25" y2="31"/><line x1="37" y1="1" x2="37" y2="31"/><line x1="1" y1="16" x2="47" y2="16"/></g></svg>
+        <div class="rs-t">Trascina un pannello</div>
+        <div class="rs-d">tienilo premuto e portalo sul tetto in oro</div>
+      </div>
+
+      <div class="roof-stats">
+        <div class="rst-row"><span class="rst-l">Pannelli posati</span><span class="rst-v c-sole" id="rsPannelli">0</span></div>
+        <div class="rst-row"><span class="rst-l">Potenza impianto</span><span class="rst-v c-ciano"><span id="rsKwp">0,0</span> kWp</span></div>
+        <div class="rst-row"><span class="rst-l">Produzione stimata</span><span class="rst-v c-energia"><span id="rsAnno">0</span> kWh/anno</span></div>
+        <div class="rst-row"><span class="rst-l">CO&#8322; evitata</span><span class="rst-v c-energia"><span id="rsCo2">0</span> kg/anno</span></div>
+      </div>
+
+      <div class="roof-btns">
+        <button class="btn-ghost" id="roofUndo"><span>Togli l&rsquo;ultimo</span></button>
+        <button class="btn-ghost" id="roofClear"><span>Svuota i tetti</span></button>
+      </div>
+      <p class="roof-hint">Ogni pannello &egrave; da <strong>400 W</strong>. Tocca un pannello gi&agrave; posato per rimuoverlo. Stima: circa <strong>1.100 kWh</strong> all&rsquo;anno per ogni kWp, qui a Orzinuovi.</p>
+    </div>
+  </div>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Riempi i tetti in oro e leggi la <strong>potenza</strong> che hai progettato. Poi rispondi sul diario: secondo te <strong>perch&eacute;</strong> la piscina, il campo da calcio e la palestra <em>non</em> sono in oro? (pensa alle ombre, alla forma del tetto, a cosa c&rsquo;&egrave; gi&agrave; sopra). Confronta la potenza che hai messo con i <span class="num">6.988,8</span> kWh gi&agrave; prodotti dall&rsquo;impianto vero.</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="5"><span>Ora accendi l&rsquo;impianto</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 6 — ACCENDI L'IMPIANTO (interruttori 0/1)
+============================================================ -->
+<section class="sezione" id="sez-accendi">
+  <div class="s-head">
+    <span class="s-etich">Passo 6 &middot; Accendi l&rsquo;impianto</span>
+    <h2>In sala di controllo: metti in moto la centrale</h2>
+    <p class="s-intro">Una centrale non si accende con un solo bottone: &egrave; una <strong>catena di interruttori</strong>, ognuno con il suo <strong>0</strong> (spento) e <strong>1</strong> (acceso), da chiudere nel giusto ordine. &Egrave; lo stesso modo di ragionare di un computer. Chiudi la catena e vedrai l&rsquo;energia iniziare a scorrere &mdash; &egrave; la stessa centrale che hai letto al Passo 1.</p>
+  </div>
+
+  <div class="card missione-quadro" id="missioneBox">
+    <div class="mq-head">
+      <button class="mq-nav" data-mq="prev" aria-label="Missione precedente">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <span class="mq-count" id="mqCount"></span>
+      <button class="mq-nav" data-mq="next" aria-label="Missione successiva">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="mq-title" id="mqTitle"></div>
+    <div class="mq-desc" id="mqDesc"></div>
+    <ol class="mq-steps" id="mqSteps"></ol>
+    <div class="mq-foot">
+      <span class="mq-moves" id="mqMovesWrap">Mosse: <b id="mqMoves">0</b> <span id="mqMax"></span></span>
+      <span class="mq-fb" id="mqFb"></span>
+    </div>
+  </div>
+
+  <div class="quadro-grid">
+    <div class="sim-pan">
+      <h3>Il quadro comandi</h3>
+      <div class="switch-lista" id="switchLista"></div>
+      <div class="parola-bin">
+        <div class="pb-riga">
+          <span class="pb-l">Parola letta dal computer dell&rsquo;impianto</span>
+          <span class="pb-v" id="parolaBin"></span>
+        </div>
+        <div class="bin-dec"><span class="bstr" id="binStr"></span> = <b id="binDec"></b> in base 10</div>
+      </div>
+      <button class="btn-ghost" id="btnResetQuadro"><span>Riporta tutti gli interruttori a 0</span></button>
+    </div>
+
+    <div class="sim-pan schermo">
+      <div class="schermo-label"><span class="led" aria-hidden="true"></span><span>Stato impianto &middot; in diretta</span></div>
+      <div class="catena" id="catena"></div>
+      <div class="catena-extra" id="catenaExtra"></div>
+      <div class="stato-box" id="statoBox">
+        <div class="stato-led" aria-hidden="true"></div>
+        <div class="stato-txt" id="statoTxt">IMPIANTO SPENTO</div>
+        <div class="stato-hint" id="statoHint">Comincia dall&rsquo;inizio: collega i pannelli.</div>
+        <div class="stato-live" id="statoLive" hidden>Sta producendo <span class="num" id="quadroKw">0,0</span> kW in questo istante.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="azione">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Prova a spegnere <strong>un solo</strong> interruttore della catena mentre l&rsquo;impianto lavora e guarda cosa succede: quale anello, se salta, ferma tutto? Scrivi sul diario la tua ipotesi di <strong>&laquo;anello debole&raquo;</strong> e verificala. &Egrave; il ragionamento che fa un tecnico quando un impianto vero si spegne all&rsquo;improvviso.</p>
+  </div>
+
+  <button class="btn-avanti" data-vai="6"><span>Ora che &egrave; acceso, ottimizzalo: caccia al sole</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 5 — SIMULATORE
 ============================================================ -->
 <section class="sezione" id="sez-3">
   <div class="s-head">
-    <span class="s-etich">Passo 4 &middot; Il simulatore</span>
+    <span class="s-etich">Passo 7 &middot; Il simulatore</span>
     <h2>Caccia al sole: batti l&rsquo;ingegnere</h2>
     <p class="s-intro">Comandi un impianto immaginario da <strong>10 pannelli (4 kW)</strong> a Orzinuovi. Scegli stagione, meteo, <strong>inclinazione</strong> e <strong>orientamento</strong>, poi avvia la giornata: l&rsquo;energia raccolta ricarica un&rsquo;auto elettrica in viaggio. Ma non sei solo: sulla corsia sopra corre <strong>l&rsquo;auto fantasma dell&rsquo;ingegnere</strong>, che ha orientato i suoi pannelli nel modo migliore possibile. Riuscirai a starle dietro? E le sfide in fondo alla pagina, le sblocchi tutte?</p>
   </div>
@@ -1013,7 +1390,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <p>Domani, sulla strada per la scuola, gioca al <strong>cacciatore di tetti</strong>: scegli il tetto del paese che secondo te sarebbe perfetto per i pannelli e preparati a difendere la tua scelta in classe con due argomenti (verso dove guarda? &egrave; inclinato bene? c&rsquo;&egrave; qualcosa che gli fa ombra?).</p>
   </div>
 
-  <button class="btn-avanti" data-vai="4"><span>E se il pannello si muovesse da solo? Programmalo</span>
+  <button class="btn-avanti" data-vai="7"><span>E se il pannello si muovesse da solo? Programmalo</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </section>
@@ -1022,7 +1399,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
 ============================================================ -->
 <section class="sezione" id="sez-4">
   <div class="s-head">
-    <span class="s-etich">Passo 5 &middot; Coding</span>
+    <span class="s-etich">Passo 8 &middot; Coding</span>
     <h2>Il codice del sole: programma il pilota automatico</h2>
     <p class="s-intro">Nel simulatore muovevi le leve con le mani. Ma nell&rsquo;impianto vero chi ci pensa? Un <strong>computer</strong>: l&rsquo;inverter esegue istruzioni scritte da qualcuno &mdash; un <strong>programma</strong>. Adesso il programmatore sei tu: componi le istruzioni, eseguile, guarda il risultato, correggi. Si chiama <strong>debug</strong>, ed &egrave; quello che fanno i programmatori veri tutto il giorno.</p>
   </div>
@@ -1097,7 +1474,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <p>Scrivi sul diario, <strong>a parole tue</strong>, il programma della tua giornata perfetta di domani come se fossi un inverter: &laquo;ALLE 7:00 &rarr; sveglia. ALLE 7:20 &rarr; colazione&hellip;&raquo;. Domani controlla: quante istruzioni hai eseguito davvero? Dove &egrave; servito un <strong>debug</strong>?</p>
   </div>
 
-  <button class="btn-avanti" data-vai="5"><span>Mettiti alla prova</span>
+  <button class="btn-avanti" data-vai="8"><span>Mettiti alla prova</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </section>
@@ -1107,7 +1484,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
 ============================================================ -->
 <section class="sezione" id="sez-5">
   <div class="s-head">
-    <span class="s-etich">Passo 6 &middot; La verifica</span>
+    <span class="s-etich">Passo 9 &middot; La verifica</span>
     <h2>Sei diventato un lettore di energia?</h2>
     <p class="s-intro">Una domanda alla volta. Se sbagli non succede niente: leggi la spiegazione e vai avanti, &egrave; cos&igrave; che si impara.</p>
   </div>
@@ -1131,7 +1508,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     </div>
   </div>
 
-  <button class="btn-avanti" data-vai="6"><span>L&rsquo;ultimo passo: cosa ho capito</span>
+  <button class="btn-avanti" data-vai="9"><span>L&rsquo;ultimo passo: cosa ho capito</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </section>
@@ -1141,11 +1518,29 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
 ============================================================ -->
 <section class="sezione" id="sez-6">
   <div class="s-head">
-    <span class="s-etich">Passo 7 &middot; Il cerchio si chiude</span>
+    <span class="s-etich">Passo 10 &middot; Il cerchio si chiude</span>
     <h2>Cosa ho capito davvero?</h2>
-    <p class="s-intro">Siamo partiti da una centrale che nessuno vedeva e da 23.297 chilometri misteriosi. Ora la centrale la sai leggere, quei chilometri sai spiegarli, e il pannello lo sai perfino programmare. Resta l&rsquo;ultimo passo, il pi&ugrave; importante: fermarsi a pensare.</p>
+    <p class="s-intro">Siamo partiti da una centrale che nessuno vedeva e da 23.297 chilometri misteriosi. Ora la centrale la sai leggere, quei chilometri sai spiegarli, e il pannello lo sai perfino programmare. Prima di fermarti a pensare, <strong>accendi tutto quello che hai imparato</strong>.</p>
   </div>
 
+  <div class="recap card" id="recap">
+    <div class="recap-head">
+      <div>
+        <h3 style="margin:0">Accendi ci&ograve; che hai imparato</h3>
+        <p class="nota-muta" style="margin:4px 0 0">Ogni interruttore &egrave; una cosa che ora sai. Accendi solo quelle di cui sei sicuro: quante luci riesci a far brillare?</p>
+      </div>
+      <div class="recap-score">
+        <div class="recap-num"><span id="recapOn">0</span>/<span id="recapTot">0</span></div>
+        <div class="recap-lab">conoscenze accese</div>
+      </div>
+    </div>
+    <div class="recap-bar"><div class="recap-fill" id="recapFill"></div></div>
+    <div class="recap-lista" id="recapLista"></div>
+    <button class="btn-ghost recap-tutto" id="recapTutto"><span>Le so tutte: accendi il quadro</span></button>
+    <div class="recap-msg" id="recapMsg"></div>
+  </div>
+
+  <h3>E adesso fermati a pensare</h3>
   <div class="meta-grid">
     <div class="card meta-card">
       <label for="meta1">1. Che cosa ho capito che prima non sapevo?</label>
@@ -1172,7 +1567,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <p style="margin:0">La prossima volta che passi davanti alla piscina, alza gli occhi: la centrale invisibile adesso la vedi. E ogni lampadina che spegni quando esci da una stanza &egrave; un pezzetto di quel lavoro che resta disponibile per qualcun altro.</p>
   </div>
 
-  <button class="btn-avanti appr-intro-link" data-vai="7"><span>Vuoi vederlo dal vero? Vai agli approfondimenti</span>
+  <button class="btn-avanti appr-intro-link" data-vai="10"><span>Vuoi vederlo dal vero? Vai agli approfondimenti</span>
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </button>
 </section>
@@ -1203,13 +1598,12 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
   </div>
 </section>
 
+<footer>
+  <span>Energy Pixel &middot; Scuola Sacra Famiglia &middot; Orzinuovi &middot; dati reali dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo;</span>
+</footer>
 </main>
 
-<footer>
-  <div class="wrap">
-    <span>Energy Pixel &middot; Scuola Sacra Famiglia &middot; Orzinuovi &middot; dati reali dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo;</span>
-  </div>
-</footer>
+</div><!-- /.shell -->
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" role="dialog" aria-label="Schermata completa del portale di monitoraggio">
@@ -1244,15 +1638,18 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
       <p>Tag: Educazione ambientale &middot; STEM &middot; Coding/pensiero computazionale &middot; Lettura di dati. Linguaggio non colpevolizzante: si ragiona su &laquo;che cosa non torna&raquo;, mai su &laquo;chi ha sbagliato&raquo;.</p>
     </div>
     <div class="mtab-corpo">
-      <p><strong>Percorso in 7 passi</strong> (logica EAS: situazione-stimolo &rarr; produzione &rarr; rielaborazione):</p>
+      <p><strong>Percorso in 10 passi</strong> (logica EAS: situazione-stimolo &rarr; produzione &rarr; rielaborazione):</p>
       <ul>
         <li><strong>1. La scoperta:</strong> stimolo con la schermata reale + osservazione scritta + traccia audio 01 con card sincronizzate.</li>
         <li><strong>2. Il kWh:</strong> traccia audio 02 (analogia della bicicletta) + card sincronizzate + convertitore interattivo.</li>
-        <li><strong>3. I numeri veri:</strong> schema dei flussi, i 4 totalizzatori, i calcoli dietro CO<sub>2</sub>/alberi/km, detective dei dati.</li>
-        <li><strong>4. Il simulatore:</strong> stagione + meteo variabile (nuvole con previsioni) + inclinazione/orientamento &rarr; energia &rarr; km dell&rsquo;auto elettrica; auto fantasma dell&rsquo;ingegnere (miglior pannello fisso, stesso meteo) come avversario; 5 sfide progressive; valore in euro.</li>
-        <li><strong>5. Il codice del sole:</strong> lo studente compone un programma (istruzioni orarie), lo legge in pseudocodice, lo esegue e fa debug; obiettivo: battere il miglior pannello fisso &rarr; capire perch&eacute; esistono gli inseguitori solari.</li>
-        <li><strong>6. Verifica:</strong> quiz con feedback esplicativo, mai punitivo (incluse 2 domande di coding).</li>
-        <li><strong>7. Metacognizione:</strong> tre domande + impegno concreto.</li>
+        <li><strong>3. La tua giornata:</strong> consumo personale &mdash; ogni apparecchio (iPad, luce, phon, forno, induzione, friggitrice, computer&hellip;) ha un interruttore 0/1 e una barra d&rsquo;istogramma proporzionale ai kWh; in fondo totale + costo (0,25 &euro;/kWh) + proiezione annua. Educazione al risparmio, personalizza il kWh (Dewey).</li>
+        <li><strong>4. I numeri veri:</strong> schema dei flussi, i 4 totalizzatori, i calcoli dietro CO<sub>2</sub>/alberi/km, detective dei dati.</li>
+        <li><strong>5. Progetta i tetti:</strong> drag &amp; drop sui tetti reali della scuola (immagine <em>digital twin</em> con i tetti abilitati in oro). Lo studente trascina i pannelli (400 W l&rsquo;uno) solo sulle aree valide; conteggio di potenza (kWp), produzione stimata (~1.100 kWh/kWp/anno) e CO<sub>2</sub> evitata. Bruner: si progetta manipolando; riflessione su perch&eacute; piscina/campo/palestra non sono abilitati.</li>
+        <li><strong>6. Accendi l&rsquo;impianto:</strong> quadro di avviamento a interruttori <strong>0/1</strong> con catena di dipendenze (sezionatore CC &rarr; inverter &rarr; sezionatore CA &rarr; contatore; batteria e monitoraggio opzionali). Insegna sequenza, prerequisiti e logica booleana; mostra la &laquo;parola binaria&raquo; letta dal computer dell&rsquo;impianto. Attività &laquo;per tutti&raquo;, tattile, legata al pensiero computazionale.</li>
+        <li><strong>7. Il simulatore:</strong> stagione + meteo variabile (nuvole con previsioni) + inclinazione/orientamento &rarr; energia &rarr; km dell&rsquo;auto elettrica; auto fantasma dell&rsquo;ingegnere (miglior pannello fisso, stesso meteo) come avversario; 5 sfide progressive; valore in euro.</li>
+        <li><strong>8. Il codice del sole:</strong> lo studente compone un programma (istruzioni orarie), lo legge in pseudocodice, lo esegue e fa debug; obiettivo: battere il miglior pannello fisso &rarr; capire perch&eacute; esistono gli inseguitori solari.</li>
+        <li><strong>9. Verifica:</strong> quiz con feedback esplicativo, mai punitivo (incluse 2 domande di coding).</li>
+        <li><strong>10. Metacognizione:</strong> recap 0/1 &laquo;accendi ci&ograve; che hai imparato&raquo; + tre domande + impegno concreto.</li>
       </ul>
       <p><strong>Audio:</strong> i due MP3 (audio-scoperta.mp3, audio-kwh.mp3) vanno nella stessa cartella della pagina. I tempi di sblocco delle card si tarano nelle costanti <span class="num">TEMPI</span> in testa allo script. Finch&eacute; i file non ci sono, le card risultano sbloccate e la trascrizione &egrave; sempre disponibile.</p>
     </div>
@@ -1330,7 +1727,7 @@ function creaPlayer(root) {
 const players = [...document.querySelectorAll('.player[data-player]')].map(creaPlayer);
 
 /* ============ NAVIGAZIONE ============ */
-const SEZIONI = ['La scoperta', 'Il kWh', 'I numeri veri', 'Il simulatore', 'Il codice', 'La verifica', 'Cosa ho capito'];
+const SEZIONI = ['La scoperta', 'Il kWh', 'La tua giornata', 'I numeri veri', 'Progetta i tetti', 'Accendi l’impianto', 'Il simulatore', 'Il codice', 'La verifica', 'Cosa ho capito'];
 const navPills = document.getElementById('navPills');
 SEZIONI.forEach((nome, i) => {
   const b = document.createElement('button');
@@ -1342,21 +1739,22 @@ SEZIONI.forEach((nome, i) => {
 const pillAppr = document.createElement('button');
 pillAppr.className = 'pill pill-appr';
 pillAppr.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg><span>Approfondimenti</span>';
-pillAppr.addEventListener('click', () => vai(7));
+pillAppr.addEventListener('click', () => vai(10));
 navPills.appendChild(pillAppr);
 
 const pillDoc = document.createElement('button');
 pillDoc.className = 'pill pill-doc';
 pillDoc.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".5" fill="currentColor"/></svg><span>Info docenti</span>';
 pillDoc.addEventListener('click', () => document.getElementById('modalDoc').classList.add('aperta'));
-navPills.appendChild(pillDoc);
+const sideFoot = document.getElementById('sideFoot');
+sideFoot.insertBefore(pillDoc, sideFoot.firstChild);
 
 function vai(i) {
   players.forEach(pl => pl.pausa());
   if (typeof ytPausaTutti === 'function') ytPausaTutti();
   document.querySelectorAll('.sezione').forEach((s, j) => s.classList.toggle('attiva', j === i));
   navPills.querySelectorAll('.pill:not(.pill-doc)').forEach((p, j) => p.classList.toggle('attiva', j === i));
-  if (i === 7 && typeof caricaVideo === 'function') caricaVideo();
+  if (i === 10 && typeof caricaVideo === 'function') caricaVideo();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => vai(+b.dataset.vai)));
@@ -2229,6 +2627,499 @@ document.getElementById('btnCopiaEsperto').addEventListener('click', () => {
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(testo).then(fine, fine);
   else fine();
 });
+
+/* ============ PROGETTA I TETTI: drag & drop pannelli ============ */
+const ROOF_ZONES = [   // tetti abilitati (in % dell'immagine): x,y,w,h
+  { x:43, y:23, w:11, h:25 },
+  { x:47, y:45, w:21, h:12 },
+  { x:66, y:22, w:20, h:15 },
+  { x:73, y:29, w:16, h:24 }
+];
+const PANEL_SVG = '<svg viewBox="0 0 48 32" aria-hidden="true"><rect x="1" y="1" width="46" height="30" rx="2.5" fill="#F0A81C" stroke="#FFD75E" stroke-width="1.5"/><g stroke="#3a2a08" stroke-width="1" opacity=".8"><line x1="13" y1="1" x2="13" y2="31"/><line x1="25" y1="1" x2="25" y2="31"/><line x1="37" y1="1" x2="37" y2="31"/><line x1="1" y1="16" x2="47" y2="16"/></g></svg>';
+const YIELD_KWP = 1100, CO2_KWH = 0.4;
+(function () {
+  const stage = document.getElementById('roofStage');
+  const source = document.getElementById('roofSource');
+  if (!stage || !source) return;
+  ROOF_ZONES.forEach(z => {
+    const d = document.createElement('div');
+    d.className = 'roof-zone';
+    d.style.left = z.x + '%'; d.style.top = z.y + '%'; d.style.width = z.w + '%'; d.style.height = z.h + '%';
+    stage.appendChild(d);
+  });
+  const posati = [];
+  function stats() {
+    const n = posati.length, kwp = n * 0.4, anno = kwp * YIELD_KWP;
+    document.getElementById('rsPannelli').textContent = n;
+    document.getElementById('rsKwp').textContent = fmt(kwp, 1);
+    document.getElementById('rsAnno').textContent = fmt(anno, 0);
+    document.getElementById('rsCo2').textContent = fmt(anno * CO2_KWH, 0);
+  }
+  function poni(xPct, yPct) {
+    const el = document.createElement('div');
+    el.className = 'roof-panel';
+    el.style.left = xPct + '%'; el.style.top = yPct + '%';
+    el.innerHTML = PANEL_SVG;
+    el.addEventListener('click', () => { el.remove(); const i = posati.indexOf(el); if (i > -1) posati.splice(i, 1); stats(); });
+    stage.appendChild(el);
+    posati.push(el);
+    stats();
+  }
+  function flash(xPct, yPct, testo) {
+    const f = document.createElement('div');
+    f.className = 'roof-flash'; f.textContent = testo;
+    f.style.left = Math.max(12, Math.min(88, xPct)) + '%'; f.style.top = Math.max(8, yPct) + '%';
+    stage.appendChild(f);
+    setTimeout(() => f.remove(), 1400);
+  }
+  function startDrag(e) {
+    e.preventDefault();
+    const ghost = document.createElement('div');
+    ghost.className = 'roof-ghost'; ghost.innerHTML = PANEL_SVG;
+    document.body.appendChild(ghost);
+    stage.classList.add('dragging');
+    source.classList.add('pronto');
+    const move = ev => { ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px'; };
+    move(e);
+    const up = ev => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      ghost.remove(); stage.classList.remove('dragging'); source.classList.remove('pronto');
+      const r = stage.getBoundingClientRect();
+      const xPct = (ev.clientX - r.left) / r.width * 100, yPct = (ev.clientY - r.top) / r.height * 100;
+      if (xPct < 0 || xPct > 100 || yPct < 0 || yPct > 100) return;
+      const ok = ROOF_ZONES.some(z => xPct >= z.x && xPct <= z.x + z.w && yPct >= z.y && yPct <= z.y + z.h);
+      if (ok) { poni(xPct, yPct); SwSound.toggle(true); }
+      else { flash(xPct, yPct, 'Qui no: solo sui tetti in oro'); SwSound.toggle(false); }
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  }
+  source.addEventListener('pointerdown', startDrag);
+  source.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { // accessibilità: posa al centro di un tetto libero, a rotazione
+      e.preventDefault();
+      const z = ROOF_ZONES[posati.length % ROOF_ZONES.length];
+      poni(z.x + z.w / 2, z.y + z.h / 2); SwSound.toggle(true);
+    }
+  });
+  document.getElementById('roofUndo').addEventListener('click', () => { const el = posati.pop(); if (el) { el.remove(); SwSound.toggle(false); stats(); } });
+  document.getElementById('roofClear').addEventListener('click', () => { posati.forEach(el => el.remove()); posati.length = 0; SwSound.toggle(false); stats(); });
+  stats();
+})();
+
+/* ============ RECAP FINALE: accendi ciò che hai imparato ============ */
+const RECAP = [
+  { passo:'Passo 1', txt:'Sul tetto della scuola c’è una centrale fotovoltaica: produce elettricità dal sole, in silenzio.' },
+  { passo:'Passo 2', txt:'So la differenza tra kW (la spinta di adesso) e kWh (l’energia, la strada fatta).' },
+  { passo:'Passo 2', txt:'1 kWh = 1.000 watt che lavorano per un’ora; è ciò che conta il contatore.' },
+  { passo:'Passo 3', txt:'Nella mia giornata gli apparecchi che scaldano (forno, phon, induzione) pesano molto più di iPad e telefono.' },
+  { passo:'Passo 3', txt:'So calcolare quanta energia uso in un giorno e quanto costa.' },
+  { passo:'Passo 4', txt:'So leggere il portale: energia generata, consumata, esportata, importata.' },
+  { passo:'Passo 4', txt:'L’autoconsumo è il super-potere del fotovoltaico: l’energia migliore è quella che non deve viaggiare.' },
+  { passo:'Passo 4', txt:'Ogni kWh pulito evita CO₂: da lì nascono gli alberi e i km “risparmiati”.' },
+  { passo:'Passo 5', txt:'Accendere un impianto è una catena di interruttori 0/1 in sequenza, come gli 0 e 1 che legge un computer.' },
+  { passo:'Passo 6', txt:'Un pannello rende di più se guarda il sole: a sud, inclinato secondo la stagione.' },
+  { passo:'Passo 7', txt:'Un pannello si può programmare con una sequenza di istruzioni, eseguire il codice e correggerlo (debug).' },
+  { passo:'Passo 9', txt:'Spegnere ciò che non uso è un piccolo gesto che, moltiplicato per tutti, conta davvero.' }
+];
+const recapState = {};
+RECAP.forEach((r, i) => recapState[i] = false);
+(function () {
+  const lista = document.getElementById('recapLista');
+  if (!lista) return;
+  document.getElementById('recapTot').textContent = RECAP.length;
+  RECAP.forEach((r, i) => {
+    const row = document.createElement('div');
+    row.className = 'recap-item spento'; row.dataset.recap = i;
+    row.innerHTML =
+      '<span class="ri-passo">' + r.passo + '</span>' +
+      '<span class="ri-txt">' + r.txt + '</span>' +
+      '<button class="sw-toggle" role="switch" aria-checked="false" aria-label="' + r.txt + '"><span class="knob"></span></button>';
+    lista.appendChild(row);
+    row.querySelector('.sw-toggle').addEventListener('click', () => { recapState[i] = !recapState[i]; SwSound.toggle(recapState[i]); aggiornaRecap(); });
+  });
+  document.getElementById('recapTutto').addEventListener('click', () => {
+    const giaTutte = RECAP.every((r, i) => recapState[i]);
+    RECAP.forEach((r, i) => recapState[i] = !giaTutte);
+    SwSound.toggle(!giaTutte);
+    aggiornaRecap();
+  });
+})();
+function aggiornaRecap() {
+  let n = 0;
+  RECAP.forEach((r, i) => {
+    const row = document.querySelector('.recap-item[data-recap="' + i + '"]');
+    const on = recapState[i];
+    row.classList.toggle('acceso', on); row.classList.toggle('spento', !on);
+    row.querySelector('.sw-toggle').classList.toggle('on', on);
+    row.querySelector('.sw-toggle').setAttribute('aria-checked', on ? 'true' : 'false');
+    if (on) n++;
+  });
+  const tot = RECAP.length;
+  document.getElementById('recapOn').textContent = n;
+  document.getElementById('recapFill').style.width = (n / tot * 100) + '%';
+  const box = document.getElementById('recap');
+  const completo = n === tot;
+  box.classList.toggle('completo', completo);
+  const msg = document.getElementById('recapMsg');
+  document.getElementById('recapTutto').querySelector('span').textContent = completo ? 'Spegni tutto e ricomincia' : 'Le so tutte: accendi il quadro';
+  if (n === 0) msg.innerHTML = 'Comincia ad accendere: ogni luce &egrave; un pezzo di Energy Pixel che ora vive nella tua testa.';
+  else if (completo) { msg.innerHTML = '<b>Quadro completo!</b> Hai acceso tutta Energy Pixel: la centrale invisibile ora la <b>vedi</b>, la <b>leggi</b>, la <b>orienti</b>, la <b>programmi</b> — e sai perfino quanto consumi tu. Da qui in poi, ogni volta che passi davanti alla piscina, quella centrale non sar&agrave; pi&ugrave; invisibile.'; if (!recapCompletato) { SwSound.success(); recapCompletato = true; } }
+  else msg.innerHTML = 'Ne hai accese <b>' + n + '</b> su ' + tot + '. Ne manca ancora qualcuna: ripensa ai passi e accendi ci&ograve; di cui sei sicuro.';
+  if (!completo) recapCompletato = false;
+}
+let recapCompletato = false;
+aggiornaRecap();
+
+/* ============ LA TUA GIORNATA: consumi + istogramma ============ */
+const PREZZO_KWH = 0.25;
+const DEV_IC = {
+  ipad:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></svg>',
+  telefono:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"/></svg>',
+  spazzolino:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 21V9"/><rect x="9" y="4" width="4" height="5" rx="1.5"/><path d="M9 5.5 6 4M9 7 6.5 6.5M13 5.5 16 4M13 7 15.5 6.5"/></svg>',
+  luce:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>',
+  computer:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg>',
+  tv:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="13" rx="2"/><line x1="9" y1="21" x2="15" y2="21"/></svg>',
+  microonde:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><rect x="5" y="8" width="9" height="8" rx="1"/><line x1="18" y1="9" x2="18" y2="9.5"/><line x1="18" y1="13" x2="18" y2="13.5"/></svg>',
+  asciugacapelli:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="5"/><circle cx="9" cy="9" r="1.6"/><path d="M13.8 11.5 19 13.5c.6.2.6 1 .1 1.3L14 17M9 14v3.5c0 2 1 3.5 3 3.5"/></svg>',
+  friggitrice:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="3"/><path d="M9 4.5h6"/><line x1="9" y1="11" x2="15" y2="11"/></svg>',
+  induzione:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="2.5"/><circle cx="15.5" cy="15.5" r="2.5"/></svg>',
+  forno:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="6.5" y1="6.5" x2="8" y2="6.5"/><rect x="7" y="12" width="10" height="5" rx="1"/></svg>',
+  frigo:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><line x1="6" y1="10" x2="18" y2="10"/><line x1="9" y1="6" x2="9" y2="7.5"/><line x1="9" y1="13" x2="9" y2="15"/></svg>',
+  climatizzatore:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="8" rx="2.5"/><line x1="6" y1="8.5" x2="18" y2="8.5"/><path d="M6.5 16.5c1.2-1.2 1.2-2.4 0-3.5M12 18c1.2-1.2 1.2-2.4 0-3.5M17.5 16.5c1.2-1.2 1.2-2.4 0-3.5"/></svg>',
+  pompadicalore:'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="12" r="4"/><path d="M9 8.5v7M5.5 12h7"/><path d="M16 9.5c1.2 1 1.2 2 0 3s-1.2 2 0 3"/></svg>'
+};
+/* watt = potenza · maxMin = massimo trascinabile · tip/ris = minuti dei preset */
+const DEVICES = [
+  { id:'ipad', ic:'ipad', nome:'Ricarica iPad', watt:12, maxMin:240, tip:150, ris:90 },
+  { id:'telefono', ic:'telefono', nome:'Ricarica telefono', watt:7, maxMin:180, tip:120, ris:60 },
+  { id:'spazzolino', ic:'spazzolino', nome:'Spazzolino elettrico', watt:2, maxMin:480, tip:240, ris:120 },
+  { id:'luce', ic:'luce', nome:'Luce della cameretta (LED)', watt:10, maxMin:600, tip:240, ris:120 },
+  { id:'computer', ic:'computer', nome:'Computer', watt:60, maxMin:600, tip:180, ris:120 },
+  { id:'tv', ic:'tv', nome:'Televisione', watt:100, maxMin:480, tip:120, ris:60 },
+  { id:'microonde', ic:'microonde', nome:'Microonde', watt:1000, maxMin:30, tip:6, ris:3 },
+  { id:'asciugacapelli', ic:'asciugacapelli', nome:'Asciugacapelli', watt:2000, maxMin:30, tip:9, ris:4 },
+  { id:'friggitrice', ic:'friggitrice', nome:'Friggitrice ad aria', watt:1500, maxMin:60, tip:16, ris:0 },
+  { id:'induzione', ic:'induzione', nome:'Piano a induzione', watt:2000, maxMin:90, tip:24, ris:12 },
+  { id:'forno', ic:'forno', nome:'Forno elettrico', watt:2000, maxMin:120, tip:30, ris:0 },
+  { id:'climatizzatore', ic:'climatizzatore', nome:'Climatizzatore', det:'aria fredda d’estate', watt:900, maxMin:600, tip:180, ris:60 },
+  { id:'pompadicalore', ic:'pompadicalore', nome:'Pompa di calore', det:'riscaldamento d’inverno', watt:2000, maxMin:600, tip:0, ris:0 },
+  { id:'frigo', ic:'frigo', nome:'Frigorifero', det:'non si spegne mai', watt:38, maxMin:1440, tip:1440, ris:1440, fisso:true }
+];
+const devMin = {};
+DEVICES.forEach(d => devMin[d.id] = d.fisso ? d.maxMin : 0);
+const kwhDi = d => d.watt / 1000 * devMin[d.id] / 60;
+const stepDi = d => d.maxMin <= 30 ? 1 : (d.maxMin <= 120 ? 5 : 15);
+function fmtTempo(min) {
+  if (min <= 0) return 'spento';
+  if (min < 60) return Math.round(min) + ' min';
+  const h = Math.floor(min / 60), m = Math.round(min % 60);
+  return m === 0 ? h + ' h' : h + 'h ' + m + 'min';
+}
+const devPrevOn = {};
+(function () {
+  const lista = document.getElementById('devLista');
+  if (!lista) return;
+  DEVICES.forEach(d => {
+    devPrevOn[d.id] = devMin[d.id] > 0;
+    const row = document.createElement('div');
+    row.className = 'dev-row'; row.dataset.dev = d.id;
+    row.innerHTML =
+      '<span class="dev-ic">' + DEV_IC[d.ic] + '</span>' +
+      '<div class="dev-info"><div class="dev-nome">' + d.nome + (d.fisso ? '<span class="dev-fisso">sempre on</span>' : '') + '</div><div class="dev-w">' + d.watt + ' W' + (d.det ? ' &middot; ' + d.det : '') + '</div></div>' +
+      '<div class="dev-slider-wrap"><input type="range" class="dev-slider" min="0" max="' + d.maxMin + '" step="' + stepDi(d) + '" value="' + devMin[d.id] + '"' + (d.fisso ? ' disabled' : '') + ' aria-label="Tempo d’uso di ' + d.nome + '"></div>' +
+      '<div class="dev-read"><span class="dev-time" data-time>spento</span><span class="dev-kwh" data-kwh>0,00 kWh</span></div>';
+    lista.appendChild(row);
+    const sl = row.querySelector('.dev-slider');
+    if (!d.fisso) sl.addEventListener('input', () => {
+      devMin[d.id] = +sl.value;
+      const on = devMin[d.id] > 0;
+      if (on !== devPrevOn[d.id]) { SwSound.toggle(on); devPrevOn[d.id] = on; }
+      aggiornaConsumi();
+    });
+  });
+})();
+function aggiornaConsumi() {
+  let tot = 0;
+  DEVICES.forEach(d => {
+    const row = document.querySelector('.dev-row[data-dev="' + d.id + '"]');
+    const sl = row.querySelector('.dev-slider');
+    const min = devMin[d.id], on = min > 0;
+    if (+sl.value !== min) sl.value = min;
+    const pct = (min / d.maxMin * 100).toFixed(1);
+    const col = d.fisso ? 'var(--muted)' : 'var(--sole)';
+    sl.style.background = 'linear-gradient(90deg,' + col + ' ' + pct + '%,#0A1828 ' + pct + '%)';
+    row.classList.toggle('acceso', on && !d.fisso); row.classList.toggle('spento', !on);
+    const k = kwhDi(d);
+    row.querySelector('[data-time]').textContent = d.fisso ? 'tutto il giorno' : fmtTempo(min);
+    row.querySelector('[data-kwh]').textContent = fmt(k, 2) + ' kWh';
+    tot += k;
+  });
+  document.getElementById('ctKwh').textContent = fmt(tot, 2);
+  document.getElementById('ctEuro').textContent = fmt(tot * PREZZO_KWH, 2);
+  document.getElementById('ctAnno').textContent = fmt(tot * PREZZO_KWH * 365, 0);
+  document.getElementById('ctAnnoKwh').textContent = fmt(tot * 365, 0);
+  document.getElementById('ctKwhNota').innerHTML = '&asymp; ' + fmt(tot / 0.03, 0) + ' ricariche di iPad';
+  const attivi = DEVICES.filter(d => devMin[d.id] > 0).map(d => ({ d, k: kwhDi(d) })).sort((a, b) => b.k - a.k);
+  const nonFissi = attivi.filter(x => !x.d.fisso);
+  const msg = document.getElementById('consumoMsg');
+  if (!nonFissi.length) {
+    msg.innerHTML = 'Per ora c&rsquo;&egrave; solo il <b>frigorifero</b> (0,9 kWh): non si spegne mai. <b>Trascina gli slider</b> per aggiungere il resto della tua giornata e guarda crescere le barre.';
+  } else {
+    const top = attivi.slice(0, 3).map(x => x.d.nome).join(', ');
+    const pesante = attivi[0];
+    const quota = tot > 0 ? Math.round(pesante.k / tot * 100) : 0;
+    msg.innerHTML = 'I tuoi <b>pesi massimi</b> di oggi: ' + top + '. Da solo, <b>' + pesante.d.nome + '</b> vale circa il <b>' + quota + '%</b> del totale. Nota la regola: gli apparecchi che <b>scaldano o raffrescano</b> (pompa di calore, climatizzatore, forno, phon) pesano tantissimo anche in poco tempo, perch&eacute; hanno una <b>potenza</b> enorme &mdash; molto pi&ugrave; di iPad o telefono anche se li tieni sotto carica per ore.';
+  }
+}
+function applicaPreset(nome) {
+  DEVICES.forEach(d => {
+    if (d.fisso) return;
+    devMin[d.id] = nome === 'tipica' ? d.tip : (nome === 'risparmio' ? d.ris : 0);
+    devPrevOn[d.id] = devMin[d.id] > 0;
+  });
+  SwSound.toggle(nome !== 'vuota');
+  aggiornaConsumi();
+}
+document.querySelectorAll('.consumi-preset').forEach(b => b.addEventListener('click', () => applicaPreset(b.dataset.preset)));
+aggiornaConsumi();
+
+/* ============ SUONO INTERRUTTORI (Web Audio, sbloccato al primo click) ============ */
+const SwSound = (function () {
+  let ctx = null, noise = null;
+  function ac() {
+    if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ctx = null; } }
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+  function noiseBuf(c) {
+    if (noise) return noise;
+    const n = Math.floor(c.sampleRate * 0.08), b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    noise = b; return b;
+  }
+  /* scatto del relè: click di rumore filtrato + corpo grave ("thunk") */
+  function click(freq, vol, dur) {
+    const c = ac(); if (!c) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = noiseBuf(c);
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = 1.1;
+    const g = c.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + (dur || 0.04));
+    s.connect(bp); bp.connect(g); g.connect(c.destination); s.start(t); s.stop(t + 0.08);
+    const o = c.createOscillator(); o.type = 'square'; o.frequency.setValueAtTime(freq < 2500 ? 110 : 150, t);
+    const g2 = c.createGain(); g2.gain.setValueAtTime(vol * 0.5, t); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.028);
+    o.connect(g2); g2.connect(c.destination); o.start(t); o.stop(t + 0.05);
+  }
+  function blip(f, dur, vol) {
+    const c = ac(); if (!c) return;
+    const t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle'; o.frequency.setValueAtTime(f, t);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol || 0.22, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.02);
+  }
+  return {
+    toggle(on) {           // ON = doppio scatto brillante del relè che si eccita; OFF = clunk singolo più cupo
+      if (on) { click(2800, 0.5, 0.045); setTimeout(() => click(3400, 0.22, 0.03), 14); }
+      else { click(1700, 0.42, 0.05); }
+    },
+    success() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => blip(f, 0.16, 0.22), i * 90)); }
+  };
+})();
+
+/* ============ QUADRO DI AVVIAMENTO: interruttori 0/1 ============
+   Catena di dipendenze (sequenza), stato booleano, parola binaria letta dal
+   "computer" dell'impianto. Lega il fotovoltaico al pensiero computazionale. */
+const SW_IC = {
+  pann: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="11" rx="1.5"/><line x1="9" y1="5" x2="9" y2="16"/><line x1="15" y1="5" x2="15" y2="16"/><line x1="3" y1="10.5" x2="21" y2="10.5"/><line x1="12" y1="16" x2="12" y2="20"/></svg>',
+  inv:  '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M6 14 q 3 -7 5.5 0 t 5.5 0"/></svg>',
+  rete: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 21 12 3 17 21"/><path d="M5 9h14"/><path d="M4 15h16"/><path d="M9 15 15 9M15 15 9 9"/></svg>',
+  cont: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 12 16 9"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>',
+  batt: '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="16" height="10" rx="2"/><line x1="21" y1="10.5" x2="21" y2="13.5"/><path d="M11 9 9 12.5h3L10 15"/></svg>',
+  mon:  '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="9" y1="20" x2="15" y2="20"/><path d="M7 11l3-3 2.5 2L16 7"/></svg>'
+};
+const SWITCHES = [
+  { id:'cc',   ic:'pann', nome:'Sezionatore CC',       fun:'Collega i pannelli all’inverter',            prereq:null,  ess:true,  lab:'Pannelli' },
+  { id:'inv',  ic:'inv',  nome:'Inverter',             fun:'Trasforma la corrente continua in alternata', prereq:'cc',  ess:true,  lab:'Inverter' },
+  { id:'ca',   ic:'rete', nome:'Sezionatore CA',       fun:'Collega l’inverter alla rete elettrica',      prereq:'inv', ess:true,  lab:'Rete' },
+  { id:'cont', ic:'cont', nome:'Contatore di scambio', fun:'Misura l’energia che entra ed esce',           prereq:'ca',  ess:true,  lab:'Contatore' },
+  { id:'batt', ic:'batt', nome:'Accumulo (batteria)',  fun:'Immagazzina l’energia in più per la sera',     prereq:'inv', ess:false, lab:'Batteria' },
+  { id:'mon',  ic:'mon',  nome:'Monitoraggio',         fun:'Accende il portale dati (i numeri del Passo 1 e 3)', prereq:'cont', ess:false, lab:'Portale' }
+];
+const ESSENZIALI = ['cc', 'inv', 'ca', 'cont'];
+const swState = {};
+SWITCHES.forEach(s => swState[s.id] = false);
+const swById = id => SWITCHES.find(s => s.id === id);
+function swValido(id) {
+  const s = swById(id);
+  if (!swState[id]) return false;
+  if (s.prereq && !swValido(s.prereq)) return false;
+  return true;
+}
+const swLista = document.getElementById('switchLista');
+SWITCHES.forEach(s => {
+  const row = document.createElement('div');
+  row.className = 'sw-row'; row.dataset.sw = s.id;
+  row.innerHTML =
+    '<span class="sw-ic">' + SW_IC[s.ic] + '</span>' +
+    '<div class="sw-info"><div class="sw-nome">' + s.nome + (s.ess ? '<span class="sw-ess">essenziale</span>' : '') + '</div>' +
+      '<div class="sw-fun">' + s.fun + '</div>' +
+      '<div class="sw-attesa" data-attesa></div></div>' +
+    '<button class="sw-toggle" role="switch" aria-checked="false" aria-label="' + s.nome + ': acceso o spento"><span class="knob"></span></button>';
+  swLista.appendChild(row);
+  row.querySelector('.sw-toggle').addEventListener('click', () => toggleSwitch(s.id));
+});
+function toggleSwitch(id) {
+  swState[id] = !swState[id];
+  SwSound.toggle(swState[id]);
+  mosse++;
+  registraOrdine(id, swState[id]);
+  aggiornaQuadro();
+}
+(function () {
+  const catena = document.getElementById('catena');
+  ESSENZIALI.forEach((id, i) => {
+    const s = swById(id);
+    const n = document.createElement('div');
+    n.className = 'nodo'; n.dataset.nodo = id;
+    n.innerHTML = '<div class="nodo-box">' + SW_IC[s.ic] + '</div><div class="nodo-lab">' + s.lab + '</div>';
+    catena.appendChild(n);
+    if (i < ESSENZIALI.length - 1) {
+      const c = document.createElement('div'); c.className = 'conn'; c.dataset.conn = id;
+      catena.appendChild(c);
+    }
+  });
+  const extra = document.getElementById('catenaExtra');
+  ['batt', 'mon'].forEach(id => {
+    const s = swById(id);
+    const n = document.createElement('div');
+    n.className = 'nodo'; n.dataset.nodo = id;
+    n.innerHTML = '<div class="nodo-box">' + SW_IC[s.ic] + '</div><div class="nodo-lab">' + s.lab + '</div>';
+    extra.appendChild(n);
+  });
+})();
+/* --- missioni del quadro (stile acquedotto mini: obiettivi + contamosse + sequenza) --- */
+const MISSIONI_Q = [
+  { titolo:'1 · Accensione base', desc:'Metti in funzione l’impianto: accendi i quattro interruttori essenziali (pannelli → inverter → rete → contatore).', target:['cc','inv','ca','cont'], maxMosse:6 },
+  { titolo:'2 · Impianto al massimo', desc:'Ora fai lavorare tutto: accendi anche l’accumulo e il monitoraggio, così l’impianto produce, accumula e ti mostra i dati.', target:['cc','inv','ca','cont','batt','mon'], maxMosse:8 },
+  { titolo:'3 · La sequenza del tecnico', desc:'Come un vero tecnico: accendi i quattro interruttori nell’ordine giusto della catena, uno dopo l’altro, senza saltare passaggi.', tipo:'ordine', ordine:['cc','inv','ca','cont'], target:['cc','inv','ca','cont'], maxMosse:5 }
+];
+let mqIndex = 0, mosse = 0, ordineStep = 0, ordineHint = '', mqSuonata = false;
+function avviaMissione(i) {
+  mqIndex = (i + MISSIONI_Q.length) % MISSIONI_Q.length;
+  SWITCHES.forEach(s => swState[s.id] = false);
+  mosse = 0; ordineStep = 0; ordineHint = ''; mqSuonata = false;
+  renderMissione();
+  aggiornaQuadro();
+}
+function renderMissione() {
+  const m = MISSIONI_Q[mqIndex];
+  document.getElementById('mqTitle').textContent = m.titolo;
+  document.getElementById('mqDesc').textContent = m.desc;
+  document.getElementById('mqCount').textContent = 'Missione ' + (mqIndex + 1) + ' di ' + MISSIONI_Q.length;
+  document.getElementById('mqMax').textContent = '/ max ' + m.maxMosse;
+  const steps = document.getElementById('mqSteps');
+  steps.innerHTML = '';
+  if (m.tipo === 'ordine') m.ordine.forEach((id, i) => {
+    const li = document.createElement('li'); li.dataset.step = i;
+    li.innerHTML = '<span class="num">' + (i + 1) + '</span><span>' + swById(id).nome + '</span>';
+    steps.appendChild(li);
+  });
+}
+function registraOrdine(id, acceso) {
+  const m = MISSIONI_Q[mqIndex];
+  if (m.tipo !== 'ordine' || !acceso) return;
+  const atteso = m.ordine[ordineStep];
+  if (id === atteso) { ordineStep++; ordineHint = ''; }
+  else if (m.ordine.includes(id)) ordineHint = 'Non è il momento: prima accendi «' + swById(atteso).nome + '».';
+}
+function aggiornaStepUI() {
+  document.querySelectorAll('#mqSteps li').forEach((li, i) => {
+    li.classList.toggle('done', i < ordineStep);
+    li.classList.toggle('current', i === ordineStep);
+  });
+}
+function valutaMissione() {
+  const m = MISSIONI_Q[mqIndex];
+  const fb = document.getElementById('mqFb');
+  document.getElementById('mqMoves').textContent = mosse;
+  document.getElementById('mqMovesWrap').classList.toggle('over', mosse > m.maxMosse);
+  if (m.tipo === 'ordine') aggiornaStepUI();
+  const raggiunto = m.tipo === 'ordine'
+    ? (ordineStep >= m.ordine.length && m.target.every(swValido))
+    : m.target.every(swValido);
+  if (!(raggiunto && mosse <= m.maxMosse)) mqSuonata = false;
+  if (raggiunto && mosse <= m.maxMosse) {
+    fb.className = 'mq-fb ok'; fb.textContent = 'Completata in ' + mosse + ' mosse! Passa alla prossima con la freccia →';
+    if (!mqSuonata) { SwSound.success(); mqSuonata = true; }
+  } else if (raggiunto) {
+    fb.className = 'mq-fb warn'; fb.textContent = 'Obiettivo raggiunto, ma in troppe mosse (' + mosse + ' > ' + m.maxMosse + '). Premi «Riporta a 0» e riprova.';
+  } else if (ordineHint) {
+    fb.className = 'mq-fb warn'; fb.textContent = ordineHint;
+  } else if (mosse > m.maxMosse) {
+    fb.className = 'mq-fb warn'; fb.textContent = 'Hai superato le mosse: premi «Riporta a 0» e riprova con calma.';
+  } else {
+    fb.className = 'mq-fb'; fb.textContent = '';
+  }
+}
+function aggiornaQuadro() {
+  const pb = document.getElementById('parolaBin');
+  pb.innerHTML = SWITCHES.map(s => '<span class="' + (swState[s.id] ? 'bit1' : '') + '">' + (swState[s.id] ? '1' : '0') + '</span>').join('');
+  const bits = SWITCHES.map(s => swState[s.id] ? 1 : 0).join('');
+  document.getElementById('binStr').textContent = bits;
+  document.getElementById('binDec').textContent = parseInt(bits, 2);
+  SWITCHES.forEach(s => {
+    const row = swLista.querySelector('.sw-row[data-sw="' + s.id + '"]');
+    const tog = row.querySelector('.sw-toggle');
+    tog.classList.toggle('on', swState[s.id]);
+    tog.setAttribute('aria-checked', swState[s.id] ? 'true' : 'false');
+    const attesa = swState[s.id] && s.prereq && !swValido(s.prereq);
+    row.classList.toggle('attesa', attesa);
+    row.classList.toggle('on', swValido(s.id));
+    row.querySelector('[data-attesa]').textContent = attesa ? ('In attesa: prima accendi «' + swById(s.prereq).nome + '»') : '';
+  });
+  SWITCHES.forEach(s => {
+    const n = document.querySelector('[data-nodo="' + s.id + '"]');
+    if (n) n.classList.toggle('on', swValido(s.id));
+  });
+  ESSENZIALI.slice(0, -1).forEach((id, i) => {
+    const c = document.querySelector('[data-conn="' + id + '"]');
+    if (c) c.classList.toggle('flusso', swValido(id) && swValido(ESSENZIALI[i + 1]));
+  });
+  const inFunzione = ESSENZIALI.every(swValido);
+  const box = document.getElementById('statoBox');
+  const txt = document.getElementById('statoTxt');
+  const hint = document.getElementById('statoHint');
+  const live = document.getElementById('statoLive');
+  box.classList.toggle('acceso', inFunzione);
+  if (inFunzione) {
+    txt.textContent = 'IMPIANTO IN FUNZIONE';
+    const extra = [];
+    extra.push(swValido('batt') ? 'stai caricando la batteria per stasera' : 'la batteria è spenta, l’energia in più va tutta in rete');
+    extra.push(swValido('mon') ? 'e il portale ti mostra ogni dato' : 'ma il portale è spento: stai lavorando alla cieca, accendi il Monitoraggio');
+    hint.textContent = 'Catena chiusa: pannelli → inverter → rete → contatore. ' + extra.join('; ') + '.';
+    document.getElementById('quadroKw').textContent = fmt(2.8, 1);
+    live.hidden = false;
+  } else {
+    live.hidden = true;
+    txt.textContent = 'IMPIANTO SPENTO';
+    const nomi = { cc:'collega i pannelli (Sezionatore CC)', inv:'accendi l’inverter', ca:'collega alla rete (Sezionatore CA)', cont:'attiva il contatore di scambio' };
+    const mancante = ESSENZIALI.find(id => !swValido(id));
+    hint.textContent = 'Prossimo passo: ' + nomi[mancante] + '.';
+  }
+  valutaMissione();
+}
+document.getElementById('btnResetQuadro').addEventListener('click', () => {
+  SWITCHES.forEach(s => swState[s.id] = false);
+  mosse = 0; ordineStep = 0; ordineHint = '';
+  aggiornaQuadro();
+});
+document.getElementById('missioneBox').addEventListener('click', e => {
+  const b = e.target.closest('[data-mq]');
+  if (b) avviaMissione(mqIndex + (b.dataset.mq === 'next' ? 1 : -1));
+});
+avviaMissione(0);
 </script>
 </body>
 </html>
