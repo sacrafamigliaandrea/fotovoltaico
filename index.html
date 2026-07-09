@@ -68,6 +68,17 @@ h1 .h-sole{color:var(--sole)}
 .side-nav{display:flex;flex-direction:column;gap:5px;flex:1 1 auto}
 .side-foot{display:flex;flex-direction:column;gap:9px;border-top:1.5px solid var(--brd);padding-top:12px}
 .side-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.6px;color:var(--muted);text-transform:uppercase;line-height:1.35}
+/* progresso di completamento */
+.pill-check{width:17px;height:17px;margin-left:auto;flex:0 0 auto;color:var(--energia);opacity:0;transform:scale(.5);transition:opacity .25s,transform .25s}
+.pill.fatto .pill-check{opacity:1;transform:scale(1)}
+.pill.fatto{box-shadow:inset 3px 0 0 var(--energia)}
+.pill.attiva.fatto .pill-check{color:#06121F}
+.side-progress{background:var(--pann);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px}
+.sp-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-family:var(--head);font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.sp-top b{font-family:var(--mono);color:var(--energia);font-size:14px}
+.sp-bar{height:8px;background:#0A1828;border:1px solid var(--brd);border-radius:999px;overflow:hidden}
+.sp-fill{height:100%;width:0;background:linear-gradient(90deg,var(--ciano),var(--energia));border-radius:999px;transition:width .4s}
+.side-progress.completo{border-color:var(--energia);box-shadow:0 0 12px rgba(61,220,151,.2)}
 
 .pill{border:1.5px solid var(--brd2);background:var(--pann);color:var(--testo);border-radius:10px;padding:10px 12px;font-size:14.5px;font-weight:600;min-height:44px;width:100%;display:inline-flex;align-items:center;gap:9px;text-align:left;transition:all .16s}
 .pill:hover{border-color:var(--ciano);background:var(--cianoL)}
@@ -616,15 +627,19 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
       <span class="side-claim">Cattura, trasforma e usa il potere del sole</span>
     </div>
   </div>
-  <div class="side-school">Scuola Sacra Famiglia &middot; Animatore Digitale &middot; Andrea Cerioli</div>
 
   <nav class="side-nav" id="navPills" aria-label="Sezioni del percorso"></nav>
 
   <div class="side-foot" id="sideFoot">
+    <div class="side-progress" id="sideProgress">
+      <div class="sp-top"><span id="spLab">Sezioni completate</span><b id="spNum">0/10</b></div>
+      <div class="sp-bar"><div class="sp-fill" id="spFill"></div></div>
+    </div>
     <div class="side-status" role="status">
       <span class="led" aria-hidden="true"></span>
       <span>Impianto Piscina Andreana &middot; Orzinuovi &middot; Sistema attivo</span>
     </div>
+    <div class="side-school">Scuola Sacra Famiglia &middot; Animatore Digitale &middot; Andrea Cerioli</div>
   </div>
 </aside>
 
@@ -1729,13 +1744,29 @@ const players = [...document.querySelectorAll('.player[data-player]')].map(creaP
 /* ============ NAVIGAZIONE ============ */
 const SEZIONI = ['La scoperta', 'Il kWh', 'La tua giornata', 'I numeri veri', 'Progetta i tetti', 'Accendi l’impianto', 'Il simulatore', 'Il codice', 'La verifica', 'Cosa ho capito'];
 const navPills = document.getElementById('navPills');
+const stepPills = [];
+const fatti = new Set();
+let attuale = 0;
 SEZIONI.forEach((nome, i) => {
   const b = document.createElement('button');
   b.className = 'pill';
-  b.innerHTML = '<span class="p-num">' + (i + 1) + '</span><span>' + nome + '</span>';
+  b.innerHTML = '<span class="p-num">' + (i + 1) + '</span><span>' + nome + '</span>' +
+    '<svg class="pill-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>';
   b.addEventListener('click', () => vai(i));
   navPills.appendChild(b);
+  stepPills.push(b);
 });
+function completa(i) {
+  if (!(i >= 0 && i < SEZIONI.length) || fatti.has(i)) return;
+  fatti.add(i);
+  stepPills[i].classList.add('fatto');
+  const n = fatti.size, tot = SEZIONI.length;
+  document.getElementById('spNum').textContent = n + '/' + tot;
+  document.getElementById('spFill').style.width = (n / tot * 100) + '%';
+  const box = document.getElementById('sideProgress');
+  box.classList.toggle('completo', n === tot);
+  document.getElementById('spLab').textContent = n === tot ? 'Percorso completato!' : 'Sezioni completate';
+}
 const pillAppr = document.createElement('button');
 pillAppr.className = 'pill pill-appr';
 pillAppr.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg><span>Approfondimenti</span>';
@@ -1750,6 +1781,7 @@ const sideFoot = document.getElementById('sideFoot');
 sideFoot.insertBefore(pillDoc, sideFoot.firstChild);
 
 function vai(i) {
+  attuale = i;
   players.forEach(pl => pl.pausa());
   if (typeof ytPausaTutti === 'function') ytPausaTutti();
   document.querySelectorAll('.sezione').forEach((s, j) => s.classList.toggle('attiva', j === i));
@@ -1757,7 +1789,7 @@ function vai(i) {
   if (i === 10 && typeof caricaVideo === 'function') caricaVideo();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => vai(+b.dataset.vai)));
+document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => { completa(attuale); vai(+b.dataset.vai); }));
 vai(0);
 
 /* ============ LIGHTBOX + MODAL ============ */
@@ -2100,6 +2132,7 @@ function passoSim() {
 function fineGiorno() {
   clearInterval(timerSim);
   inCorsa = false;
+  completa(6);
   elStrada.classList.remove('in-moto');
   elBtnGiorno.disabled = false;
   elBtnGiorno.querySelector('span').textContent = 'Rivivi la giornata';
@@ -2302,6 +2335,7 @@ document.getElementById('btnEsegui').addEventListener('click', () => {
           : 'Il tuo record manuale (' + fmt(recordKm) + ' km) per ora resiste: il programma può fare di meglio.');
       }
       document.getElementById('codMsg').textContent = msg.join(' ');
+      completa(7);
       document.getElementById('badgeProg').classList.toggle('mostra', eff > 100);
     }
   }, 16);
@@ -2391,6 +2425,7 @@ elBtnProssima.addEventListener('click', () => {
   else fineQuiz();
 });
 function fineQuiz() {
+  completa(8);
   elQuizCorpo.style.display = 'none';
   elQuizFine.classList.add('mostra');
   elQpFill.style.width = '100%';
@@ -2664,6 +2699,7 @@ const YIELD_KWP = 1100, CO2_KWH = 0.4;
     stage.appendChild(el);
     posati.push(el);
     stats();
+    completa(4);
   }
   function flash(xPct, yPct, testo) {
     const f = document.createElement('div');
@@ -2761,6 +2797,7 @@ function aggiornaRecap() {
   document.getElementById('recapFill').style.width = (n / tot * 100) + '%';
   const box = document.getElementById('recap');
   const completo = n === tot;
+  if (completo) completa(9);
   box.classList.toggle('completo', completo);
   const msg = document.getElementById('recapMsg');
   document.getElementById('recapTutto').querySelector('span').textContent = completo ? 'Spegni tutto e ricomincia' : 'Le so tutte: accendi il quadro';
@@ -2836,6 +2873,7 @@ const devPrevOn = {};
       devMin[d.id] = +sl.value;
       const on = devMin[d.id] > 0;
       if (on !== devPrevOn[d.id]) { SwSound.toggle(on); devPrevOn[d.id] = on; }
+      completa(2);
       aggiornaConsumi();
     });
   });
@@ -3093,6 +3131,7 @@ function aggiornaQuadro() {
   const hint = document.getElementById('statoHint');
   const live = document.getElementById('statoLive');
   box.classList.toggle('acceso', inFunzione);
+  if (inFunzione) completa(5);
   if (inFunzione) {
     txt.textContent = 'IMPIANTO IN FUNZIONE';
     const extra = [];
