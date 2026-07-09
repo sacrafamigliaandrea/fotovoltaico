@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cacciatori di Sole — la sala di controllo del fotovoltaico</title>
+<title>Energy Pixel — il fotovoltaico della nostra scuola</title>
 <link rel="icon" href="logo.svg">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -330,6 +330,47 @@ input[type=range]{width:100%;accent-color:var(--sole);height:44px;background:tra
 .mtab-corpo ul{margin:0 0 14px 22px}
 .mtab-corpo li{margin-bottom:7px}
 
+/* ============ APPROFONDIMENTI (video distraction-free) ============ */
+.pill-appr{border-color:var(--sole);color:var(--sole)}
+.pill-appr:hover{background:var(--soleL);border-color:var(--sole)}
+.pill-appr.attiva{background:var(--sole);color:#231500;border-color:var(--sole);box-shadow:0 0 14px rgba(255,201,61,.35)}
+.video-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:14px}
+@media(max-width:760px){.video-grid{grid-template-columns:1fr}}
+.video-card{background:var(--pann);border:1.5px solid var(--brd);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#060F1B}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.video-overlay{position:absolute;inset:0;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(6,15,27,.15);transition:background .2s}
+.video-overlay:hover{background:rgba(6,15,27,.28)}
+.video-overlay.giocando{background:transparent}
+.video-overlay.giocando .play-big{opacity:0;transform:scale(.7)}
+.play-big{width:66px;height:66px;border-radius:50%;background:linear-gradient(180deg,var(--sole),var(--sole2));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(0,0,0,.4);transition:opacity .2s,transform .2s;pointer-events:none}
+.play-big svg{margin-left:3px}
+.video-cover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--pann2),#060F1B);color:var(--muted);font-family:var(--mono);font-size:12.5px;letter-spacing:1px;text-transform:uppercase}
+.video-controls{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1.5px solid var(--brd)}
+.vc-btn{flex:0 0 auto;width:40px;height:40px;border-radius:10px;border:1.5px solid var(--brd2);background:var(--pann2);color:var(--testo);display:flex;align-items:center;justify-content:center}
+.vc-btn:hover{border-color:var(--ciano);color:var(--ciano)}
+.vc-bar{flex:1;height:10px;background:#0A1828;border:1px solid var(--brd);border-radius:999px;cursor:pointer;position:relative;overflow:hidden}
+.vc-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ciano),var(--sole));border-radius:999px}
+.vc-time{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap;min-width:88px;text-align:right}
+.video-meta{padding:16px 18px;border-top:1.5px solid var(--brd)}
+.video-fonte{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ciano);background:var(--cianoL);border:1px solid rgba(59,201,236,.3);border-radius:999px;padding:4px 12px;margin-bottom:10px}
+.video-titolo{font-family:var(--head);font-weight:700;font-size:1.08rem;line-height:1.35;margin-bottom:8px}
+.video-perche{font-size:15px;color:var(--muted);line-height:1.55}
+.video-perche strong{color:var(--testo)}
+.appr-intro-link{margin-top:26px}
+/* domande aperte "da esperto" dopo i video */
+.dexp-lista{margin-top:14px}
+.dexp{background:var(--pann);border:1.5px solid var(--brd);border-radius:14px;padding:16px 18px 14px;margin-bottom:14px}
+.dexp-q{font-family:var(--head);font-weight:600;font-size:1.06rem;line-height:1.4;display:flex;gap:10px;margin-bottom:10px}
+.dexp-n{font-family:var(--mono);font-weight:700;color:var(--sole);flex:0 0 auto}
+.dexp textarea{width:100%;min-height:80px;border:1.5px solid var(--brd2);border-radius:10px;padding:12px;font-family:var(--body);font-size:17px;resize:vertical;background:#0C1A2C;color:var(--testo)}
+.dexp textarea:focus{border-color:var(--ciano);outline:none}
+.dexp details{margin-top:10px}
+.dexp summary{display:inline-flex;align-items:center;gap:8px;font-family:var(--head);font-weight:600;font-size:14.5px;color:var(--ciano);cursor:pointer;min-height:44px;list-style:none}
+.dexp summary::-webkit-details-marker{display:none}
+.dexp-a{background:var(--cianoL);border:1px solid rgba(59,201,236,.3);border-radius:10px;padding:14px 16px;margin-top:4px;font-size:16px;line-height:1.6}
+.dexp-a-t{font-family:var(--head);font-weight:700;font-size:12.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--ciano);margin-bottom:6px}
+
 footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;text-align:center;color:var(--muted);font-size:14.5px}
 
 /* ============ RESPONSIVE ============ */
@@ -369,8 +410,8 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <line x1="19" y1="33" x2="19" y2="41" stroke="var(--sfondo)" stroke-width="1.6"/>
     <line x1="29" y1="33" x2="29" y2="41" stroke="var(--sfondo)" stroke-width="1.6"/>
   </svg>
-  <h1>Cacciatori di <span class="h-sole">Sole</span></h1>
-  <p class="sottotitolo">Benvenuto nella <span class="evidenza">sala di controllo</span> del fotovoltaico della nostra scuola: impara a leggere l&rsquo;energia, insegui il sole, poi <span class="evidenza">programmalo</span>.</p>
+  <h1>Energy <span class="h-sole">Pixel</span></h1>
+  <p class="sottotitolo"><span class="evidenza">Cattura, trasforma e usa</span> il potere del sole: entra nella sala di controllo del fotovoltaico della nostra scuola e impara a leggerne l&rsquo;energia.</p>
   <div class="statobar" role="status">
     <span class="led" aria-hidden="true"></span>
     <span>Impianto Piscina Andreana</span><span class="sep">|</span>
@@ -447,19 +488,19 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
           <div class="v-tit">La centrale che nessuno vede</div>
           <div class="v-txt">Niente ciminiere, niente rumore: ci passi accanto ogni giorno.</div>
         </div>
-        <div class="vcard" data-t="22">
+        <div class="vcard" data-t="15">
           <span class="v-num">02</span>
           <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
           <div class="v-tit">La fotografia delle 05:47</div>
           <div class="v-txt">Il sole era appena sorto e la centrale gi&agrave; lavorava, piano piano.</div>
         </div>
-        <div class="vcard" data-t="45">
+        <div class="vcard" data-t="50">
           <span class="v-num">03</span>
           <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
           <div class="v-tit">Il mistero: 23.297 km</div>
           <div class="v-txt">Chilometri? Ma se i pannelli stanno fermi sul tetto&hellip; Messo da parte: ci torneremo.</div>
         </div>
-        <div class="vcard" data-t="68">
+        <div class="vcard" data-t="71">
           <span class="v-num">04</span>
           <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
           <div class="v-tit">La chiave: tre lettere</div>
@@ -514,31 +555,31 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
   </div>
 
   <div class="vcards" data-vcards="kwh" style="max-width:1100px">
-    <div class="vcard" data-t="6">
+    <div class="vcard" data-t="8">
       <span class="v-num">01</span>
       <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <div class="v-tit">Watt = la spinta di adesso</div>
       <div class="v-txt">Quanto premi sui pedali in questo istante. LED: 10 W. Phon: 2.000 W.</div>
     </div>
-    <div class="vcard" data-t="32">
+    <div class="vcard" data-t="28">
       <span class="v-num">02</span>
       <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <div class="v-tit">kWh = tutta la strada fatta</div>
       <div class="v-txt">Il lavoro completo, dall&rsquo;inizio alla fine della pedalata.</div>
     </div>
-    <div class="vcard" data-t="50">
+    <div class="vcard" data-t="38">
       <span class="v-num">03</span>
       <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <div class="v-tit">1 kWh = 1.000 W &times; 1 ora</div>
       <div class="v-txt">La regola unica. &Egrave; esattamente ci&ograve; che conta il contatore.</div>
     </div>
-    <div class="vcard" data-t="66">
+    <div class="vcard" data-t="50">
       <span class="v-num">04</span>
       <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <div class="v-tit">Quanto vale 1 kWh?</div>
       <div class="v-txt">Pi&ugrave; di 30 ricariche di iPad, 100 ore di LED, 6 km in auto elettrica.</div>
     </div>
-    <div class="vcard" data-t="86">
+    <div class="vcard" data-t="69">
       <span class="v-num">05</span>
       <svg class="v-lucchetto" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       <div class="v-tit">La trappola: kW &ne; kWh</div>
@@ -1067,7 +1108,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
 <section class="sezione" id="sez-5">
   <div class="s-head">
     <span class="s-etich">Passo 6 &middot; La verifica</span>
-    <h2>Sei diventato un cacciatore di sole?</h2>
+    <h2>Sei diventato un lettore di energia?</h2>
     <p class="s-intro">Una domanda alla volta. Se sbagli non succede niente: leggi la spiegazione e vai avanti, &egrave; cos&igrave; che si impara.</p>
   </div>
 
@@ -1130,13 +1171,43 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
     <div class="fact-t">E il viaggio continua</div>
     <p style="margin:0">La prossima volta che passi davanti alla piscina, alza gli occhi: la centrale invisibile adesso la vedi. E ogni lampadina che spegni quando esci da una stanza &egrave; un pezzetto di quel lavoro che resta disponibile per qualcun altro.</p>
   </div>
+
+  <button class="btn-avanti appr-intro-link" data-vai="7"><span>Vuoi vederlo dal vero? Vai agli approfondimenti</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</section>
+
+<!-- ============================================================
+     SEZIONE 8 — APPROFONDIMENTI (video distraction-free)
+============================================================ -->
+<section class="sezione" id="sez-7">
+  <div class="s-head">
+    <span class="s-etich">Extra &middot; Approfondimenti</span>
+    <h2>Guarda il fotovoltaico dal vero</h2>
+    <p class="s-intro">Quattro video scelti per andare pi&ugrave; a fondo: dentro un pannello, dentro un impianto, su fino al parco solare pi&ugrave; grande del mondo e infine una domanda a sorpresa sul deserto. Li guardi qui, senza uscire dalla nostra sala di controllo e senza distrazioni.</p>
+  </div>
+
+  <div class="video-grid" id="videoGrid"></div>
+
+  <h3 style="margin-top:40px">Metti alla prova la tua comprensione</h3>
+  <p class="testo">Dieci domande da <strong>veri esperti dell&rsquo;energia</strong>. Prima scrivi la tua risposta con parole tue, poi apri la &laquo;risposta esperta&raquo; e confrontala: dov&rsquo;eri gi&agrave; preciso? Cosa aggiungeresti? Le risposte vivono dentro i quattro video &mdash; a volte devi collegarne pi&ugrave; di uno.</p>
+  <div class="dexp-lista" id="domandeEsperto"></div>
+  <button class="btn-tech" id="btnCopiaEsperto" style="margin-top:8px"><span>Copia le mie risposte</span></button><span class="copiato-avviso" id="copiatoEsperto">Copiate! Consegnale come ti dice il/la docente.</span>
+
+  <div class="azione" style="margin-top:34px">
+    <div class="azione-t">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.5 2.5h5c.2-1 .7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>
+      <span>L&rsquo;idea diventa azione</span>
+    </div>
+    <p>Scegli <strong>una sola cosa</strong> che hai scoperto in questi video e che non sapevi prima. Scrivila sul diario in una frase e preparati a raccontarla alla classe: il parco di Midong &egrave; grande come&hellip; quante volte il nostro paese? Che cosa succede <em>dentro</em> il pannello quando lo colpisce il sole?</p>
+  </div>
 </section>
 
 </main>
 
 <footer>
   <div class="wrap">
-    <span>Cacciatori di Sole &middot; Scuola Sacra Famiglia &middot; Orzinuovi &middot; dati reali dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo;</span>
+    <span>Energy Pixel &middot; Scuola Sacra Famiglia &middot; Orzinuovi &middot; dati reali dell&rsquo;impianto &laquo;Fotovoltaico Piscina Andreana&raquo;</span>
   </div>
 </footer>
 
@@ -1268,6 +1339,12 @@ SEZIONI.forEach((nome, i) => {
   b.addEventListener('click', () => vai(i));
   navPills.appendChild(b);
 });
+const pillAppr = document.createElement('button');
+pillAppr.className = 'pill pill-appr';
+pillAppr.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg><span>Approfondimenti</span>';
+pillAppr.addEventListener('click', () => vai(7));
+navPills.appendChild(pillAppr);
+
 const pillDoc = document.createElement('button');
 pillDoc.className = 'pill pill-doc';
 pillDoc.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".5" fill="currentColor"/></svg><span>Info docenti</span>';
@@ -1276,8 +1353,10 @@ navPills.appendChild(pillDoc);
 
 function vai(i) {
   players.forEach(pl => pl.pausa());
+  if (typeof ytPausaTutti === 'function') ytPausaTutti();
   document.querySelectorAll('.sezione').forEach((s, j) => s.classList.toggle('attiva', j === i));
   navPills.querySelectorAll('.pill:not(.pill-doc)').forEach((p, j) => p.classList.toggle('attiva', j === i));
+  if (i === 7 && typeof caricaVideo === 'function') caricaVideo();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 document.querySelectorAll('[data-vai]').forEach(b => b.addEventListener('click', () => vai(+b.dataset.vai)));
@@ -1924,8 +2003,8 @@ function fineQuiz() {
   document.getElementById('anelloNum').textContent = qPunti + '/' + QUIZ.length;
   document.getElementById('anelloLab').textContent = perc + '% giuste';
   let med, comm;
-  if (perc === 100) { med = 'Cacciatore di Sole leggendario'; comm = 'Hai letto ogni dato come un tecnico esperto. Ora tocca a te: insegna a qualcuno a casa cosa significa kWh.'; }
-  else if (perc >= 75) { med = 'Cacciatore di Sole esperto'; comm = 'Ottima lettura! Rivedi solo le spiegazioni delle domande sbagliate: sono i pezzi che ti mancano per il punteggio pieno.'; }
+  if (perc === 100) { med = 'Lettore di energia leggendario'; comm = 'Hai letto ogni dato come un tecnico esperto. Ora tocca a te: insegna a qualcuno a casa cosa significa kWh.'; }
+  else if (perc >= 75) { med = 'Lettore di energia esperto'; comm = 'Ottima lettura! Rivedi solo le spiegazioni delle domande sbagliate: sono i pezzi che ti mancano per il punteggio pieno.'; }
   else if (perc >= 50) { med = 'Apprendista dell’energia'; comm = 'Buona base! Torna al passo 2 e al simulatore, poi rifai la verifica: vedrai la differenza.'; }
   else { med = 'Primo giro di ricognizione'; comm = 'Nessun problema: rileggi le spiegazioni con calma e riprova. Ogni tentativo è energia accumulata.'; }
   document.getElementById('quizMedaglia').textContent = med;
@@ -1943,9 +2022,207 @@ mostraDomanda();
 document.getElementById('btnCopia').addEventListener('click', () => {
   const t = ['Che cosa ho capito che prima non sapevo?', 'Come ci sono arrivato?', 'Che cosa cambierò da domani?'];
   const r = [1, 2, 3].map((n, i) => t[i] + '\n' + (document.getElementById('meta' + n).value.trim() || '(non ho ancora risposto)')).join('\n\n');
-  const testo = 'CACCIATORI DI SOLE — le mie riflessioni\n\n' + r;
+  const testo = 'ENERGY PIXEL — le mie riflessioni\n\n' + r;
   const fine = () => {
     const avv = document.getElementById('copiatoAvviso');
+    avv.style.display = 'inline';
+    setTimeout(() => { avv.style.display = 'none'; }, 3500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(testo).then(fine, fine);
+  else fine();
+});
+
+/* ============ APPROFONDIMENTI: player YouTube distraction-free ============
+   Regola video del design system: iframe pointer-events:none + overlay che
+   intercetta i click; controls=0, fs=0, rel=0, modestbranding; pausa al cambio
+   sezione; niente uscita verso YouTube, niente "consigliati". */
+const VIDEOS = [
+  { id:'mj6_WVh2HwU', fonte:'Geopop', titolo:'Come funziona un pannello solare dall’interno?',
+    perche:'Entri <strong>dentro</strong> il pannello e vedi cosa succede quando il sole colpisce il silicio: è proprio lì che nasce la corrente che poi conti in kWh.' },
+  { id:'dKE8BkQHuvg', fonte:'RinnovaMente', titolo:'Come funziona un impianto fotovoltaico',
+    perche:'Il viaggio completo dell’energia — pannelli, inverter, rete — cioè lo stesso schema del Passo 3, raccontato con le immagini.' },
+  { id:'cy3B1saxM0U', fonte:'Geopop', titolo:'Il parco solare di Midong: più di 5 milioni di pannelli, in Cina',
+    perche:'Dal tetto della nostra piscina al <strong>parco solare più grande del mondo</strong>: guarda fin dove può arrivare questa idea.' },
+  { id:'GQ2VaCbAKec', fonte:'Geopop', titolo:'Perché è assurdo tappezzare il Sahara di pannelli solari',
+    perche:'La domanda furba: se il sole nel deserto è tantissimo, <strong>perché non mettiamo i pannelli lì?</strong> La risposta ti insegna a non fidarti delle idee "troppo facili".' }
+];
+const SVG_PLAY = '<svg width="26" height="26" viewBox="0 0 24 24" fill="#231500" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+const icoPlaySm = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+const icoPauseSm = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>';
+const icoVol = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a4 4 0 0 1 0 7"/></svg>';
+const icoMute = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><line x1="16" y1="9" x2="21" y2="15"/><line x1="21" y1="9" x2="16" y2="15"/></svg>';
+const mmssV = s => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+var videoCostruiti = false, ytApiPronta = false;
+var ytPlayers = [];   // { player, ready, ui, timer } — var: usato da vai() prima di questa riga
+
+function caricaVideo() {
+  if (videoCostruiti) return;
+  videoCostruiti = true;
+  const grid = document.getElementById('videoGrid');
+  VIDEOS.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML =
+      '<div class="video-frame">' +
+        '<div id="yt-mount-' + i + '"></div>' +
+        '<div class="video-cover" data-cover>Caricamento player&hellip;</div>' +
+        '<div class="video-overlay" data-ov><div class="play-big">' + SVG_PLAY + '</div></div>' +
+      '</div>' +
+      '<div class="video-controls">' +
+        '<button class="vc-btn vc-play" aria-label="Play o pausa">' + icoPlaySm + '</button>' +
+        '<div class="vc-bar" data-bar><div class="vc-fill" data-fill></div></div>' +
+        '<span class="vc-time" data-time>0:00 / 0:00</span>' +
+        '<button class="vc-btn vc-mute" aria-label="Muto">' + icoVol + '</button>' +
+      '</div>' +
+      '<div class="video-meta">' +
+        '<span class="video-fonte">Fonte: ' + v.fonte + '</span>' +
+        '<div class="video-titolo">' + v.titolo + '</div>' +
+        '<div class="video-perche"><strong>Perché guardarlo:</strong> ' + v.perche + '</div>' +
+      '</div>';
+    grid.appendChild(card);
+    ytPlayers.push({ player:null, ready:false, timer:null, el:{
+      cover: card.querySelector('[data-cover]'),
+      ov: card.querySelector('[data-ov]'),
+      play: card.querySelector('.vc-play'),
+      mute: card.querySelector('.vc-mute'),
+      bar: card.querySelector('[data-bar]'),
+      fill: card.querySelector('[data-fill]'),
+      time: card.querySelector('[data-time]')
+    }});
+  });
+  // carica l'API IFrame solo ora (mai al load della pagina)
+  if (window.YT && window.YT.Player) { ytApiPronta = true; creaYTPlayers(); }
+  else {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  }
+}
+window.onYouTubeIframeAPIReady = function () { ytApiPronta = true; creaYTPlayers(); };
+
+function creaYTPlayers() {
+  if (!ytApiPronta || !videoCostruiti) return;
+  VIDEOS.forEach((v, i) => {
+    const rec = ytPlayers[i];
+    if (rec.player) return;
+    rec.player = new YT.Player('yt-mount-' + i, {
+      videoId: v.id,
+      playerVars: { controls:0, fs:0, modestbranding:1, rel:0, iv_load_policy:3, disablekb:1, playsinline:1 },
+      events: {
+        onReady: () => { rec.ready = true; rec.el.cover.style.display = 'none'; },
+        onStateChange: e => onStato(i, e.data)
+      }
+    });
+  });
+}
+
+function onStato(i, stato) {
+  const rec = ytPlayers[i], el = rec.el;
+  const P = window.YT ? YT.PlayerState : {};
+  if (stato === P.PLAYING) {
+    // un solo video alla volta
+    ytPlayers.forEach((r, j) => { if (j !== i && r.ready && r.player.getPlayerState && r.player.getPlayerState() === 1) r.player.pauseVideo(); });
+    el.ov.classList.add('giocando');
+    el.play.innerHTML = icoPauseSm;
+    avviaTimer(i);
+  } else {
+    el.play.innerHTML = icoPlaySm;
+    if (stato === P.ENDED) { el.ov.classList.remove('giocando'); el.fill.style.width = '0%'; }
+    fermaTimer(i);
+  }
+}
+function avviaTimer(i) {
+  const rec = ytPlayers[i], el = rec.el;
+  fermaTimer(i);
+  rec.timer = setInterval(() => {
+    if (!rec.ready || !rec.player.getDuration) return;
+    const d = rec.player.getDuration(), t = rec.player.getCurrentTime();
+    if (d > 0) { el.fill.style.width = (t / d * 100) + '%'; el.time.textContent = mmssV(t) + ' / ' + mmssV(d); }
+  }, 250);
+}
+function fermaTimer(i) { const rec = ytPlayers[i]; if (rec.timer) { clearInterval(rec.timer); rec.timer = null; } }
+
+function toggleVideo(i) {
+  const rec = ytPlayers[i];
+  if (!rec.ready) return;
+  if (rec.player.getPlayerState() === 1) rec.player.pauseVideo();
+  else rec.player.playVideo();
+}
+function ytPausaTutti() {
+  if (!videoCostruiti || !ytPlayers.length) return;
+  ytPlayers.forEach((rec, i) => { if (rec.ready && rec.player.getPlayerState && rec.player.getPlayerState() === 1) rec.player.pauseVideo(); fermaTimer(i); });
+}
+
+// deleghe eventi (i nodi esistono dopo caricaVideo)
+document.getElementById('videoGrid').addEventListener('click', e => {
+  const card = e.target.closest('.video-card');
+  if (!card) return;
+  const i = [...document.querySelectorAll('#videoGrid .video-card')].indexOf(card);
+  if (i < 0) return;
+  const rec = ytPlayers[i];
+  if (e.target.closest('[data-ov]') || e.target.closest('.vc-play')) { toggleVideo(i); return; }
+  if (e.target.closest('.vc-mute')) {
+    if (!rec.ready) return;
+    if (rec.player.isMuted()) { rec.player.unMute(); rec.el.mute.innerHTML = icoVol; }
+    else { rec.player.mute(); rec.el.mute.innerHTML = icoMute; }
+    return;
+  }
+  const bar = e.target.closest('[data-bar]');
+  if (bar && rec.ready && rec.player.getDuration) {
+    const r = bar.getBoundingClientRect();
+    const frac = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    rec.player.seekTo(frac * rec.player.getDuration(), true);
+  }
+});
+
+/* ============ APPROFONDIMENTI: domande aperte "da esperto" ============
+   Testo di domande e risposte fornito da Andrea (non inventato). Attività di
+   autoverifica: lo studente scrive, poi rivela la risposta esperta e confronta. */
+const DOMANDE_ESPERTO = [
+  { q:'Quali sono i principali fattori ambientali e tecnici che influenzano la quantità di energia prodotta da un impianto fotovoltaico?',
+    a:'La produzione dipende dall’irraggiamento solare, dall’angolo di incidenza dei raggi solari sui moduli e dalla temperatura operativa dei moduli stessi. Questi elementi determinano l’efficienza con cui la luce viene convertita in flusso elettronico.' },
+  { q:'Qual è la funzione specifica dell’inverter all’interno di un sistema fotovoltaico?',
+    a:'L’inverter trasforma la corrente continua (DC), generata dal movimento degli elettroni nelle celle, in corrente alternata (AC). Questa conversione è necessaria affinché l’energia possa essere immessa nella rete nazionale o utilizzata per i consumi domestici.' },
+  { q:'In che modo il «doping» del silicio con fosforo e boro permette la generazione di corrente elettrica?',
+    a:'Il fosforo (tipo N) aggiunge un elettrone libero al silicio, mentre il boro (tipo P) crea una «buca» o mancanza di elettrone. Il contatto tra i due tipi crea un voltaggio; quando la luce colpisce gli elettroni, questi si muovono per riempire le buche, generando corrente.' },
+  { q:'Descrivi la struttura stratificata di una cella solare, partendo dal basso verso l’alto.',
+    a:'Una cella è composta da una piastra di metallo inferiore, seguita da uno strato di silicio tipo P, uno di silicio tipo N, una griglia metallica conduttrice, uno strato antiriflesso e, infine, una copertura protettiva in vetro trasparente.' },
+  { q:'Perché l’uso di batterie di accumulo è considerato fondamentale in determinati contesti di produzione?',
+    a:'Le batterie permettono di stoccare l’energia prodotta durante le ore di massimo irraggiamento per renderla disponibile quando la produzione è assente o insufficiente, come durante la notte, garantendo continuità nell’approvvigionamento.' },
+  { q:'Quali sono le principali sfide logistiche legate al trasporto di energia prodotta nel deserto del Sahara verso il resto del mondo?',
+    a:'Il trasporto richiederebbe migliaia di chilometri di cavi sottomarini estremamente costosi. Inoltre, su lunghe distanze, si verificherebbe una dissipazione energetica significativa, stimata tra il 20% e il 22% dell’elettricità totale trasportata.' },
+  { q:'In che modo la copertura del Sahara con pannelli solari potrebbe danneggiare l’ecosistema della Foresta Amazzonica?',
+    a:'La sabbia del Sahara, trasportata dai venti, funge da fertilizzante naturale per l’Amazzonia e gli oceani. La trasformazione del deserto in un’area verde (causata dai cambiamenti climatici indotti dai pannelli) interromperebbe questo flusso di nutrienti, danneggiando quegli ecosistemi.' },
+  { q:'Cosa si intende per pannelli «bifacciali» e quali vantaggi offrono rispetto ai modelli tradizionali?',
+    a:'I pannelli bifacciali possono assorbire energia solare da entrambi i lati: catturano la luce diretta sulla parte anteriore e la luce riflessa dal suolo sulla parte posteriore, aumentando la resa energetica complessiva.' },
+  { q:'Qual è la differenza in termini di efficienza tra il silicio monocristallino e quello policristallino?',
+    a:'Il silicio monocristallino presenta un grado di purezza superiore rispetto al policristallino. A parità di dimensioni, i pannelli monocristallini sono in grado di assorbire più energia e risultano quindi più efficienti dal punto di vista energetico.' },
+  { q:'Quali sono gli obiettivi energetici e ambientali che la Cina si è posta di raggiungere entro il 2060 attraverso parchi come quello di Midong?',
+    a:'La Cina punta a raggiungere la «Carbon Neutrality», ovvero l’equilibrio tra CO2 prodotta e assorbita, entro il 2060. Per farlo, prevede di installare una potenza rinnovabile complessiva di 455 GW, integrando energia solare ed eolica.' }
+];
+(function () {
+  const cont = document.getElementById('domandeEsperto');
+  if (!cont) return;
+  DOMANDE_ESPERTO.forEach((d, i) => {
+    const el = document.createElement('div');
+    el.className = 'dexp';
+    el.innerHTML =
+      '<div class="dexp-q"><span class="dexp-n">' + (i + 1) + '.</span><span>' + d.q + '</span></div>' +
+      '<textarea id="dexp-' + i + '" aria-label="La tua risposta alla domanda ' + (i + 1) + '"></textarea>' +
+      '<details><summary>' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>' +
+        '<span>Confronta con la risposta esperta</span></summary>' +
+        '<div class="dexp-a"><div class="dexp-a-t">Risposta esperta</div>' + d.a + '</div>' +
+      '</details>';
+    cont.appendChild(el);
+  });
+})();
+document.getElementById('btnCopiaEsperto').addEventListener('click', () => {
+  const parts = DOMANDE_ESPERTO.map((d, i) => (i + 1) + '. ' + d.q + '\n' + (document.getElementById('dexp-' + i).value.trim() || '(non ho ancora risposto)'));
+  const testo = 'ENERGY PIXEL — le mie risposte da esperto\n\n' + parts.join('\n\n');
+  const fine = () => {
+    const avv = document.getElementById('copiatoEsperto');
     avv.style.display = 'inline';
     setTimeout(() => { avv.style.display = 'none'; }, 3500);
   };
