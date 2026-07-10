@@ -168,18 +168,38 @@ h3{font-size:1.32rem;margin:30px 0 12px}
 .pl-tempo{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px;display:flex;justify-content:space-between}
 .pl-badge{display:none;margin-top:10px;background:var(--ambraL);border:1px solid var(--ambra);color:var(--ambra);border-radius:10px;padding:8px 14px;font-family:var(--head);font-size:14px;font-weight:600}
 .pl-badge.mostra{display:inline-block}
-/* PASSO 0 — storia con slide dentro un display Mac */
-.storia{max-width:960px}
-.mac{width:100%;max-width:820px;margin:0 auto}
-.mac-screen{position:relative;padding:15px;border-radius:22px;background:#0b0c0f;
-  box-shadow:0 0 0 2px #55585e,0 0 0 3px #313337,0 28px 52px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.06)}
-.mac-cam{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#2a3340,#05070a 70%);box-shadow:0 0 0 2px rgba(0,0,0,.4);z-index:3}
-.mac-glass{position:relative;border-radius:6px;overflow:hidden;background:#05060a;aspect-ratio:16/10;box-shadow:inset 0 0 0 1px rgba(0,0,0,.9),inset 0 0 40px rgba(0,0,0,.55)}
-.mac-glass img{width:100%;height:100%;object-fit:contain;display:block;background:#05060a}
-.mac-glass::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(122deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,0) 20%)}
-.mac-neck{width:110px;height:44px;margin:-1px auto 0;background:linear-gradient(90deg,#34363b 0%,#5c5f65 22%,#282a2e 56%,#4c4f55 84%,#2f3135 100%);clip-path:polygon(34% 0,66% 0,80% 100%,20% 100%)}
-.mac-foot{width:230px;height:14px;margin:0 auto;border-radius:3px 3px 11px 11px;background:linear-gradient(180deg,#4a4d53,#26272b);box-shadow:0 14px 22px rgba(0,0,0,.45),inset 0 1px 1px rgba(255,255,255,.14)}
-.storia-player{margin-top:22px}
+/* PASSO 0 — storia su due device: MacBook (tappe dispari) + iPad (tappe pari) */
+.storia{max-width:1000px}
+.devices{display:flex;align-items:flex-end;justify-content:center;gap:28px;flex-wrap:wrap}
+.device{transition:transform .55s cubic-bezier(.22,1,.36,1),filter .55s,opacity .55s}
+.device:not(.attivo){filter:brightness(.8) saturate(.92);transform:scale(.965)}
+.device.attivo{transform:scale(1)}
+.device.spento{filter:brightness(.66) saturate(.8);transform:scale(.95)}
+/* schermo comune */
+.schermo{position:relative;overflow:hidden;background:#0A1524;border-radius:4px}
+.schermo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.schermo::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(122deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,0) 20%)}
+.schermo.entra img{animation:slideIn .6s cubic-bezier(.22,1,.36,1)}
+@keyframes slideIn{from{opacity:0;transform:scale(1.07)}to{opacity:1;transform:none}}
+.device.spento .schermo img{opacity:0}
+.device.spento .schermo{background:radial-gradient(circle at 50% 42%,#12253c,#060d18 72%)}
+.schermo-off{position:absolute;inset:0;display:none;align-items:center;justify-content:center}
+.device.spento .schermo-off{display:flex}
+.schermo-off span{width:9px;height:9px;border-radius:50%;background:var(--ciano);box-shadow:0 0 12px var(--ciano);animation:offPulse 1.6s ease-in-out infinite}
+@keyframes offPulse{0%,100%{opacity:.3;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
+/* MacBook */
+.macbook{flex:0 1 560px;max-width:560px;min-width:280px}
+.mb-screen{position:relative;padding:9px;border-radius:13px 13px 4px 4px;background:#0b0c0f;box-shadow:0 0 0 2px #45484d,0 16px 30px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.05)}
+.mb-cam{position:absolute;top:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#05070a;box-shadow:0 0 0 1.5px #1a1c1f;z-index:3}
+.macbook .schermo{aspect-ratio:16/10}
+.mb-base{position:relative;height:12px;width:113%;margin:-1px 0 0 -6.5%;border-radius:0 0 10px 10px;background:linear-gradient(180deg,#c6cace 0%,#9a9ea3 52%,#7c8085 100%);box-shadow:0 9px 15px rgba(0,0,0,.42)}
+.mb-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:70px;height:6px;border-radius:0 0 8px 8px;background:linear-gradient(180deg,#83878c,#6d7176)}
+/* iPad (landscape) */
+.ipad{flex:0 1 300px;max-width:300px;min-width:210px}
+.ip-body{position:relative;padding:11px;border-radius:20px;background:#0b0c0f;box-shadow:0 0 0 2px #45484d,0 16px 28px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.05)}
+.ip-cam{position:absolute;top:50%;left:4px;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:#05070a;box-shadow:0 0 0 1.5px #1a1c1f;z-index:3}
+.ipad .schermo{aspect-ratio:4/3}
+.storia-player{margin-top:26px}
 .storia-dots{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .storia-dots-lab{width:100%;font-family:var(--mono);font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 .storia-dot{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--brd2);background:var(--pann2);color:var(--muted);font-family:var(--mono);font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s,border-color .2s}
@@ -1799,15 +1819,26 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
   </div>
 
   <div class="storia">
-    <div class="mac" role="img" aria-label="Le schermate di Energy Pixel su un display Mac">
-      <div class="mac-screen">
-        <span class="mac-cam" aria-hidden="true"></span>
-        <div class="mac-glass">
-          <img id="storiaImg" src="13.png" alt="Le schermate di Energy Pixel che scorrono seguendo la voce" />
+    <div class="devices">
+      <div class="device macbook attivo" id="devMac">
+        <div class="mb-screen">
+          <span class="mb-cam" aria-hidden="true"></span>
+          <div class="schermo">
+            <img id="slideMac" src="13.png" alt="Schermata di Energy Pixel sul MacBook" />
+            <div class="schermo-off" aria-hidden="true"><span></span></div>
+          </div>
+        </div>
+        <div class="mb-base" aria-hidden="true"><span class="mb-notch"></span></div>
+      </div>
+      <div class="device ipad spento" id="devPad">
+        <div class="ip-body">
+          <span class="ip-cam" aria-hidden="true"></span>
+          <div class="schermo">
+            <img id="slidePad" alt="Schermata di Energy Pixel sull&rsquo;iPad" />
+            <div class="schermo-off" aria-hidden="true"><span></span></div>
+          </div>
         </div>
       </div>
-      <div class="mac-neck" aria-hidden="true"></div>
-      <div class="mac-foot" aria-hidden="true"></div>
     </div>
 
     <div class="player storia-player">
@@ -2080,7 +2111,10 @@ vai(0);
   const audio = new Audio();
   audio.preload = 'metadata';
   audio.src = 'energy_pixel.mp3';
-  const img = document.getElementById('storiaImg');
+  const imgMac = document.getElementById('slideMac');
+  const imgPad = document.getElementById('slidePad');
+  const devMac = document.getElementById('devMac');
+  const devPad = document.getElementById('devPad');
   const btn = document.getElementById('storiaBtn');
   const icPlay = btn.querySelector('.ic-play'), icPause = btn.querySelector('.ic-pause');
   const barra = document.getElementById('storiaBarra'), fill = document.getElementById('storiaFill');
@@ -2108,12 +2142,25 @@ vai(0);
     for (let j = 0; j < SLIDE.length; j++) { if (t + 0.05 >= SLIDE[j].t) k = j; else break; }
     return k;
   }
+  let curMac = -1, curPad = -1;
+  function accendi(imgEl, dev, s) {
+    imgEl.src = s.img + '.png';
+    imgEl.alt = 'Energy Pixel: ' + s.cap;
+    dev.classList.remove('spento');
+    const sc = imgEl.closest('.schermo');
+    sc.classList.remove('entra'); void sc.offsetWidth; sc.classList.add('entra');
+  }
   function mostraSlide(k, forza) {
     if (k === idx && !forza) return;
     idx = k;
-    const s = SLIDE[k];
-    if (img.getAttribute('src') !== s.img + '.png') img.setAttribute('src', s.img + '.png');
-    img.alt = 'Energy Pixel: ' + s.cap;
+    // MacBook = tappe dispari, iPad = tappe pari; ogni schermo tiene la sua ultima slide
+    let miMac = -1, miPad = -1;
+    for (let j = 0; j <= k; j++) { if ((j + 1) % 2 === 1) miMac = j; else miPad = j; }
+    if (miMac >= 0 && miMac !== curMac) { curMac = miMac; accendi(imgMac, devMac, SLIDE[miMac]); }
+    if (miPad >= 0 && miPad !== curPad) { curPad = miPad; accendi(imgPad, devPad, SLIDE[miPad]); }
+    const dispari = (k + 1) % 2 === 1;
+    devMac.classList.toggle('attivo', dispari);
+    devPad.classList.toggle('attivo', !dispari);
     dots.forEach((d, j) => d.classList.toggle('on', j === k));
   }
   const mostraPlay = () => { icPlay.style.display = ''; icPause.style.display = 'none'; };
