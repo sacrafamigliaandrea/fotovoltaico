@@ -49,7 +49,7 @@ h1 .h-sole{color:var(--sole)}
 .sottotitolo .evidenza{color:var(--sole);font-weight:700}
 
 /* --- SIDEBAR --- */
-.sidebar{position:sticky;top:0;align-self:flex-start;flex:0 0 250px;width:250px;height:100vh;overflow-y:auto;
+.sidebar{position:sticky;top:0;align-self:flex-start;flex:0 0 288px;width:288px;height:100vh;overflow-y:auto;
   background:var(--sfondo2);border-right:1.5px solid var(--brd);z-index:50;
   display:flex;flex-direction:column;gap:12px;padding:18px 14px}
 .side-brand{display:flex;align-items:center;gap:11px;padding:2px 6px 10px;border-bottom:1.5px solid var(--brd)}
@@ -175,36 +175,31 @@ h3{font-size:1.32rem;margin:30px 0 12px}
 .device:not(.attivo){filter:brightness(.8) saturate(.92);transform:scale(.965)}
 .device.attivo{transform:scale(1)}
 .device.spento{filter:brightness(.66) saturate(.8);transform:scale(.95)}
-/* schermo comune */
-.schermo{position:relative;overflow:hidden;background:#0A1524;border-radius:4px}
-.schermo img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
-.schermo::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(122deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,0) 20%)}
-.schermo.entra img{animation:slideIn .6s cubic-bezier(.22,1,.36,1)}
+/* schermo dei device (nome dedicato: .schermo è già usato dal simulatore CAM 01) */
+.slideframe{position:relative;overflow:hidden;background:#0A1524;border-radius:4px;font-size:0;line-height:0}
+.slideframe img{display:block;width:100%;height:auto}
+.device.spento .slideframe{min-height:190px}
+.slideframe::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(122deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,0) 20%)}
+.slideframe.entra img{animation:slideIn .6s cubic-bezier(.22,1,.36,1)}
 @keyframes slideIn{from{opacity:0;transform:scale(1.07)}to{opacity:1;transform:none}}
-.device.spento .schermo img{opacity:0}
-.device.spento .schermo{background:radial-gradient(circle at 50% 42%,#12253c,#060d18 72%)}
-.schermo-off{position:absolute;inset:0;display:none;align-items:center;justify-content:center}
-.device.spento .schermo-off{display:flex}
-.schermo-off span{width:9px;height:9px;border-radius:50%;background:var(--ciano);box-shadow:0 0 12px var(--ciano);animation:offPulse 1.6s ease-in-out infinite}
+.device.spento .slideframe img{opacity:0}
+.device.spento .slideframe{background:radial-gradient(circle at 50% 42%,#12253c,#060d18 72%)}
+.slideframe-off{position:absolute;inset:0;display:none;align-items:center;justify-content:center}
+.device.spento .slideframe-off{display:flex}
+.slideframe-off span{width:9px;height:9px;border-radius:50%;background:var(--ciano);box-shadow:0 0 12px var(--ciano);animation:offPulse 1.6s ease-in-out infinite}
 @keyframes offPulse{0%,100%{opacity:.3;transform:scale(.85)}50%{opacity:1;transform:scale(1.1)}}
 /* MacBook */
 .macbook{flex:0 1 560px;max-width:560px;min-width:280px}
 .mb-screen{position:relative;padding:9px;border-radius:13px 13px 4px 4px;background:#0b0c0f;box-shadow:0 0 0 2px #45484d,0 16px 30px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.05)}
 .mb-cam{position:absolute;top:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#05070a;box-shadow:0 0 0 1.5px #1a1c1f;z-index:3}
-.macbook .schermo{aspect-ratio:16/10}
 .mb-base{position:relative;height:12px;width:113%;margin:-1px 0 0 -6.5%;border-radius:0 0 10px 10px;background:linear-gradient(180deg,#c6cace 0%,#9a9ea3 52%,#7c8085 100%);box-shadow:0 9px 15px rgba(0,0,0,.42)}
 .mb-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:70px;height:6px;border-radius:0 0 8px 8px;background:linear-gradient(180deg,#83878c,#6d7176)}
 /* iPad (landscape) */
 .ipad{flex:0 1 300px;max-width:300px;min-width:210px}
 .ip-body{position:relative;padding:11px;border-radius:20px;background:#0b0c0f;box-shadow:0 0 0 2px #45484d,0 16px 28px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.05)}
 .ip-cam{position:absolute;top:50%;left:4px;transform:translateY(-50%);width:5px;height:5px;border-radius:50%;background:#05070a;box-shadow:0 0 0 1.5px #1a1c1f;z-index:3}
-.ipad .schermo{aspect-ratio:4/3}
-.storia-player{margin-top:26px}
-.storia-dots{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.storia-dots-lab{width:100%;font-family:var(--mono);font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
-.storia-dot{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--brd2);background:var(--pann2);color:var(--muted);font-family:var(--mono);font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s,border-color .2s}
-.storia-dot:hover{color:var(--testo);border-color:var(--brd2);transform:translateY(-2px)}
-.storia-dot.on{background:linear-gradient(180deg,var(--sole),var(--sole2));color:#231500;border-color:var(--sole)}
+.storia-controllo{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:30px}
+.storia-ctl-lab{font-family:var(--head);font-weight:600;font-size:1.06rem;color:var(--muted)}
 .pill-storia .p-num{background:var(--cianoL);color:var(--ciano)}
 .pill-storia.attiva .p-num{background:#06121F;color:var(--ciano)}
 /* card-concetto sincronizzate */
@@ -759,7 +754,6 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
       <span class="led" aria-hidden="true"></span>
       <span>Impianto Piscina Andreana &middot; Orzinuovi &middot; Sistema attivo</span>
     </div>
-    <div class="side-school">Scuola Sacra Famiglia &middot; Animatore Digitale &middot; Andrea Cerioli</div>
   </div>
 </aside>
 
@@ -1813,7 +1807,7 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
 ============================================================ -->
 <section class="sezione" id="sez-storia">
   <div class="s-head">
-    <span class="s-etich">Passo 0 &middot; Il making of</span>
+    <span class="s-etich">Scuola Sacra Famiglia &middot; Animatore Digitale &middot; Andrea Cerioli</span>
     <h2>Come &egrave; nata questa app</h2>
     <p class="s-intro">Il racconto di Energy Pixel in poco pi&ugrave; di tre minuti: dall&rsquo;impianto sul tetto della piscina fino a questa sala di controllo. Premi play &mdash; le schermate scorrono da sole, seguendo la voce.</p>
   </div>
@@ -1823,9 +1817,9 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
       <div class="device macbook attivo" id="devMac">
         <div class="mb-screen">
           <span class="mb-cam" aria-hidden="true"></span>
-          <div class="schermo">
+          <div class="slideframe">
             <img id="slideMac" src="13.png" alt="Schermata di Energy Pixel sul MacBook" />
-            <div class="schermo-off" aria-hidden="true"><span></span></div>
+            <div class="slideframe-off" aria-hidden="true"><span></span></div>
           </div>
         </div>
         <div class="mb-base" aria-hidden="true"><span class="mb-notch"></span></div>
@@ -1833,31 +1827,20 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
       <div class="device ipad spento" id="devPad">
         <div class="ip-body">
           <span class="ip-cam" aria-hidden="true"></span>
-          <div class="schermo">
+          <div class="slideframe">
             <img id="slidePad" alt="Schermata di Energy Pixel sull&rsquo;iPad" />
-            <div class="schermo-off" aria-hidden="true"><span></span></div>
+            <div class="slideframe-off" aria-hidden="true"><span></span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="player storia-player">
-      <div class="player-testa">
-        <button class="pl-btn" id="storiaBtn" aria-label="Riproduci o metti in pausa il racconto">
-          <svg class="ic-play" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
-          <svg class="ic-pause" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1.5"/><rect x="13.5" y="4.5" width="4.5" height="15" rx="1.5"/></svg>
-        </button>
-        <div class="pl-info">
-          <div class="pl-titolo">La storia di Energy Pixel &middot; voce narrante</div>
-          <div class="pl-barra" id="storiaBarra" role="slider" aria-label="Avanzamento del racconto"><div class="pl-fill" id="storiaFill"></div></div>
-          <div class="pl-tempo"><span id="storiaCorr">0:00</span><span id="storiaTot">--:--</span></div>
-        </div>
-      </div>
-      <span class="pl-badge" id="storiaBadge">Traccia MP3 in preparazione: intanto puoi sfogliare le tappe con i numeri qui sotto.</span>
-    </div>
-
-    <div class="storia-dots" id="storiaDots">
-      <span class="storia-dots-lab">Salta a una tappa del racconto</span>
+    <div class="storia-controllo">
+      <button class="pl-btn" id="storiaBtn" aria-label="Ascolta o metti in pausa il racconto">
+        <svg class="ic-play" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+        <svg class="ic-pause" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="display:none" aria-hidden="true"><rect x="6" y="4.5" width="4.5" height="15" rx="1.5"/><rect x="13.5" y="4.5" width="4.5" height="15" rx="1.5"/></svg>
+      </button>
+      <span class="storia-ctl-lab" id="storiaBadge">Ascolta il racconto &middot; 3 minuti</span>
     </div>
   </div>
 </section>
@@ -2117,25 +2100,8 @@ vai(0);
   const devPad = document.getElementById('devPad');
   const btn = document.getElementById('storiaBtn');
   const icPlay = btn.querySelector('.ic-play'), icPause = btn.querySelector('.ic-pause');
-  const barra = document.getElementById('storiaBarra'), fill = document.getElementById('storiaFill');
-  const corr = document.getElementById('storiaCorr'), tot = document.getElementById('storiaTot');
   const badge = document.getElementById('storiaBadge');
-  const dotsBox = document.getElementById('storiaDots');
-  const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
   let pronto = false, idx = -1;
-
-  // un pallino per ogni tappa del racconto (in ordine): salta a quel punto della voce
-  SLIDE.forEach((s, k) => {
-    const d = document.createElement('button');
-    d.className = 'storia-dot'; d.type = 'button'; d.textContent = k + 1;
-    d.title = s.cap;
-    d.addEventListener('click', () => {
-      if (pronto) audio.currentTime = s.t + 0.05;
-      mostraSlide(k, true);
-    });
-    dotsBox.appendChild(d);
-  });
-  const dots = [...dotsBox.querySelectorAll('.storia-dot')];
 
   function indiceAl(t) {
     let k = 0;
@@ -2147,7 +2113,7 @@ vai(0);
     imgEl.src = s.img + '.png';
     imgEl.alt = 'Energy Pixel: ' + s.cap;
     dev.classList.remove('spento');
-    const sc = imgEl.closest('.schermo');
+    const sc = imgEl.closest('.slideframe');
     sc.classList.remove('entra'); void sc.offsetWidth; sc.classList.add('entra');
   }
   function mostraSlide(k, forza) {
@@ -2161,27 +2127,19 @@ vai(0);
     const dispari = (k + 1) % 2 === 1;
     devMac.classList.toggle('attivo', dispari);
     devPad.classList.toggle('attivo', !dispari);
-    dots.forEach((d, j) => d.classList.toggle('on', j === k));
   }
   const mostraPlay = () => { icPlay.style.display = ''; icPause.style.display = 'none'; };
-  audio.addEventListener('loadedmetadata', () => { pronto = true; tot.textContent = mmss(audio.duration); });
-  audio.addEventListener('error', () => { badge.classList.add('mostra'); });
+  audio.addEventListener('loadedmetadata', () => { pronto = true; });
+  audio.addEventListener('error', () => { badge.textContent = 'Traccia MP3 in preparazione'; });
   audio.addEventListener('timeupdate', () => {
-    if (audio.duration) { fill.style.width = (audio.currentTime / audio.duration * 100) + '%'; corr.textContent = mmss(audio.currentTime); }
-    // mentre suona la voce pilota le slide; da fermo comandano i pallini (evita il
-    // "rimbalzo" quando il seek non è supportato in locale e currentTime torna a 0)
+    // mentre suona, la voce pilota le slide sui due device
     if (!audio.paused) mostraSlide(indiceAl(audio.currentTime));
   });
   audio.addEventListener('ended', () => { mostraPlay(); if (typeof pillStoria !== 'undefined') pillStoria.classList.add('letto'); });
   btn.addEventListener('click', () => {
-    if (!pronto) { badge.classList.add('mostra'); return; }
+    if (!pronto) { badge.textContent = 'Traccia MP3 in preparazione'; return; }
     if (audio.paused) { audio.play(); icPlay.style.display = 'none'; icPause.style.display = ''; }
     else { audio.pause(); mostraPlay(); }
-  });
-  barra.addEventListener('click', e => {
-    if (!audio.duration) return;
-    const r = barra.getBoundingClientRect();
-    audio.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * audio.duration;
   });
   mostraSlide(0, true);
   players.push({ pausa() { if (!audio.paused) { audio.pause(); mostraPlay(); } } });
