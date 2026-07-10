@@ -457,8 +457,29 @@ input[type=range]{width:100%;accent-color:var(--sole);height:44px;background:tra
 .stato-txt{font-family:var(--head);font-weight:700;font-size:1.3rem;letter-spacing:.5px;color:var(--ambra)}
 .stato-box.acceso .stato-txt{color:var(--energia)}
 .stato-hint{font-size:15px;color:var(--muted);margin-top:6px;min-height:22px;max-width:46ch;margin-left:auto;margin-right:auto}
-.stato-live{text-align:center;font-family:var(--head);font-size:1.05rem;margin-top:6px;color:var(--testo)}
-.stato-live .num{color:var(--ciano);font-size:1.3rem}
+/* cruscotto vivo (simulazione impianto in funzione) */
+.cv{background:#060F1B;border:1.5px solid var(--brd);border-radius:12px;padding:12px;margin-top:12px;animation:appare .35s ease}
+.cv-head{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--energia);margin:2px 4px 10px}
+.cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cv-tile{background:var(--pann2);border:1.5px solid var(--brd);border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:2px;border-top:3px solid var(--brd2)}
+.cv-tile.t-sole{border-top-color:var(--sole)}
+.cv-tile.t-casa{border-top-color:var(--ciano)}
+.cv-tile.t-rete{border-top-color:var(--energia)}
+.cv-tile.t-batt{border-top-color:var(--energia)}
+.cv-tile.t-rete.importa{border-top-color:var(--ambra)}
+.cv-ic{width:22px;height:22px;margin-bottom:2px}
+.cv-lab{font-family:var(--head);font-size:12px;font-weight:600;color:var(--muted);line-height:1.2}
+.cv-val{font-family:var(--head);font-size:14px;color:var(--muted);font-weight:600}
+.cv-val b{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--testo)}
+.cv-tile.t-sole .cv-val b{color:var(--sole)}
+.cv-tile.t-casa .cv-val b{color:var(--ciano)}
+.cv-tile.t-rete .cv-val b{color:var(--energia)}
+.cv-tile.t-rete.importa .cv-val b{color:var(--ambra)}
+#cvBatt.carica{color:var(--energia);font-weight:700}
+.cv-foot{font-size:13px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5}
+.cv-foot b{font-family:var(--mono);color:var(--energia)}
+.cv-spento{color:var(--ambra);font-size:14px;line-height:1.5;text-align:center;border-color:var(--ambra);background:var(--ambraL)}
+.cv-spento b{color:var(--testo)}
 @media (max-width:900px){.quadro-grid{grid-template-columns:1fr}}
 .parola-bin{flex-direction:column;align-items:stretch;gap:8px}
 .parola-bin .pb-riga{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -1201,7 +1222,33 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
         <div class="stato-led" aria-hidden="true"></div>
         <div class="stato-txt" id="statoTxt">IMPIANTO SPENTO</div>
         <div class="stato-hint" id="statoHint">Comincia dall&rsquo;inizio: collega i pannelli.</div>
-        <div class="stato-live" id="statoLive" hidden>Sta producendo <span class="num" id="quadroKw">0,0</span> kW in questo istante.</div>
+      </div>
+
+      <div class="cv" id="cruscottoVivo" hidden>
+        <div class="cv-head"><span class="led" aria-hidden="true"></span><span>Cruscotto &middot; in diretta</span></div>
+        <div class="cv-grid">
+          <div class="cv-tile t-sole">
+            <svg class="cv-ic" viewBox="0 0 24 24" fill="none" stroke="var(--sole)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="3" x2="12" y2="5.5"/><line x1="12" y1="18.5" x2="12" y2="21"/><line x1="3" y1="12" x2="5.5" y2="12"/><line x1="18.5" y1="12" x2="21" y2="12"/><line x1="5.6" y1="5.6" x2="7.4" y2="7.4"/><line x1="16.6" y1="16.6" x2="18.4" y2="18.4"/><line x1="5.6" y1="18.4" x2="7.4" y2="16.6"/><line x1="16.6" y1="7.4" x2="18.4" y2="5.6"/></svg>
+            <span class="cv-lab">Il sole produce</span><span class="cv-val"><b id="cvProd">0,0</b> kW</span>
+          </div>
+          <div class="cv-tile t-casa">
+            <svg class="cv-ic" viewBox="0 0 24 24" fill="none" stroke="var(--ciano)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>
+            <span class="cv-lab">La scuola usa</span><span class="cv-val"><b id="cvCasa">0,0</b> kW</span>
+          </div>
+          <div class="cv-tile t-rete">
+            <svg class="cv-ic" viewBox="0 0 24 24" fill="none" stroke="var(--testo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21 12 3l4 18"/><path d="M6 9h12M5 14h14"/></svg>
+            <span class="cv-lab" id="cvReteLab">Verso la rete</span><span class="cv-val"><b id="cvRete">0,0</b> kW</span>
+          </div>
+          <div class="cv-tile t-batt" id="cvBattTile">
+            <svg class="cv-ic" viewBox="0 0 24 24" fill="none" stroke="var(--energia)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="16" height="8" rx="2"/><line x1="21" y1="11" x2="21" y2="13"/></svg>
+            <span class="cv-lab">Batteria</span><span class="cv-val" id="cvBatt">spenta</span>
+          </div>
+        </div>
+        <div class="cv-foot">Da quando l&rsquo;hai acceso ha raccolto <b id="cvEn">0,00</b> kWh, evitando <b id="cvCo2">0</b> g di CO&#8322;.</div>
+      </div>
+
+      <div class="cv cv-spento" id="cruscottoSpento" hidden>
+        <span>Il portale &egrave; spento: l&rsquo;impianto lavora ma sei al buio sui dati. Accendi il <b>Monitoraggio</b> per vedere il cruscotto in diretta.</span>
       </div>
     </div>
   </div>
@@ -1794,6 +1841,7 @@ function vai(i) {
   attuale = i;
   players.forEach(pl => pl.pausa());
   if (typeof ytPausaTutti === 'function') ytPausaTutti();
+  gestisciCruscottoNav(i === 5);
   document.querySelectorAll('.sezione').forEach((s, j) => s.classList.toggle('attiva', j === i));
   navPills.querySelectorAll('.pill:not(.pill-doc)').forEach((p, j) => p.classList.toggle('attiva', j === i));
   if (i === 10 && typeof caricaVideo === 'function') caricaVideo();
@@ -2979,12 +3027,33 @@ const SwSound = (function () {
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + 0.02);
   }
+  let hum = null, humGain = null, humLfo = null;
   return {
     toggle(on) {           // ON = doppio scatto brillante del relè che si eccita; OFF = clunk singolo più cupo
       if (on) { click(2800, 0.5, 0.045); setTimeout(() => click(3400, 0.22, 0.03), 14); }
       else { click(1700, 0.42, 0.05); }
     },
-    success() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => blip(f, 0.16, 0.22), i * 90)); }
+    success() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => blip(f, 0.16, 0.22), i * 90)); },
+    avvio() {              // sweep in salita: l'impianto che si accende
+      const c = ac(); if (!c) return;
+      const t = c.currentTime, o = c.createOscillator(), g = c.createGain();
+      o.type = 'triangle'; o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(620, t + 0.4);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.26, t + 0.14); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + 0.6);
+    },
+    humOn() {              // ronzio continuo dell'inverter mentre l'impianto lavora
+      const c = ac(); if (!c) return;
+      if (hum) { humGain.gain.setTargetAtTime(0.05, c.currentTime, 0.3); return; }
+      hum = c.createOscillator(); hum.type = 'sawtooth'; hum.frequency.value = 72;
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 200;
+      humGain = c.createGain(); humGain.gain.value = 0;
+      humLfo = c.createOscillator(); humLfo.frequency.value = 6;                 // leggero tremolo "vivo"
+      const lfoG = c.createGain(); lfoG.gain.value = 6; humLfo.connect(lfoG); lfoG.connect(hum.frequency);
+      hum.connect(lp); lp.connect(humGain); humGain.connect(c.destination);
+      hum.start(); humLfo.start();
+      humGain.gain.setTargetAtTime(0.05, c.currentTime, 0.35);
+    },
+    humOff() { const c = ac(); if (c && humGain) humGain.gain.setTargetAtTime(0, c.currentTime, 0.25); }
   };
 })();
 
@@ -3151,7 +3220,6 @@ function aggiornaQuadro() {
   const box = document.getElementById('statoBox');
   const txt = document.getElementById('statoTxt');
   const hint = document.getElementById('statoHint');
-  const live = document.getElementById('statoLive');
   box.classList.toggle('acceso', inFunzione);
   if (inFunzione) completa(5);
   if (inFunzione) {
@@ -3160,16 +3228,55 @@ function aggiornaQuadro() {
     extra.push(swValido('batt') ? 'stai caricando la batteria per stasera' : 'la batteria è spenta, l’energia in più va tutta in rete');
     extra.push(swValido('mon') ? 'e il portale ti mostra ogni dato' : 'ma il portale è spento: stai lavorando alla cieca, accendi il Monitoraggio');
     hint.textContent = 'Catena chiusa: pannelli → inverter → rete → contatore. ' + extra.join('; ') + '.';
-    document.getElementById('quadroKw').textContent = fmt(2.8, 1);
-    live.hidden = false;
   } else {
-    live.hidden = true;
     txt.textContent = 'IMPIANTO SPENTO';
     const nomi = { cc:'collega i pannelli (Sezionatore CC)', inv:'accendi l’inverter', ca:'collega alla rete (Sezionatore CA)', cont:'attiva il contatore di scambio' };
     const mancante = ESSENZIALI.find(id => !swValido(id));
     hint.textContent = 'Prossimo passo: ' + nomi[mancante] + '.';
   }
+  gestisciCruscotto(inFunzione, swValido('mon'), swValido('batt'));
   valutaMissione();
+}
+
+/* --- cruscotto vivo: valori simulati + suono mentre l'impianto lavora --- */
+var cvTimer = null, cvEnergia = 0, plantOn = false;   // var: gestisciCruscottoNav li usa da vai() al load
+function gestisciCruscottoNav(entrando) {
+  if (!plantOn) return;   // niente da fermare/riprendere (o siamo al primo load)
+  if (entrando) { SwSound.humOn(); if (!cvTimer) cvTimer = setInterval(() => cvTick(swValido('batt')), 1000); }
+  else { SwSound.humOff(); if (cvTimer) { clearInterval(cvTimer); cvTimer = null; } }
+}
+function cvTick(battOn) {
+  const prod = 2.55 + Math.random() * 0.5;              // kW dal sole (fluttua un po')
+  const casa = 1.25 + Math.random() * 0.45;             // kW usati dalla scuola
+  const surplus = prod - casa;
+  cvEnergia += prod / 60;                               // ogni tick = ~1 minuto di produzione
+  document.getElementById('cvProd').textContent = fmt(prod, 1);
+  document.getElementById('cvCasa').textContent = fmt(casa, 1);
+  const reteTile = document.getElementById('cruscottoVivo').querySelector('.t-rete');
+  const reteLab = document.getElementById('cvReteLab');
+  if (surplus >= 0) {
+    reteTile.classList.remove('importa');
+    reteLab.textContent = battOn ? 'Batteria + rete' : 'Verso la rete';
+    document.getElementById('cvRete').textContent = '+' + fmt(surplus, 1);
+  } else {
+    reteTile.classList.add('importa');
+    reteLab.textContent = 'Dalla rete';
+    document.getElementById('cvRete').textContent = '−' + fmt(-surplus, 1);
+  }
+  const batt = document.getElementById('cvBatt');
+  batt.textContent = battOn ? 'in carica ▲' : 'spenta';
+  batt.classList.toggle('carica', battOn);
+  document.getElementById('cvBattTile').style.borderTopColor = battOn ? 'var(--energia)' : 'var(--brd2)';
+  document.getElementById('cvEn').textContent = fmt(cvEnergia, 2);
+  document.getElementById('cvCo2').textContent = fmt(cvEnergia * 400, 0);
+}
+function gestisciCruscotto(inFunzione, monOn, battOn) {
+  const cv = document.getElementById('cruscottoVivo'), cvSp = document.getElementById('cruscottoSpento');
+  if (inFunzione && !plantOn) { plantOn = true; cvEnergia = 0; SwSound.avvio(); SwSound.humOn(); cvTimer = setInterval(() => cvTick(swValido('batt')), 1000); }
+  else if (!inFunzione && plantOn) { plantOn = false; SwSound.humOff(); clearInterval(cvTimer); cvTimer = null; }
+  cv.hidden = !(inFunzione && monOn);
+  cvSp.hidden = !(inFunzione && !monOn);
+  if (inFunzione && monOn) cvTick(battOn);   // aggiorna subito lo stato batteria/rete al variare degli interruttori
 }
 document.getElementById('btnResetQuadro').addEventListener('click', () => {
   SWITCHES.forEach(s => swState[s.id] = false);
