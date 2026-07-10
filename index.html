@@ -168,13 +168,18 @@ h3{font-size:1.32rem;margin:30px 0 12px}
 .pl-tempo{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:6px;display:flex;justify-content:space-between}
 .pl-badge{display:none;margin-top:10px;background:var(--ambraL);border:1px solid var(--ambra);color:var(--ambra);border-radius:10px;padding:8px 14px;font-family:var(--head);font-size:14px;font-weight:600}
 .pl-badge.mostra{display:inline-block}
-/* PASSO 0 — storia con slide sincronizzate */
+/* PASSO 0 — storia con slide dentro un display Mac */
 .storia{max-width:960px}
-.storia-slide{position:relative;margin:0;border:1.5px solid var(--brd2);border-radius:16px;overflow:hidden;background:#06121F;box-shadow:0 14px 44px rgba(0,0,0,.4)}
-.storia-slide img{display:block;width:100%;height:auto;aspect-ratio:1.83;object-fit:cover;object-position:top center}
-.storia-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 18px 13px;background:linear-gradient(0deg,rgba(6,18,31,.94) 12%,rgba(6,18,31,.72) 55%,rgba(6,18,31,0));font-family:var(--head);font-weight:600;font-size:1.04rem;color:var(--testo)}
-.storia-cap::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--sole);box-shadow:0 0 10px var(--sole);margin-right:9px;vertical-align:middle}
-.storia-player{margin-top:16px}
+.mac{width:100%;max-width:820px;margin:0 auto}
+.mac-screen{position:relative;padding:15px;border-radius:22px;background:#0b0c0f;
+  box-shadow:0 0 0 2px #55585e,0 0 0 3px #313337,0 28px 52px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.06)}
+.mac-cam{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#2a3340,#05070a 70%);box-shadow:0 0 0 2px rgba(0,0,0,.4);z-index:3}
+.mac-glass{position:relative;border-radius:6px;overflow:hidden;background:#05060a;aspect-ratio:16/10;box-shadow:inset 0 0 0 1px rgba(0,0,0,.9),inset 0 0 40px rgba(0,0,0,.55)}
+.mac-glass img{width:100%;height:100%;object-fit:contain;display:block;background:#05060a}
+.mac-glass::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(122deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,0) 20%)}
+.mac-neck{width:110px;height:44px;margin:-1px auto 0;background:linear-gradient(90deg,#34363b 0%,#5c5f65 22%,#282a2e 56%,#4c4f55 84%,#2f3135 100%);clip-path:polygon(34% 0,66% 0,80% 100%,20% 100%)}
+.mac-foot{width:230px;height:14px;margin:0 auto;border-radius:3px 3px 11px 11px;background:linear-gradient(180deg,#4a4d53,#26272b);box-shadow:0 14px 22px rgba(0,0,0,.45),inset 0 1px 1px rgba(255,255,255,.14)}
+.storia-player{margin-top:22px}
 .storia-dots{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .storia-dots-lab{width:100%;font-family:var(--mono);font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 .storia-dot{width:30px;height:30px;border-radius:9px;border:1.5px solid var(--brd2);background:var(--pann2);color:var(--muted);font-family:var(--mono);font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s,border-color .2s}
@@ -1794,10 +1799,16 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
   </div>
 
   <div class="storia">
-    <figure class="storia-slide">
-      <img id="storiaImg" src="1.jpeg" alt="Le schermate di Energy Pixel che scorrono mentre la voce racconta" />
-      <figcaption class="storia-cap"><span id="storiaCap">La scoperta: una centrale nascosta sul tetto</span></figcaption>
-    </figure>
+    <div class="mac" role="img" aria-label="Le schermate di Energy Pixel su un display Mac">
+      <div class="mac-screen">
+        <span class="mac-cam" aria-hidden="true"></span>
+        <div class="mac-glass">
+          <img id="storiaImg" src="13.png" alt="Le schermate di Energy Pixel che scorrono seguendo la voce" />
+        </div>
+      </div>
+      <div class="mac-neck" aria-hidden="true"></div>
+      <div class="mac-foot" aria-hidden="true"></div>
+    </div>
 
     <div class="player storia-player">
       <div class="player-testa">
@@ -1811,11 +1822,11 @@ footer{border-top:1.5px solid var(--brd);padding:26px 0 40px;margin-top:20px;tex
           <div class="pl-tempo"><span id="storiaCorr">0:00</span><span id="storiaTot">--:--</span></div>
         </div>
       </div>
-      <span class="pl-badge" id="storiaBadge">Traccia MP3 in preparazione: intanto puoi sfogliare le schermate con i numeri qui sotto.</span>
+      <span class="pl-badge" id="storiaBadge">Traccia MP3 in preparazione: intanto puoi sfogliare le tappe con i numeri qui sotto.</span>
     </div>
 
     <div class="storia-dots" id="storiaDots">
-      <span class="storia-dots-lab">Salta a una schermata</span>
+      <span class="storia-dots-lab">Salta a una tappa del racconto</span>
     </div>
   </div>
 </section>
@@ -1990,7 +2001,7 @@ navPills.appendChild(pillAppr);
 const pillStoria = document.createElement('button');
 pillStoria.className = 'pill pill-storia';
 pillStoria.dataset.sez = 11;
-pillStoria.innerHTML = '<span class="p-num">0</span><span class="p-lab">Come &egrave; nata questa app</span>' +
+pillStoria.innerHTML = '<span class="p-num">0</span><span class="p-lab">Com&rsquo;&egrave; nata l&rsquo;app</span>' +
   '<span class="pill-badges"><svg class="pill-star" viewBox="0 0 24 24" fill="currentColor" aria-label="ascoltato"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.3l6.1-.7z"/></svg></span>';
 pillStoria.addEventListener('click', () => vai(11));
 navPills.insertBefore(pillStoria, navPills.firstChild);
@@ -2044,34 +2055,32 @@ vai(0);
    la narrazione (durata ~185 s); ritoccabili qui senza toccare altro. */
 (function () {
   const SLIDE = [
-    { t:0,   img:1,  cap:'La scoperta: una centrale nascosta sul tetto' },
-    { t:18,  img:4,  cap:'Numeri veri: energia prodotta, consumata, CO2 risparmiata' },
-    { t:36,  img:1,  cap:'Non un video da guardare, ma un’esperienza da fare' },
-    { t:50,  img:2,  cap:'Che cos’è un kilowattora: iPad, forno, TV' },
-    { t:60,  img:3,  cap:'La tua giornata: pesano gli apparecchi che scaldano' },
-    { t:70,  img:5,  cap:'Progetta tu: i pannelli sui tetti della scuola dall’alto' },
-    { t:78,  img:6,  cap:'Accendi l’impianto: interruttori 0/1, come un tecnico' },
-    { t:85,  img:8,  cap:'…e persino lo programma: coding vero' },
-    { t:89,  img:4,  cap:'Scienze e tecnologia: dal sole al contatore' },
-    { t:96,  img:7,  cap:'Astronomia: le stagioni e l’inclinazione dell’asse' },
-    { t:104, img:6,  cap:'Matematica: potenza × tempo e codice binario' },
-    { t:110, img:8,  cap:'Informatica: scrivere, eseguire, correggere' },
-    { t:116, img:5,  cap:'Geografia: orientare i pannelli, leggere i tetti' },
-    { t:122, img:3,  cap:'Educazione civica: risparmio e CO2 evitata' },
-    { t:128, img:1,  cap:'Prima si legge, poi si gioca' },
-    { t:134, img:5,  cap:'Partire dal reale: la loro scuola, la loro giornata' },
-    { t:141, img:7,  cap:'Imparare facendo: guidare un’auto elettrica col sole' },
-    { t:149, img:9,  cap:'Errare senza paura: la verifica non dà voti' },
-    { t:157, img:10, cap:'Niente si salva: alla chiusura tutto sparisce' },
-    { t:164, img:10, cap:'Cresciuta poco alla volta, un’idea dopo l’altra' },
-    { t:172, img:11, cap:'Gli approfondimenti: video e domande da esperto' },
-    { t:180, img:1,  cap:'E pensare che tutto è partito dall’impianto sul tetto' }
+    { t:0,   img:13, cap:'Energy Pixel: cattura, trasforma e usa il potere del sole' },
+    { t:10,  img:1,  cap:'Dal tetto alla classe: i numeri veri dell’impianto' },
+    { t:24,  img:16, cap:'Dal sole alla rete: energia generata e consumata' },
+    { t:36,  img:14, cap:'Non un video, ma un’esperienza da fare' },
+    { t:46,  img:2,  cap:'Prova, sceglie, sbaglia e riprova' },
+    { t:53,  img:15, cap:'Un kWh: ricariche di iPad o minuti di asciugacapelli' },
+    { t:61,  img:3,  cap:'La tua giornata: pesano gli apparecchi che scaldano' },
+    { t:70,  img:5,  cap:'Progetta i pannelli sui tetti della scuola dall’alto' },
+    { t:78,  img:17, cap:'Accendi l’impianto: gli interruttori nell’ordine giusto' },
+    { t:85,  img:18, cap:'…e persino lo programmi: coding vero' },
+    { t:89,  img:19, cap:'Una sola attività, tante materie insieme' },
+    { t:97,  img:4,  cap:'Scienze e tecnologia: dal sole al contatore' },
+    { t:104, img:11, cap:'Astronomia: le stagioni e l’inclinazione dell’asse' },
+    { t:110, img:6,  cap:'Matematica e logica: 111101 = 61 in base 2' },
+    { t:116, img:7,  cap:'Informatica: istruzioni, esecuzione, debug' },
+    { t:122, img:12, cap:'Geografia: orientare il pannello dove il sole scalda' },
+    { t:128, img:10, cap:'Imparare facendo: l’impianto entra in funzione' },
+    { t:140, img:8,  cap:'Errare senza paura: la verifica spiega, non giudica' },
+    { t:150, img:20, cap:'Niente si salva: alla chiusura tutto sparisce' },
+    { t:163, img:9,  cap:'Sette materie, zero astrazione: l’energia ora è reale' },
+    { t:175, img:21, cap:'Dal tetto alla mente: il futuro è già sul tetto della scuola' }
   ];
   const audio = new Audio();
   audio.preload = 'metadata';
   audio.src = 'energy_pixel.mp3';
   const img = document.getElementById('storiaImg');
-  const cap = document.getElementById('storiaCap');
   const btn = document.getElementById('storiaBtn');
   const icPlay = btn.querySelector('.ic-play'), icPause = btn.querySelector('.ic-pause');
   const barra = document.getElementById('storiaBarra'), fill = document.getElementById('storiaFill');
@@ -2081,20 +2090,17 @@ vai(0);
   const mmss = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
   let pronto = false, idx = -1;
 
-  // un pallino per ognuna delle 11 schermate: salta alla prima volta che se ne parla
-  const primaComparsa = {};
-  SLIDE.forEach(s => { if (primaComparsa[s.img] === undefined) primaComparsa[s.img] = s.t; });
-  for (let n = 1; n <= 11; n++) {
+  // un pallino per ogni tappa del racconto (in ordine): salta a quel punto della voce
+  SLIDE.forEach((s, k) => {
     const d = document.createElement('button');
-    d.className = 'storia-dot'; d.type = 'button'; d.textContent = n;
-    d.dataset.img = n; d.title = 'Schermata ' + n;
-    const tt = primaComparsa[n] || 0;
+    d.className = 'storia-dot'; d.type = 'button'; d.textContent = k + 1;
+    d.title = s.cap;
     d.addEventListener('click', () => {
-      if (pronto) audio.currentTime = tt + 0.05;
-      mostraSlide(indiceAl(tt + 0.05), true);
+      if (pronto) audio.currentTime = s.t + 0.05;
+      mostraSlide(k, true);
     });
     dotsBox.appendChild(d);
-  }
+  });
   const dots = [...dotsBox.querySelectorAll('.storia-dot')];
 
   function indiceAl(t) {
@@ -2106,9 +2112,9 @@ vai(0);
     if (k === idx && !forza) return;
     idx = k;
     const s = SLIDE[k];
-    if (img.getAttribute('src') !== s.img + '.jpeg') img.setAttribute('src', s.img + '.jpeg');
-    cap.textContent = s.cap;
-    dots.forEach(d => d.classList.toggle('on', +d.dataset.img === s.img));
+    if (img.getAttribute('src') !== s.img + '.png') img.setAttribute('src', s.img + '.png');
+    img.alt = 'Energy Pixel: ' + s.cap;
+    dots.forEach((d, j) => d.classList.toggle('on', j === k));
   }
   const mostraPlay = () => { icPlay.style.display = ''; icPause.style.display = 'none'; };
   audio.addEventListener('loadedmetadata', () => { pronto = true; tot.textContent = mmss(audio.duration); });
